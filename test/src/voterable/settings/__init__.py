@@ -1,8 +1,8 @@
 from .base import *
 
-# from .local import *
+from .local import *
 
-# from .test import *
+from .test import *
 
 # from .production import *
 

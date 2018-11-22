@@ -57,8 +57,8 @@ EMAIL_USE_TLS = True
 
 
 
-STRIPE_PUBLISHABLE = os.getenv('STRIPE_PUBLISHABLE','pk_test_xqHMB28f6lRBqp828JHEoe1o')
-STRIPE_SECRET = os.getenv('STRIPE_SECRET','sk_test_UuTCO2umQ0oZ5fQGEorCXRnb')
+STRIPE_PUBLISHABLE = os.getenv('STRIPE_PUBLISHABLE','pk_test_gYemm4pYUHZufj7WAlFE5owC')
+STRIPE_SECRET = os.getenv('STRIPE_SECRET','sk_test_ghdJXX8eWjTYglGMNFO4woVZ')
 
 # Application definition
 
