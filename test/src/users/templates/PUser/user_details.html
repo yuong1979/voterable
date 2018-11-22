@@ -1,0 +1,135 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% load staticfiles %}
+
+
+<style>
+{% block style %}
+
+
+
+
+
+{% endblock %}
+</style>
+
+
+{% block content %}
+
+
+<div class="container">
+
+    <div class="card cardstyle">
+      <div class="card-body">
+        <h4 class="card-title allfontcolor"><i class="allfontcolor fas fa-user-circle fa-1x"></i>&nbsp;&nbsp;&nbsp;&nbsp;User Details</h4><hr>
+        <div class="container">
+        <div class="row">
+
+        <div class="col-xs-4 col-sm-3" style="float:right;"><br>
+          {% if user.image %}
+            <img class ="imgdetail" src="{{ user.image.url }}" width="100px" height="100px">
+          {% else %}
+            <img class ="imgdetail" src="{% static 'img/anonymous.jpg' %}" class="img-rounded imgtn">
+          {% endif %}
+          <br>
+        </div>
+
+        <div class="col-xs-8 col-sm-9">
+          
+            &nbsp;&nbsp;&nbsp;
+            <h4>
+              <b>
+            {% if user.user.puser.name %}
+            {{ user.user.puser.name }}
+            {% else %}
+            {{ user.user }}
+            {% endif %}
+              </b>
+            </h4>
+            
+
+            &nbsp;&nbsp;&nbsp;
+            <h5 class=wdstyle style="color:grey">
+                {% if user.description %}
+                  {{ user.description }}
+                {% else %}
+                  Description
+                {% endif %}
+            </h5>
+
+        </div>
+
+        </div><!-- row -->
+        </div><!-- container -->
+
+        <br>
+
+      </div>
+    </div>
+
+
+
+    <div class="card cardstyle">
+      <div class="card-body">
+
+
+        <h4 class="card-title allfontcolor"><i class="allfontcolor fas fa-trophy fa-1x"></i>&nbsp;&nbsp;&nbsp;&nbsp;User Impact</h4>
+
+
+        <div class="row">
+
+
+          <div class="col-12" style="padding:10px;">
+
+            <ul class="list-group">
+              <li class="list-group-item">
+                <small><b>Reputation Points:</b></small>
+                <span class="badge badge-pill badge-secondary" style="float:right"> {{points}} </span>
+              </li>
+              <li class="list-group-item">
+                <small><b>Rank:</b></small>
+                <span class="badge badge-pill badge-secondary" style="float:right"> {{rank}} </span>
+              </li>
+              <li class="list-group-item">
+                <small><b>Tips Created:</b></small>
+                <span class="badge badge-pill badge-secondary" style="float:right"> {{pollsECreated}} </span>
+              </li>
+            </ul>
+            
+          </div>
+
+
+
+
+        </div>
+
+      </div>
+    </div>
+
+
+</div> <!-- /container -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+{% endblock %}
+
+

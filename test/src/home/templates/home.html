@@ -1,0 +1,634 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% load staticfiles %}
+
+
+<style>
+{% block style %}
+
+
+
+
+{% endblock %}
+</style>
+
+
+
+
+{% block pwa %}
+
+
+<script src="https://www.gstatic.com/firebasejs/5.5.7/firebase.js"></script>
+<script src="https://www.gstatic.com/firebasejs/5.5.7/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/5.5.7/firebase-messaging.js"></script>
+
+<script type="text/javascript">
+
+    // Initialize Firebase
+      var config = {
+        apiKey: "AIzaSyCvd2Dw2i7rtNDByl6mmplyPebHMUy9bis",
+        authDomain: "voterable-yuong.firebaseapp.com",
+        databaseURL: "https://voterable-yuong.firebaseio.com",
+        projectId: "voterable-yuong",
+        storageBucket: "voterable-yuong.appspot.com",
+        messagingSenderId: "838519391446"
+      };
+      firebase.initializeApp(config);
+      const messaging = firebase.messaging();
+
+
+
+    if('serviceWorker' in navigator){
+      // registering the service worker
+        navigator.serviceWorker.register('/serviceworker.js',{
+            scope: '.'
+        }).then(function(registration){
+            messaging.useServiceWorker(registration);
+            console.log('Registration successful with scope ',registration.scope);
+        },function(err){
+            console.log('service worker not registered ',err);
+        });
+    }
+
+
+    messaging
+            .requestPermission()
+            .then(function () {
+//                MsgElem.innerHTML = "Notification permission granted."
+                console.log("Notification permission granted.");
+                // get the token in the form of promise
+                return messaging.getToken()
+            })
+            .then(function(token) {
+//                TokenElem.innerHTML = "token is : " + token
+                console.log(token);
+            })
+            .catch(function (err) {
+//                ErrElem.innerHTML =  ErrElem.innerHTML + "; " + err
+                console.log("Unable to get permission to notify.", err);
+            });
+        messaging.onMessage(function(payload) {
+            console.log("Message received. ", payload);
+//            NotisElem.innerHTML = NotisElem.innerHTML + JSON.stringify(payload)
+        });
+
+
+
+ </script>
+{% endblock %}
+
+
+
+
+  {% block special %}
+
+
+
+<div class="row">
+
+
+  <div class="col-sm-12 col-md-6">
+
+
+    <div class="card cardstyle">
+      <div class="card-body">
+        <h4 class="card-title allfontcolor"><i class="allfontcolor fas fa-user-circle fa-1x"></i>&nbsp;&nbsp;&nbsp;&nbsp;Your Profile</h4><hr>
+        <div class="container">
+        <div class="row">
+
+        <div class="col-xs-4 col-sm-3" style="float:right;"><br>
+          {% if user.image %}
+            <img class ="imgdetail" src="{{ user.image.url }}" width="100px" height="100px">
+          {% else %}
+            <img class ="imgdetail" src="{% static 'img/anonymous.jpg' %}" class="img-rounded imgtn">
+          {% endif %}
+          <br>
+        </div>
+
+        <div class="col-xs-8 col-sm-9">
+          
+            &nbsp;&nbsp;&nbsp;
+            <h4>
+              <b>
+            {% if user.user.puser.name %}
+            {{ user.user.puser.name }}
+            {% else %}
+            {{ user.user }}
+            {% endif %}
+              </b>
+            </h4>
+            
+
+            &nbsp;&nbsp;&nbsp;
+            <h5 class=wdstyle style="color:grey">
+                {% if user.description %}
+                  {{ user.description }}
+                {% else %}
+                  Description
+                {% endif %}
+            </h5>
+
+        </div>
+
+
+
+        </div><!-- row -->
+        </div><!-- container -->
+
+        <br>
+
+
+        <a href='{{ user.get_update }}' class='btn buttonspace btn-sm btn-primary' data-action='show-spinner'><b>Update</b></a>
+
+
+      </div>
+    </div>
+
+
+
+
+
+
+    <div class="card cardstyle">
+      <div class="card-body">
+        <h4 class="card-title allfontcolor"><i class="allfontcolor fas fa-sliders fa-1x"></i>&nbsp;&nbsp;&nbsp;&nbsp;Settings</h4><hr>
+
+
+
+          <ul class="list-group">
+
+<!-- unhide the below and integrate that with notification when notification is sorted out -->
+<!--             <li class="list-group-item">
+              <b class="wdstyle">Email Notifications:</b> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              <input id="toggle-event" urequest_id="{{ request.user.id }}" type="checkbox" data-toggle="toggle" data-size="small" data-width="80">
+            </li> -->
+
+            <li class="list-group-item">
+
+<!--             replace the below with the top after you are done -->
+<!--             {{ request.user.puser.member }} -->
+
+
+            {% if request.user.puser.member == True or request.user.puser.memberp == True %}
+
+<!--             Insert ConfirmCancel url link into the below when needed -->
+<!--             <a href='' class='buttonspace btn-sm btn-danger' data-action='show-spinner' ><b>Cancel Subscription</b></a> -->
+
+              
+                {% if user.member == True %}
+                <b class="wdstyle">Subscription Type:</b>
+                <span class="badge badge-pill badge-secondary" style="float:right"> Basic </span>
+
+                <br><br>
+
+                <b class="wdstyle">Subscription End date in:</b>
+                <span class="badge badge-pill badge-secondary" style="float:right"> {{ user.subenddate|timeuntil }} </span>
+                {% endif %}
+
+                {% if user.memberp == True %}
+                <b class="wdstyle">Subscription Type:</b>
+                <span class="badge badge-pill badge-secondary" style="float:right"> Premium </span>
+
+                <br><br>
+
+                <b class="wdstyle">Subscription End date in:</b>
+                <span class="badge badge-pill badge-secondary" style="float:right"> {{ user.subenddatep|timeuntil }} </span>
+                {% endif %}
+
+                <br>
+
+            {% else %}
+
+                {% if freedays %}
+
+                <form action='' method='POST'  style="display: inline-block;">{% csrf_token %}
+                  <input type="hidden" name="freeday_count_id" value="{{ freedays }}">
+                  &nbsp;&nbsp;&nbsp;
+                  <input type="submit" class='btn btn-sm btn-primary'  style="font-weight: bold" value="Activate {{ freedays }} days of free premium access">
+                </form><br>
+
+                {% else %}
+
+                    <a href='{% url 'SelectPlan' %}' class='btn buttonspace btn-sm btn-primary' data-action='show-spinner' ><b>Subscribe</b></a>
+
+                {% endif %}
+
+            {% endif %}
+
+            </li>
+
+          </ul>
+
+
+
+
+
+            
+            <br>
+
+
+      </div>
+    </div>
+  </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <div class="col-sm-12 col-md-6">
+    <div class="card cardstyle">
+      <div class="card-body">
+        <h4 class="card-title allfontcolor"><i class="allfontcolor fas fa-trophy fa-1x"></i>&nbsp;&nbsp;&nbsp;&nbsp;Your Records</h4><hr>
+          
+          <ul class="list-group">
+            <li class="list-group-item">
+              <b class="wdstyle">Your Reputation Points:</b>
+              <i class="fas fa-question-circle fa-md" tabindex="0" role="button" data-toggle="popover" data-trigger="focus" data-content="Points are awarded based on the votes to your contributed tips and reviews."></i>
+              <span class="badge badge-pill badge-secondary" style="float:right"> {{points}} </span>
+            </li>
+
+            <li class="list-group-item">
+              <b class="wdstyle">Your Rank:</b>
+              <span class="badge badge-pill badge-secondary" style="float:right"> {{rank}} </span>
+            </li>
+
+            <li class="list-group-item">
+              <b class="wdstyle">Your Next Rank:</b>
+              <i class="fas fa-question-circle fa-md" tabindex="0" role="button" data-toggle="popover" data-trigger="focus" data-content="Earn  {{nextpts}} points to get additional {{nextfrdays}} FREE premium package days"></i>
+              <span class="badge badge-pill badge-secondary" style="float:right"> {{nextrank}} </span> 
+            </li>
+
+            <li class="list-group-item">
+              <b class="wdstyle">Tips you created:</b>
+              <span class="badge badge-pill badge-secondary" style="float:right"> {{ pollsECreated }} </span>
+            </li>
+
+            <li class="list-group-item">
+              <b class="wdstyle">Times your tips were viewed:</b>
+              <span class="badge badge-pill badge-secondary" style="float:right"> {{ votes_poll_entries_views }} </span>
+            </li>
+
+            <li class="list-group-item">
+              <b class="wdstyle">Your Tip Upvotes:</b>
+              <i class="fas fa-question-circle fa-md" tabindex="0" role="button" data-toggle="popover" data-trigger="focus" data-content="Earn 1 reputation point for 1 upvote."></i>
+              <span class="badge badge-pill badge-secondary" style="float:right"> {{ upvotes }} </span>
+            </li>
+
+            <li class="list-group-item">
+              <b class="wdstyle">Your Comment Upvotes:</b>
+              <i class="fas fa-question-circle fa-md" tabindex="0" role="button" data-toggle="popover" data-trigger="focus" data-content="Earn 1 reputation point for 1 upvote."></i> 
+              <span class="badge badge-pill badge-secondary" style="float:right"> {{ comment_likes }} </span>
+            </li>
+
+        <!--     <li class="list-group-item">
+              <span class="badge"> {{ downvotes }} </span>Your Tip Downvotes:
+              <i class="fas fa-question-circle fa-md" tabindex="0" role="button" data-toggle="popover" data-trigger="focus" data-content="1 Downvote will reduce reputation by 1 point."></i> 
+            </li> -->
+
+            <li class="list-group-item">
+              <b class="wdstyle">Times you Voted:</b>
+              <span class="badge badge-pill badge-secondary" style="float:right"> {{ votedtimes }} </span>
+            </li>
+            <li class="list-group-item">
+              <b class="wdstyle">Free subscription days:</b>
+              <span class="badge badge-pill badge-secondary" style="float:right"> {{ freedays }} </span>
+            </li>
+        <!--     <li class="list-group-item">
+              <span class="badge"> {{ freedays }} </span>Days of Free Subscription:
+              <i class="fas fa-question-circle fa-md" tabindex="0" role="button" data-toggle="popover" data-trigger="focus" data-content="Earn FREE subscription content by earning points by adding tips and/or voting"></i>
+            </li> -->
+
+          </ul>
+          
+
+      </div>
+    </div>
+  </div>
+
+
+
+
+
+</div> 
+
+
+
+
+
+
+<!-- this if if you want to format the points with decimals for votes -->
+<!-- {{points|floatformat:2}} -->
+
+
+<!-- <button type="button" class="btn btn-lg btn-danger" data-toggle="popover" title="Popover title" data-content="And here's some amazing content. It's very engaging. Right?">Click to toggle popover</button> -->
+
+
+<div class="row">
+
+
+{% if fav_poll_types %}
+  <div class="col-sm-12">
+    <div class="card cardstyle">
+      <div class="card-body">
+        <h4 class="card-title allfontcolor"><i class="allfontcolor fas fa-magic fa-1x"></i>&nbsp;&nbsp;&nbsp;&nbsp;Favorite Tips</h4><hr>
+
+        <ul class="nav nav-pills">
+
+              {% for poll_type in fav_poll_types %}
+
+                <div class="col-xs-12 col-sm-4">
+                <div class="boxstyle">
+
+      <!--                   {% if poll_type.image %}
+                  <div class="ppic">
+                  <img src="{{ poll_type.image.url }}" class="img-rounded imgtn">
+                  </div>
+                  {% else %}
+                  <div class="ppic">
+                  <img src="{% static 'img/NoImage.jpg' %}" class="img-rounded imgtn">
+                  </div>            
+                  {% endif %} -->
+
+                    <b><a href="/polls_favorite/?favorite={{ poll_type.slug }}">{{ poll_type.title }}</a></b>
+
+                      {% if poll_type.freepoll == True %}
+                      &nbsp;&nbsp;<i class="allfontcolor fas fa-check-circle fa-1x"></i><b class="allfontcolor"></b>
+                      {% endif %}
+
+<!--                     adding free poll here if need be -->
+<!--                       {% if poll_type.freepoll == True %}
+                      &nbsp;&nbsp;<i class="allfontcolor fas fa-check-circle fa-1x"></i><b class="allfontcolor"></b>
+                      {% endif %} -->
+
+                </div>
+                </div>
+
+              {% endfor %}
+
+
+          <br>
+        </ul>
+      </div>
+    </div>
+  </div>
+{% endif %}
+
+
+{% if taglist %}
+  <div class="col-sm-12">
+    <div class="card cardstyle">
+      <div class="card-body">
+        <h4 class="card-title allfontcolor"><i class="allfontcolor fa fa-tag fa-1x"></i>&nbsp;&nbsp;&nbsp;&nbsp;Favorite Tags</h4><hr>
+            {% for i in taglist %}
+               <a href='{{i.get_absolute_url}}' class="btn btn-outline-primary tagstyle"><b>{{ i }} ({{i.counter}})</b></a>&nbsp;&nbsp;
+            {% endfor %}
+      <br><br>
+      </div>
+    </div>
+  </div>
+{% endif %}
+
+
+
+{% if pollcreatelist %}
+  <div class="col-sm-12">
+    <div class="card cardstyle">
+      <div class="card-body">
+        <h4 class="card-title allfontcolor"><i class="allfontcolor fas fa-edit fa-1x"></i>&nbsp;&nbsp;&nbsp;&nbsp;Created Tips</h4><hr>
+
+        <ul class="nav nav-pills">
+
+              {% for i in pollcreatelist %}
+
+                <div class="col-xs-12 col-sm-4">
+                <div class="boxstyle">
+
+                    <b><a href="/polls_favorite/?create={{ i.slug }}">{{ i.title }}</a></b>
+
+                      {% if i.freepoll == True %}
+                      &nbsp;&nbsp;<i class="allfontcolor fas fa-check-circle fa-1x"></i><b class="allfontcolor"></b>
+                      {% endif %}
+
+                </div>
+                </div>
+
+              {% endfor %}
+
+          <br>
+        </ul>
+      </div>
+    </div>
+  </div>
+{% endif %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div> 
+
+
+<br><br>
+
+
+
+
+
+<!-- enable and disable newsletter -->
+<!--               {% if request.user.puser.subnewsletter == True %}
+
+              <form method='GET' action="{% url 'SubNews' %}">
+                <input class="btn buttonspace btn-sm btn-primary tagmargin" style="font-weight:bold" type="submit" value="Email Notifications Off" />
+              </form>
+
+              {% else %}
+
+              <form method='GET' action="{% url 'SubNews' %}">
+                <input class="btn buttonspace btn-sm btn-primary tagmargin" style="font-weight:bold" type="submit" value="Email Notifications On" />
+              </form>
+
+              {% endif %}
+ -->
+
+
+
+
+
+
+<!-- 
+                {% if not request.user.puser and not request.get_full_path == "/puser/add/" and not request.get_full_path == "/termsandconditions/" and not request.get_full_path == "/privacypolicy/" and not request.get_full_path == "/disclaimer/" %}
+                <br>
+
+                <div class="panel panel-default">
+                  <div class="panel-heading"><b>Creating your profile</b></div>
+                  <div class="panel-body">
+                    <a href='{% url "PUserCreate" %}' data-action='show-spinner' class='buttonspace btn-sm btn-success btn-block' ><b>Create your profile</b></a>
+                  </div>
+
+                </div>
+
+                {% else %}
+
+                {% endif %}
+ -->
+
+
+
+
+
+
+
+
+
+
+
+
+<script>
+
+
+
+// For toggling subscription to newsletter
+  $(function() {
+
+    $('#toggle-event').change(function() {
+    // $('#console-event').html('Toggle: ' + $(this).prop('checked'))
+    // console.log($(this).prop('checked'))
+    event.preventDefault();
+    var urequest_id = $(this).attr("urequest_id");
+
+      $.ajax({
+        dataType: 'json',
+        type: 'POST',
+        data: 'urequest_id=' + urequest_id,
+        url: '/subnews/',
+        success: function(jsondata) {
+
+        if (jsondata.result=="Subscribed"){
+          var message = "Email Notifications On"
+          // $('#toggle-event').bootstrapToggle('off')
+        }else{
+          var message = "Email Notifications Off"
+          // $('#toggle-event').bootstrapToggle('on')
+        }
+        showFlashMessage(message)
+            if (jsondata.msg === "login_requred") {
+                // alert('login required!')
+                window.location.replace("/accounts/login/");
+            } else {
+                // $(fav_id).css( "color", color );
+
+            }
+        }
+      });
+    })
+  })
+
+
+
+
+
+$(function () {
+  $('[data-toggle="popover"]').popover()
+})
+
+
+// function Test() {
+//     var x = document.getElementById("myDIV");
+//     if (x.style.display === "none") {
+//         x.style.display = "block";
+//     } else {
+//         x.style.display = "none";
+//     }
+// }
+
+
+
+</script>
+
+
+
+
+
+
+{% endblock %}
+
+
+
+
+
+
+
+<!-- <div class="panel panel-default">
+<div class="panel-body">
+
+
+            <h4>
+            <span class="label label-default">Hottest Tips and Tricks</span>
+            </h4>
+
+            <div class="container">
+            <ul class="list-group col-xs-12 col-sm-9">
+              {% for i in polls %}
+              <li class="list-group-item">
+                
+                <span class="badge"> {{ i.vote_count }} Votes </span><a href="{{ i.get_url }}"><b>{{ i|truncatechars:50 }}</b></a>
+
+              </li>
+              {% endfor %}
+            </ul>
+            </div>
+
+            <h4>
+            <span class="label label-default">Hottest Tricksters and Tipsters</span>
+            </h4>
+
+            <div class="container">
+
+            <ul class="list-group col-xs-12 col-sm-9">
+              {% for i in pollsters %}
+              <li class="list-group-item">
+                <span class="badge"> {{ i.rank }} </span>
+                <span class="badge"> {{ i.score }} </span>
+
+                <b>{{ i|truncatechars:20 }}</b>
+              </li>
+              {% endfor %}
+            </ul>
+
+            </div>
+
+
+    <div class="row"></div>
+
+</div>
+</div> -->
+
+
+<!-- </div>
+ -->

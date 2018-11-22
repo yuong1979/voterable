@@ -1,0 +1,954 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags poll_extras %}
+{% load static %}
+
+{% block meta %}
+     <meta name="title" content={{PT}}>
+     <meta name="description" content={{PT.description}}>
+     <meta name="keywords" content={% for i in Tags %} {{ i }}, {% endfor %}>
+ {% endblock %}
+
+{{Tags}}
+
+<style>
+{% block style %}
+
+
+
+{% endblock %}
+</style>
+
+
+
+
+
+{% block content %}
+
+<!-- popups to conduct surveys and to announce deals -->
+{# {% include "survey.html" %} #}
+{# {% include "offer.html" %} #}
+
+{% include 'scrollbar.html' %} <!-- for users to estimate how many on the list -->
+
+
+
+<!-- <div class="top-container">
+  <h1>Scroll Down</h1>
+  <p>Scroll down to see the sticky effect.</p>
+</div> -->
+
+
+
+
+
+
+    <div class="card cardstyle">
+      <div class="card-body">
+
+          <div class="" style="margin-left:7px; float:right;">
+
+            {% if free == True %}
+              <i class="allfontcolor fas fa-check-circle fa-1x"></i><b class="allfontcolor">&nbsp;Free</b>
+            {% endif %}
+            &nbsp;&nbsp;&nbsp;&nbsp;
+
+          {% if user_authorised == True or request.user.is_staff %}
+            {% for pt in Ptype %}
+            {% if request.GET.type == pt.slug %}
+                <a href='{{ pt.get_update }}' class='btn-link' ><b><i class="fas fa-edit fa-1x" aria-hidden="true"></i>&nbsp;Edit</b></a>
+            {% endif %}
+            {% endfor %}
+
+          {% endif %}
+          </div>
+
+        <h4 class="card-title allfontcolor"><i class="allfontcolor fas fa-list-ol fa-1x"></i>&nbsp;&nbsp;&nbsp;&nbsp;Lists</h4><hr>
+
+        <h5>
+        {% for pt in Ptype %}
+          {% if request.GET.type == pt.slug %}
+            {{ pt.title }}
+            &nbsp;
+            {% if pt.viewpolltypeunique.ecount %}
+            ({{ pt.viewpolltypeunique.ecount }} Tips)
+            {% else %}
+            (0 Tips)
+            {% endif %}
+
+          {% endif %}
+        {% endfor %}
+        </h5>
+
+        <hr>
+
+        {% for pt in Ptype %}
+          {% if request.GET.type == pt.slug %}
+
+              <b>
+              <p>
+              Tags:&nbsp;
+
+              {% if Tags %}
+                {% for i in Tags %}
+
+                  {% if i.title != "" %}
+                  <a href='{{i.get_absolute_url}}' class="btn btn-outline-primary tagstyle"> <b>{{i}} ({{i.counter}})</b></a>
+                  {% endif %}
+
+                {% endfor %}
+              {% else %}
+                None
+              {% endif %}
+              </p>
+
+<!--               <p>
+              Views:
+              {% if Views %}
+              {{ Views }}
+              {% else %}
+              0
+              {% endif %}
+              </p> -->
+              </b>
+
+          {% endif %}
+        {% endfor %}
+
+
+
+
+
+
+
+
+
+      </div> <!-- cardbody -->
+    </div> <!-- cardstyle -->
+
+
+
+
+
+
+
+
+      {% if Addpost == True %}
+
+        <form action='{% url 'polls_detail_create' %}' method='GET'  style="display: inline-block;">
+          <input type="hidden" name="type_slug" value="{{ Type_Slug }}">
+          &nbsp;&nbsp;&nbsp;
+          <input type="submit" class='btn buttonspace btn-sm btn-primary'  style="font-weight: bold" value="Add New Tip">
+        </form>
+
+      {% else %}
+
+        <small>Post again in another {{ Hours }} Hours and {{ Minutes }} Minutes</small>
+
+      {% endif %}
+
+
+
+
+
+
+      {% if request.GET.sort == 'Score' %}
+      <a href="/polls/?type={{ Type }}&sort=Score" class='btn btn-link btn-sm disabled'><b>Popular</b></a>|
+      <a href="/polls/?type={{ Type }}&sort=Date" class='btn btn-link btn-sm'><b>Latest</b></a>
+      {% else %}
+      <a href="/polls/?type={{ Type }}&sort=Score" class='btn btn-link btn-sm'><b>Popular</b></a>|
+      <a href="/polls/?type={{ Type }}&sort=Date" class='btn btn-link btn-sm disabled'><b>Latest</b></a>
+      {% endif %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+          
+      {% if object_list %}
+
+        <div class="infinite-container">
+
+          {% for poll in polls %}
+
+
+
+
+
+            <div class="infinite-item card cardstyle">
+              <div class="card-body" style="margin-bottom: -20px">
+
+              {% if poll.image or poll.imageurl %}
+
+                <div class="row row-tip"">
+
+                  <div class="col-sm-12" style="float:left;">
+
+                    <h6>
+                      <b><span>{{ page_obj.number|total_count:paginator.per_page|counter_for_pagination:forloop.counter }}.</span>
+                      {{ poll.title|safe }}</b><p class="smallstyle">{{ poll.date|timesince }} ago</p>
+                    </h6><hr style="margin:-1px">
+                  </div>
+
+                  <div class="col-xs-12 col-sm-4 test row-tip-thumb">
+
+                      {% if poll.image %}
+                        <img src="{{ poll.image.url }}" class="img-rounded polllistimg">
+                      {% else %}
+                        <img src="{{ poll.imageurl }}" class="img-rounded polllistimg">
+                      {% endif %}
+                      <br><br>
+
+                  </div>
+
+                  <div class="row">
+
+                  <div class="col-xs-12 col-sm-12 row-tip-body" style="float:left"> <!-- changed sm-7 to sm-12 to get the words to flush with all -->
+
+                    <div id="poll-space-{{ poll.id }}"></div><!-- I changed this from p to div if I face issues to change -->
+                      <small>
+                      {% if poll.description %}
+                      <div class="Mobilefont Compfont">
+                          <span class="tip-sliced">
+                          {{ poll.description|striptags_except:"a, p, ol, ul, li, br, i"|safe|truncatechars_html:"150" }}
+                          </span>
+
+                          {% if poll.description|striptags_except:"a, p, ol, ul, li, br, i"|safe|length < 150 %}
+
+                            {% if poll.textatt %}<small> Credits: {{ poll.textatt }}</small>{% endif %}
+                            {% include 'poll_features.html' %}
+
+                          {% else %}
+
+                            {% if request.user.is_authenticated %}
+
+                              {% if Subscribedp == True or poll.user_submit == request.user or free == True %}
+
+                                <button class="btn btn-link poll-button" style="padding:0px; margin-top:-5px">
+                                  <small>Read More</small>
+                                </button>
+
+                                <span class="poll-collapse d-none">
+                                {{ poll.description|striptags_except:"iframe, a, p, ol, ul, li, br, i, img"|safe }}
+
+                                {% if poll.textatt %}<small> Credits: {{ poll.textatt }}</small>{% endif %}
+                                {% include 'poll_features.html' %}
+
+                                </span>
+
+                              {% elif Subscribed == True %}
+
+                                <button class="btn btn-link poll-button" style="padding:0px; margin-top:-5px">
+                                  <small>Read More</small>
+                                </button>
+
+                                <span class="poll-collapse d-none">
+                                {{ poll.description|striptags_except:"a, p, ol, ul, li, br, i"|safe }}
+
+                                {% if poll.textatt %}<small> Credits: {{ poll.textatt }}</small>{% endif %}
+                                {% include 'poll_features.html' %}
+
+                                </span>
+
+                              {% else %}
+                                <a href="{% url 'SelectPlan' %}" style="padding:0px; margin:0px">
+                                  Read More
+                                </a>
+                              {% endif %}
+
+
+                            {% else %}
+                            <a href="/accounts/login/" style="padding:0px; margin:0px">
+                                  Read More
+                            </a>
+                            {% endif %}
+
+                          {% endif %}
+
+                            
+
+                      </div>
+                      {% endif %} <!-- poll description -->
+                      </small>
+
+
+
+                  </div>
+
+
+
+                  </div>
+
+
+
+
+                </div>
+
+
+
+              {% else %}
+
+                <div class="row row-tip">
+
+                  <div class="col-sm-12" style="float:left;">
+
+                    <h6>
+                      <b><span>{{ page_obj.number|total_count:paginator.per_page|counter_for_pagination:forloop.counter }}.</span>
+                      {{ poll.title|safe }}</b><p class="smallstyle">{{ poll.date|timesince }} ago</p>
+                    </h6><hr style="margin:-4px">
+
+                  </div>
+
+
+                  <div class="row">
+                    <div class="col-xs-12 col-sm-12">
+                    <div id="poll-space-{{ poll.id }}"></div> <!-- I changed this from p to div if I face issues to change -->
+
+                      <small>
+                      {% if poll.description %}
+                        <div class="Mobilefont Compfont">
+                          <span class="tip-sliced">
+                            {{ poll.description|striptags_except:"a, p, ol, ul, li, i"|safe|truncatechars_html:"150" }}
+                          </span>
+                          {% if poll.description|striptags_except:"a, p, ol, ul, li, i"|safe|length < 150 %}
+
+                            {% if poll.textatt %}<small> Credits: {{ poll.textatt }}</small>{% endif %}
+                            {% include 'poll_features.html' %}
+
+                          {% else %}
+
+                            {% if request.user.is_authenticated %}
+
+                              {% if Subscribedp == True or poll.user_submit == request.user or free == True  %}
+
+                                <button class="btn btn-link poll-button" style="padding:0px; margin-top:-5px">
+                                  <small>Read More</small>
+                                </button>
+
+                                <span class="poll-collapse d-none">
+                                {{ poll.description|striptags_except:"iframe, a, p, ol, ul, li, br, i, img"|safe }}
+
+                                {% if poll.textatt %}<small> Credits: {{ poll.textatt }}</small>{% endif %}
+                                {% include 'poll_features.html' %}
+
+                                </span>
+
+
+                              {% elif Subscribed == True %}
+
+                                <button class="btn btn-link poll-button" style="padding:0px; margin-top:-5px">
+                                  <small>Read More</small>
+                                </button>
+
+                                <span class="poll-collapse d-none">
+                                {{ poll.description|striptags_except:"a, p, ol, ul, li, br, i"|safe }}
+
+                                {% if poll.textatt %}<small> Credits: {{ poll.textatt }}</small>{% endif %}
+                                {% include 'poll_features.html' %}
+
+                                </span>
+
+                              {% else %}
+                                <a href="{% url 'SelectPlan' %}" style="padding:0px; margin:0px">
+                                  Read More
+                                </a>
+                              {% endif %}
+
+                            {% else %}
+                              <a href="/accounts/login/" style="padding:0px; margin:0px">
+                                  Read More
+                              </a>
+                            {% endif %}
+
+                          {% endif %}
+
+                          
+                        </div>
+                      {% endif %}<!-- poll description -->
+                    </small>
+
+                    </div>
+                  </div>
+
+
+
+                </div>
+
+              {% endif %}
+
+              <div class="clearfix" style="height: 5px"></div>
+
+
+
+
+
+            </div> <!-- for cardbody -->
+            </div><!-- for infinite item and card/cardstyle-->
+
+          {% endfor %} <!-- for poll in polls -->
+
+
+          
+          {% if not request.user.is_authenticated and not "/accounts/login" in request.get_full_path %}
+          &nbsp;&nbsp;&nbsp;&nbsp;
+          <a href="{% url 'account_login' %}" class='btn btn-primary btn-sm shadow'><b>Sign up to view all</b></a><br><br>
+          {% endif %}
+
+
+        </div><!-- for infinite container -->
+
+
+        <div class="loading" style="display: none;">
+          Loading...
+        </div>
+
+
+<!-- this is because if "more" is clicked on like the above sometimes there are issues -->
+        {% if page_obj.has_next %}
+          <a class="infinite-more-link" href="?page={{ page_obj.next_page_number }}{% if request.GET.type %}&type={{ request.GET.type }}&sort={{ request.GET.sort }}{% endif %}"></a>
+        {% endif %}
+
+
+
+<!-- <button id="hide">Hide</button> -->
+<!-- <button id="show">Show</button> -->
+
+
+      {% else %}
+        <br><br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+        <b>There are no entries yet.</b>
+        <br><br><br>
+            
+      {% endif %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+{% include 'sharemodal.html' %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <!-- The Modal -->
+  <div class="modal fade" id="ReportModal">
+    <div class="modal-dialog">
+      <div class="modal-content">
+      
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <h4 class="modal-title">Report Post</h4>
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+        
+        <!-- Modal body -->
+        <div class="modal-body center">
+
+          <h4><i class="fas fa-exclamation-triangle" style="color:red">&nbsp;&nbsp;&nbsp;</i> Is this post bothering you?</h4>
+          <p style="color:grey">Please tell us why</p>
+
+
+        <!-- import the older version of font awesome for this spinner because the latest version is not the coolest -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+        <i class="spinreport fa fa-spinner fa-spin" style="font-size:24px; display:none; margin:20px"></i>
+        <div class="spinreport" style="font-size:16px; display:none; ">Sending</div>
+
+        <div class="hidesubmission">
+        <form>
+
+        <b>
+        <input class='btn btn-sm btn-warning btn-block reportp' issue_id="Spam Content" poll_id="{{ poll.id }}" data-action='show-spinner' type="submit" value="Spam" style="font-weight: bold;">
+
+        <br>
+
+        <input class='btn btn-sm btn-danger btn-block reportp' issue_id="Outdated Content" poll_id="{{ poll.id }}" data-action='show-spinner' type="submit" value="Outdated" style="font-weight: bold;">
+
+        <br>
+
+        <input class='btn btn-sm btn-success btn-block reportp' issue_id="Inappropriate Content" poll_id="{{ poll.id }}" data-action='show-spinner' type="submit" value="Inappropriate" style="font-weight: bold;">
+
+        <br>
+
+        <input class='btn btn-sm btn-primary btn-block reportp' issue_id="Duplicate Content" poll_id="{{ poll.id }}" data-action='show-spinner' type="submit" value="Duplicate" style="font-weight: bold;">
+        </b>
+
+        <br>
+
+        <input class='btn btn-sm btn-secondary btn-block reportp' issue_id="Other Content" poll_id="{{ poll.id }}" data-action='show-spinner' type="submit" value="Others" style="font-weight: bold;">
+        </b>
+
+        <br>
+
+
+<!--         <p class="text-center"><b>Or leave your complaint below:</b></p>
+
+        <textarea id="custom_report_textarea" class="form-control" rows="3" poll_id="{{ poll.id }}" data-action='show-spinner' issue_id="Custom Report" style="font-weight: bold;"></textarea>
+
+        <br>
+
+        <button id="custom_report_button" class="btn btn-sm btn-secondary btn-block" type="submit"><b>Submit</b></button> -->
+
+
+
+
+<!--         <input class="form-control" rows="5" data-action='show-spinner' type="text"> -->
+
+<!--         <div class="form-group"> -->
+<!--           <label for="comment">Comment:</label>
+          <textarea class="form-control" rows="4" id="comment"></textarea> -->
+<!--         </div> -->
+
+        </form>
+      </div> <!-- to hide -->
+        </div>
+        
+        <!-- Modal footer -->
+<!--         <div class="modal-footer">
+          <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+        </div> -->
+        
+      </div>
+    </div>
+  </div>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+{% endblock %}
+
+
+
+
+
+{% block jquery %}
+
+
+
+
+
+
+
+
+{#  <script>#}
+
+
+
+
+
+
+
+
+
+
+// $(".signin").click(function(e){
+//   event.preventDefault();
+//   window.location.assign("/accounts/login/");
+// })
+
+
+    //Disable right click on full page
+    // $("body").on("contextmenu",function(e){
+    //     return false;
+    // });
+
+
+    var infinite = new Waypoint.Infinite({
+      element: $('.infinite-container')[0],
+      onBeforePageLoad: function () {
+        $('.loading').show();
+      },
+      onAfterPageLoad: function ($items) {
+        $('.loading').hide();
+        addPollIdEvent();
+        set_votes();
+        set_fav();
+        set_more();
+        set_report();
+ 
+    $(".note-video-clip").attr("width", "100%");
+    $(".note-video-clip").attr("height", "300");
+
+
+      }
+    });
+
+
+
+
+
+
+
+  function set_more() {
+    $(".poll-button").on('click', function (event) {
+      var $tipRow = $(event.target).closest('.row-tip');
+      $tipRow.find('.row-tip-thumb').addClass('d-none');
+      $tipRow.find('.row-tip-body').removeClass('col-sm-7');
+      $tipRow.find('.tip-sliced').addClass('d-none');
+      $tipRow.find('button').addClass('d-none');
+      $tipRow.find('span.poll-collapse').removeClass('d-none');
+    });
+  }
+
+
+    function set_votes() {
+      
+      // $( ".vote-up" ).click(function() {
+      $( ".vote-up" ).off( "click" ).click(function() {
+        event.preventDefault();
+        var poll_id = $(this).attr("poll_id");
+        $.ajax({
+          dataType: 'json',
+          type: 'POST',
+          data: 'score=1&posi=true&poll_id=' + poll_id,
+          url: '/polls/vote/',
+          success: function(jsondata) {
+
+              // var message = "Upvoted"
+              // showFlashMessage(message)
+              var score_id = "#poll-score-" + poll_id;
+              var pvote_id = "#pvote-" + poll_id;
+              var badge_id = "#poll-badge-" + poll_id;
+              var space_id = "#poll-space-" + poll_id;
+              var posi_id = "#poll-posi-" + poll_id;
+              var nega_id = "#poll-nega-" + poll_id;
+              var pcolor_id = "#pcolor-id-" + poll_id;
+              // var ncolor_id = "#ncolor-id-" + poll_id;
+              var ncolor_id = "#ncolor-id-" + poll_id;
+
+              if (jsondata.msg === "login_requred") {
+                  // alert('login required!')
+                  window.location.assign("/accounts/login/");
+
+                  // window.location.replace("/accounts/login/");
+              } else {
+
+                if (jsondata.resultvote === 0) {
+                  var pcolor = "dodgerblue"
+                  $(pcolor_id).css( "color", pcolor );
+                  var ncolor = "dodgerblue"
+                  $(ncolor_id).css( "color", ncolor );
+                } else {
+                  var pcolor = "gold"
+                  $(pcolor_id).css( "color", pcolor );
+                  var ncolor = "dodgerblue"
+                  $(ncolor_id).css( "color", ncolor );
+                }
+
+                // var posi = jsondata.result1
+                // var nega = jsondata.result2
+                var score = jsondata.result
+                // var pvote = jsondata.pvote
+                // showFlashMessage("Tip Score: " + score)
+
+                $(score_id).text(jsondata.result);
+                $(pvote_id).text(jsondata.pvote);
+                $(badge_id).show(250);
+                $(space_id).show(250);
+                // $(posi_id).text(jsondata.result1);
+                // $(nega_id).text(jsondata.result2);
+
+              }
+          }
+        });
+      });
+
+      // $( ".vote-down" ).click(function() {
+      $( ".vote-down" ).off( "click" ).click(function() {
+        event.preventDefault();
+        var poll_id = $(this).attr("poll_id");
+        $.ajax({
+          dataType: 'json',
+          type: 'POST',
+          data: 'score=-1&nega=true&poll_id=' + poll_id,
+          url: '/polls/vote/',
+          success: function(jsondata) {
+
+              // var message = "Downvoted"
+              // showFlashMessage(message)
+              var score_id = "#poll-score-" + poll_id;
+              var pvote_id = "#pvote-" + poll_id;
+              var badge_id = "#poll-badge-" + poll_id;
+              var space_id = "#poll-space-" + poll_id;
+              var posi_id = "#poll-posi-" + poll_id;
+              var nega_id = "#poll-nega-" + poll_id;
+              var pcolor_id = "#pcolor-id-" + poll_id;
+              // var ncolor_id = "#ncolor-id-" + poll_id;
+              var ncolor_id = "#ncolor-id-" + poll_id;
+
+              if (jsondata.msg === "login_requred") {
+                  // alert('login required!')
+                  window.location.assign("/accounts/login/");
+                  // window.location.replace("/accounts/login/");
+              } else {
+
+                if (jsondata.resultvote === 0) {
+                  var pcolor = "dodgerblue"
+                  $(pcolor_id).css( "color", pcolor );
+                  var ncolor = "dodgerblue"
+                  $(ncolor_id).css( "color", ncolor );
+                } else {
+                  var pcolor = "dodgerblue"
+                  $(pcolor_id).css( "color", pcolor );
+                  var ncolor = "gold"
+                  $(ncolor_id).css( "color", ncolor );
+                }
+
+                // var posi = jsondata.result1
+                // var nega = jsondata.result2
+                var score = jsondata.result
+                // var pvote = jsondata.pvote
+                // showFlashMessage("Tip Score: " + score)
+
+                $(score_id).text(jsondata.result);
+                $(pvote_id).text(jsondata.pvote);
+                $(badge_id).show(250);
+                $(space_id).show(250);
+                // $(posi_id).text(jsondata.result1);
+                // $(nega_id).text(jsondata.result2);
+
+              }
+          }
+        });
+      });
+
+
+    }
+
+
+
+
+
+    $(".note-video-clip").attr("width", "100%");
+    $(".note-video-clip").attr("height", "300");
+
+
+
+$(function(){
+    var fileInput = $('.upload-file');
+    var maxSize = fileInput.data('max-size');
+    $('.upload-form').submit(function(e){
+        if(fileInput.get(0).files.length){
+            var fileSize = fileInput.get(0).files[0].size; // in bytes
+            if(fileSize>maxSize){
+                alert('file size is more then ' + String(maxSize).charAt(0) + ' Mb');
+                return false;
+            }else{
+                // alert('file size is correct- '+fileSize+' bytes');
+            }
+        }else{
+            // alert('choose file, please');
+            // return false;
+        }
+    });
+});
+
+
+
+
+
+
+
+
+
+
+// sending the poll id to report after the flag is clicked on
+function addPollIdEvent() {
+  $(".modalclick").click(function(){
+    $(".hidesubmission").show();
+    $(".spinreport").hide();
+    var value = $(this).attr('id');
+    $(".reportp").data("poll_id", value);
+    $("#custom_report_button").data("poll_id", value);
+  });
+};
+
+
+
+
+// receiving the poll id, the poll issue id and poll issue text to be inserted into the database
+function poll_report_ajax_calling(pollid, issueid, issuemsg){
+    // if custom report textarea is empty - show flash message, else - fire AJAX call
+    if (issuemsg == false){
+        var message = "You've submitted an empty report. Please, fill in the textarea or use standard reports!"
+        showFlashMessage(message);
+    }
+    else{
+        $.ajax({
+            dataType: 'json',
+            type: 'POST',
+            data: {
+              'poll_id': pollid, 'issue_id': issueid, 'issuemsg': issuemsg,
+              csrfmiddlewaretoken: '{{ csrf_token }}'
+            },
+            url: '/polls/report/',
+            success: function(jsondata) {
+            var message = "Post reported. Thank you"
+            showFlashMessage(message)
+            $('#ReportModal').modal("hide")
+            }
+        })
+    }
+};
+
+function set_report() {
+
+  $('#custom_report_button').on('click', function(e){
+      e.preventDefault();
+      var textarea = $('#custom_report_textarea');
+      var button = $(this);
+      var pollid = $(".reportp").data("poll_id");
+      var issueid = textarea.attr('issue_id');
+      var issuemsg;
+      
+      // check if textarea is not empty and have no blank spaces instead of text
+      if ($.trim(textarea.val()).length) {
+          issuemsg = textarea.val();
+          poll_report_ajax_calling(pollid, issueid, issuemsg);
+          textarea.val('')
+      }
+      else{
+          issuemsg = false;
+          poll_report_ajax_calling(pollid, issueid, issuemsg);
+          textarea.val('')
+      };
+  });
+
+  $(".reportp").click(function(e){
+      //preventdefault is important because it stops the original button from working and uses the javascript method
+      e.preventDefault();
+      var pollid = $(".reportp").data("poll_id");
+      var issueid = $(this).attr("issue_id");
+      var issuemsg = true;
+
+      $(".hidesubmission").hide();
+      $(".spinreport").fadeIn(1000);
+
+      poll_report_ajax_calling(pollid, issueid, issuemsg);
+  });
+
+}
+
+
+
+function set_fav() {
+
+  // $(".favorite").click(function(e){
+  $(".favorite").off( "click" ).click(function(e){
+    event.preventDefault();
+    var poll_id = $(this).attr("poll_id");
+
+      $.ajax({
+        dataType: 'json',
+        type: 'POST',
+        data: 'poll_id=' + poll_id,
+        url: '/polls/fav/',
+        success: function(jsondata) {
+
+        if (jsondata.result=="favorited"){
+          var message = "Favorited Tip"
+          var color = "gold"
+        }else{
+          var message = "Unfavorited Tip"
+          var color = "dodgerblue"
+        }
+        showFlashMessage(message)
+            var fav_id = "#fav-type-" + poll_id;
+            
+            if (jsondata.msg === "login_requred") {
+                // alert('login required!')
+                window.location.replace("/accounts/login/");
+            } else {
+                $(fav_id).css( "color", color );
+
+            }
+        }
+      });
+  });
+
+}
+
+addPollIdEvent();
+set_fav();
+set_votes();
+set_more();
+set_report();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+{#  </script>#}
+
+
+
+
+
+
+{% endblock %}
+
+
+
+

@@ -1,0 +1,153 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% load staticfiles %}
+
+<style>
+
+{% block style %}
+
+{% endblock %}
+</style>
+
+
+
+
+
+{% block content %}
+
+
+
+<div class="container">
+
+<br>
+
+    <div class="card">
+      <div class="card-body">
+        <h4 class="card-title allfontcolor"><i class="fas fa-question-circle"></i>&nbsp;&nbsp;&nbsp;&nbsp;FAQ</h4>
+
+      </div>
+    </div>
+
+    <br>
+
+
+
+
+
+    <!-- Content -->
+
+        <div class="row d-flex justify-content-center">
+            <div class="col-md-12">
+
+                <!--Accordion wrapper-->
+                <div class="accordion md-accordion accordion-5" id="accordionEx5" role="tablist" aria-multiselectable="true">
+
+                    <!-- Accordion card -->
+                    <div class="card mb-4">
+
+                        <!-- Card header -->
+                        <div class="card-header p-0 z-depth-1" role="tab" id="heading30">
+                            <a data-toggle="collapse" data-parent="#accordionEx5" href="#collapse30" aria-expanded="true" aria-controls="collapse30">
+                                <i class="fas fa-question-circle p-3 mr-4 float-left black-text" aria-hidden="true"></i>
+                                <h6 class="text-uppercase white-text mb-0 py-3 mt-1">
+                                    How does voterable work?
+                                </h6>
+                            </a>
+                        </div>
+
+                        <!-- Card body -->
+                        <div id="collapse30" class="collapse show" role="tabpanel" aria-labelledby="heading30" data-parent="#accordionEx5">
+                            <div class="card-body rgba-black-light white-text z-depth-1">
+                                <p class="p-md-4 mb-0">Voterable is a system that consolidates tips for business. Users who contribute to the this platform can earn points by getting votes for their contribution. Those points they earned can be exchanged for free access. We are currently working on a reward system that rewards contributing members with a monetary incentive.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Accordion card -->
+
+                    <!-- Accordion card -->
+                    <div class="card mb-4">
+
+                        <!-- Card header -->
+                        <div class="card-header p-0 z-depth-1" role="tab" id="heading31">
+                            <a data-toggle="collapse" data-parent="#accordionEx5" href="#collapse31" aria-expanded="true" aria-controls="collapse31">
+                                <i class="fas fa-question-circle p-3 mr-4 float-left black-text" aria-hidden="true"></i>
+                                <h6 class="text-uppercase white-text mb-0 py-3 mt-1">
+                                    What is voterable for?
+                                </h6>
+                            </a>
+                        </div>
+
+                        <!-- Card body -->
+                        <div id="collapse31" class="collapse" role="tabpanel" aria-labelledby="heading31" data-parent="#accordionEx5">
+                            <div class="card-body rgba-black-light white-text z-depth-1">
+                                <p class="p-md-4 mb-0">Voterable consolidates a snapshots of tips, tricks and hacks for businesses. It serves as a reference for people who are looking for new ways to improve their business performance and designed for to help the community share solutions or identify easier ways to achieve their goals in business.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Accordion card -->
+
+                    <!-- Accordion card -->
+                    <div class="card mb-4">
+
+                        <!-- Card header -->
+                        <div class="card-header p-0 z-depth-1" role="tab" id="heading32">
+                            <a data-toggle="collapse" data-parent="#accordionEx5" href="#collapse32" aria-expanded="true" aria-controls="collapse32">
+                                <i class="fas fa-question-circle p-3 mr-4 float-left black-text" aria-hidden="true"></i>
+                                <h6 class="text-uppercase white-text mb-0 py-3 mt-1">
+                                    How do we contact you?
+                                </h6>
+                            </a>
+                        </div>
+
+                        <!-- Card body -->
+                        <div id="collapse32" class="collapse" role="tabpanel" aria-labelledby="heading32" data-parent="#accordionEx5">
+                            <div class="card-body rgba-black-light white-text z-depth-1">
+                                <p class="p-md-4 mb-0">Please reach out to us through this hello@voterable.com or use this <a href='{% url 'Contact' %}' class='btn-md btn-link' >link</a>. We will get back to you as soon as we can.</p>
+
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Accordion card -->
+                </div>
+                <!--/.Accordion wrapper-->
+
+            </div>
+        </div>
+
+    <!-- Content -->
+
+
+
+</div>
+
+
+
+
+<!-- <p aria-hidden="true" data-toggle="modal" data-target="#ouibounce-modal">test modal</p> -->
+
+
+
+
+
+
+
+
+
+
+
+<br><br><br>
+
+
+
+
+
+
+{% include 'footer.html' %}
+
+
+
+
+
+
+
+{% endblock %}

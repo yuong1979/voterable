@@ -1,0 +1,138 @@
+{% load staticfiles %}
+{% load crispy_forms_tags %}
+
+
+
+
+    {% if listtitle == "All" %}
+
+
+    <span class="" id="poll-badge-{{ poll.id }}" style="margin:10px; font-size: 12px">
+<!--       <b id="poll-score-{{ poll.id }}">{{ poll.score }} </b> -->
+                      <b id="pvote-{{ poll.id }}">{{ poll.posi }} </b>
+      <b style="font-size: 12px">Upvotes</b>
+    </span>
+
+    <div class="col-xs-11 col-sm-11" style="float:left; background-color: white; width: 110%; border-radius: 3px; padding-top:10px; padding-left:0px; padding-right:0px;">
+        <h6>
+
+        {% if poll in pollposi %}
+        <a href="#" class="vote-up" poll_id="{{ poll.id }}"><i style="color:gold;" id="pcolor-id-{{ poll.id }}" class="iconmg fas fa-arrow-alt-circle-up fa-lg"></i></a>
+        {% else %}
+        <a href="#" class="vote-up" poll_id="{{ poll.id }}"><i id="pcolor-id-{{ poll.id }}" class="iconmg allbtniconcolor fas fa-arrow-alt-circle-up fa-lg"></i></a>
+        {% endif %}
+
+        {% if poll in pollnega %}
+        <a href="#" class="vote-down" poll_id="{{ poll.id }}"><i style="color:gold;" id="ncolor-id-{{ poll.id }}" class="iconmg fas fa-arrow-alt-circle-down fa-lg"></i></a>
+        {% else %}
+        <a href="#" class="vote-down" poll_id="{{ poll.id }}"><i id="ncolor-id-{{ poll.id }}" class="iconmg allbtniconcolor fas fa-arrow-alt-circle-down fa-lg"></i></a>
+        {% endif %}
+
+
+        {% if request.user.is_authenticated %}
+        <i class="iconmg allbtniconcolor fa fa-flag fa-lg modalclick" id="{{ poll.id }}" aria-hidden="true" data-toggle="modal" data-target="#ReportModal"></i>
+        {% else %}
+        <a href="/accounts/login/"><i class="iconmg fa fa-flag fa-lg"></i></a>
+        {% endif %}
+
+        <i class="iconmg allbtniconcolor fa fa-share-alt fa-lg" aria-hidden="true" data-toggle="modal" data-target="#ShareModal"></i>
+
+        {% if request.user.is_authenticated %}
+
+          {% if poll in PollFav %}
+          <a href="#" class="favorite" poll_id="{{ poll.id }}"><i style="color:gold;" id='fav-type-{{ poll.id }}' class="iconmg fa fa-star fa-lg"></i></a>
+          {% else %}
+          <a href="#" class="favorite" poll_id="{{ poll.id }}"><i id='fav-type-{{ poll.id }}' class="iconmg allbtniconcolor fa fa-star fa-lg"></i></a>
+          {% endif %}
+
+        {% else %}
+        <a href="/accounts/login/"><i class="iconmg fa fa-star fa-lg"></i></a>
+        {% endif %}
+
+        {% if request.user.is_authenticated %}
+        <a href="/polls/{{ poll.id }}"><i class="iconmg allbtniconcolor fas fa-info-circle fa-lg"></i></a>
+        {% endif %}
+
+        </h6>
+    </div>
+    {% endif %}
+
+
+
+
+    {% if listtitle == "Favorite" %}
+    <div class="col-xs-11 col-sm-11" style="float:left; background-color: white; width: 80%; border-radius: 3px; padding-top:10px">
+        <h6>
+
+        {% if request.user.is_authenticated %}
+
+          <a href="#" class="favorite" poll_id="{{ poll.id }}"><i style="color:gold;" id='fav-type-{{ poll.id }}' class="iconmg fa fa-star fa-lg"></i></a>
+
+        {% else %}
+        <a href="/accounts/login/"><i class="iconmg fa fa-star fa-lg"></i></a>
+        {% endif %}
+
+
+        {% if request.user.is_authenticated %}
+        <a href="/polls/{{ poll.id }}"><i class="iconmg allbtniconcolor fas fa-info-circle fa-lg"></i></a>
+        {% endif %}
+
+        </h6>
+    </div>
+    {% endif %}
+
+
+
+
+
+    {% if listtitle == "Created" %}
+    <div class="col-xs-11 col-sm-11" style="float:left; background-color: white; width: 80%; border-radius: 3px; padding-top:10px">
+        <h6>
+
+        {% if request.user.is_authenticated %}
+        <a href="/polls/{{ poll.id }}"><i class="iconmg allbtniconcolor fas fa-info-circle fa-lg"></i></a>
+        {% endif %}
+
+        </h6>
+    </div>
+    {% endif %}
+
+
+
+
+
+
+    {% if listtitle == "Detail" %}
+    <div class="col-xs-11 col-sm-11" style="float:left; background-color: white; width: 80%; border-radius: 3px; padding-top:10px">
+
+        <h6>
+
+        {% if user_authorised == True %}
+        <a href='{{ poll.get_update }}' class='btn-link' ><i class="fas fa-edit fa-lg iconmg allbtniconcolor" aria-hidden="true"></i></a>
+        {% endif %}
+
+        <i class="fa fa-share-alt fa-lg iconmg allbtniconcolor" aria-hidden="true" data-toggle="modal" data-target="#ShareModal"></i>
+
+
+        {% if request.user.is_authenticated %}
+
+          {% if favorited == True %}
+          <a href="#" class="favorite iconmg" poll_id="{{ poll.id }}"><i style="color:gold;" id='fav-type-{{ poll.id }}' class="fa fa-star fa-lg"></i></a>
+          {% else %}
+          <a href="#" class="favorite iconmg allbtniconcolor" poll_id="{{ poll.id }}"><i id='fav-type-{{ poll.id }}' class="fa fa-star fa-lg"></i></a>
+          {% endif %}
+
+        {% else %}
+        <a href="/accounts/login/"><i class="fa fa-star fa-lg iconmg"></i></a>
+        {% endif %}
+
+        {% if request.user.is_authenticated %}
+        <i class="fa fa-comment fa-lg iconmg allbtniconcolor" aria-hidden="true" data-toggle="modal" data-target="#CommentModel"></i>
+        {% else %}
+        <a href="/accounts/login/"><i class="fa fa-comment fa-lg iconmg allbtniconcolor"></i></a>
+        {% endif %}
+
+        </h6>
+  
+    </div>
+    {% endif %}

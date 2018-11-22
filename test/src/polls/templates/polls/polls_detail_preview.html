@@ -1,0 +1,204 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% load static %}
+{% load blog_tags %}
+
+{% block meta %}
+     <meta name="title" content={{PT}}>
+     <meta name="description" content={{PT.description}}>
+     <meta name="keywords" content={% for i in Tags %} {{ i }}, {% endfor %}>
+ {% endblock %}
+
+
+
+<style>
+{% block style %}
+
+
+.btn-link{
+  cursor:pointer;
+  padding:0;
+  font-family:inherit;
+  font-size:inherit;
+}
+
+
+{% endblock %}
+</style>
+
+
+
+
+{% block content %}
+
+
+    <div class="card cardstyle">
+      <div class="card-body">
+
+        <h4 class="card-title allfontcolor"><i class="allfontcolor fas fa-eye fa-1x"></i>&nbsp;&nbsp;&nbsp;&nbsp;Preview your post</h4><hr>
+
+        <h5>
+
+          {{ pt.title }}
+
+        </h5>
+
+      <hr>
+
+
+        <h6>
+
+          {% if poll.user_submit.puser.image %}
+          <img src="{{ poll.user_submit.puser.image.url }}" class='cpimgsmall' />
+          {% else %}
+          <img src="{% static 'img/anonymous.jpg' %}" class='cpimgsmall' />
+          {% endif %}
+
+            &nbsp;&nbsp;
+              <a href='{{ Userdetail }}' class='btn-link' ><b>
+              {% if poll.user_submit.puser.name %}
+              {{ poll.user_submit.puser.name }}
+              {% else %}
+              {{ poll.user_submit }}
+              {% endif %}
+              </b></a>
+
+        </h6>
+
+      <hr>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+              {% if poll.image or poll.imageurl %}
+
+                <div class="row row-tip">
+
+                  <div class="col-xs-11 col-sm-11" style="float:left">
+                    <h6>
+                    <b>{{ poll.title|safe }}</b><p class="smallstyle">{{ poll.date|timesince }} ago</p>
+                    </h6><hr style="margin:-1px">
+                  </div>
+
+                  <div class="col-xs-12 col-sm-4 test row-tip-thumb">
+
+                      {% if poll.image %}
+                        <img src="{{ poll.image.url }}" class="img-rounded polllistimg">
+                      {% else %}
+                        <img src="{{ poll.imageurl }}" class="img-rounded polllistimg">
+                      {% endif %}
+                      <br><br>
+
+                  </div>
+
+                  <div class="row">
+
+
+                  <div class="col-xs-12 col-sm-12 row-tip-body" style="float:left"> <!-- changed sm-7 to sm-12 to get the words to flush with all -->
+
+                      <small>
+                      {% if poll.description %}
+                      <div class="Mobilefont Compfont">
+                          <span class="tip-sliced">
+                          {{ poll.description|safe }}
+                          </span>
+
+                      </div>
+                      {% endif %} <!-- poll description -->
+                      </small>
+
+                  </div>
+
+                  </div>
+
+                </div>
+
+
+
+              {% else %}
+
+                <div class="row row-tip">
+
+                  <div class="col-xs-11 col-sm-11" style="float:left;">
+                    <h6>
+                    <b>{{ poll.title|safe }}</b><p class="smallstyle">{{ poll.date|timesince }} ago</p>
+                    </h6><hr style="margin:-4px">
+                  </div>
+
+                  <div class="row">
+                    <div class="col-xs-12 col-sm-12">
+
+                      <small>
+                      {% if poll.description %}
+                        <div class="Mobilefont Compfont">
+                          <span class="tip-sliced">
+                            {{ poll.description|safe }}
+                          </span>
+                        </div>
+                      {% endif %}<!-- poll description -->
+                      </small>
+
+                    </div>
+                  </div>
+
+                </div>
+
+              {% endif %}
+
+
+
+
+      </div>
+    </div>
+
+
+
+
+
+
+
+
+<div class="panel panel-default newpanelpad" style="background-color: lightgrey; border-color: lightgrey">
+
+    <a href="/polls/{{Back}}/edit" class='btn buttonspace btn-sm btn-primary' ><b>Edit Post</b></a>
+
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+
+  <form action='' method='POST'  style="display: inline-block;">{% csrf_token %}
+    <input type="hidden" name="pub_poll_id" value="{{poll.id}}">
+    <input type="submit" class='btn buttonspace btn-sm btn-success'  style="font-weight: bold" value="Confirm Post">
+  </form>
+
+
+</div>
+
+
+
+<!-- polls/{{Back}}/edit -->
+
+{% endblock %}
+
+
+
+
+
+{% block jquery %}
+{#  <script>#}
+
+$(".note-video-clip").attr("width", "100%");
+$(".note-video-clip").attr("height", "300");
+
+{#  </script>#}
+{% endblock %}

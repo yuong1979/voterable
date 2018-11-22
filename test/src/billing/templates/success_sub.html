@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% load staticfiles %}
+
+
+<style>
+{% block style %}
+
+
+{% endblock %}
+</style>
+
+
+{% block head %}
+
+
+{% endblock %}
+
+
+
+
+
+
+
+{% block special %}
+
+
+
+<div class='container'>
+
+
+
+  
+  <div class="card cardstyle">
+    <div class="card-body">
+    <div class="row">
+
+      <div class="col-12 col-sm-6">
+
+        <h4><i class="fas fa-check-circle fa-1x allfontcolor"></i> &nbsp;&nbsp;<span class="card-title allfontcolor">Congratulations!</span></h4>
+
+          <br>
+
+          <b><p class="well">You have successfully subscribed for the {{ subtype }} package.</p></b>
+
+          <br>
+          <b><p>Name :</b> {{ name }}</p>
+          <br>
+          <b><p>Price paid :</b> {{ price }} USD</p>
+          <br>
+          <b><p>Email :</b> {{ email }}</p>
+          <br>
+          <b><p>Invoice number :</b> {{ invoiceno }}</p>
+          <br>
+          <b><p>Subscription Start Date :</b> {{ startdate }}</p>
+          <br>
+          <b><p>Subscription End Date :</b> {{ enddate }}</p>
+          <br>
+
+          <small><p>Please print this for your reference</p></small>
+
+          <br>
+    <a href='{% url 'Home' %}' class='buttonspace btn-sm btn-primary' data-action='show-spinner' ><b>Return to Home</b></a>
+
+      </div>
+
+    </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+{% endblock %}
+
+
+

@@ -1,0 +1,27 @@
+branch-defaults:
+  default:
+    environment: vttestenv
+    group_suffix: null
+  yu_changes:
+    environment: vttestenv1
+environment-defaults:
+  testenv:
+    branch: null
+    repository: null
+  testenv1:
+    branch: null
+    repository: null
+global:
+  application_name: voterable
+  branch: null
+  default_ec2_keyname: ExternalUser
+  default_platform: Python 3.6
+  default_region: ap-southeast-1
+  include_git_submodules: true
+  instance_profile: null
+  platform_name: null
+  platform_version: null
+  profile: null
+  repository: null
+  sc: null
+  workspace_type: Application

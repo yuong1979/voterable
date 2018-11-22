@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% load static %}
+
+<style>
+{% block style %}
+
+
+{% endblock %}
+</style>
+
+
+
+
+
+{% block content %}
+
+
+
+
+
+<div style="margin:20px">
+
+
+
+    <div class="card cardstyle">
+      <div class="card-body">
+
+
+        <h4 class="card-title allfontcolor"><i class="allfontcolor fa fa-tags fa-1x"></i>&nbsp;&nbsp;&nbsp;&nbsp;Tag Lists</h4>
+
+        <hr>
+
+            <div class="col-xs-12 col-sm-6 col-md-4">
+              <form method='GET' action='/tags/'>
+                {% crispy form %}
+              </form>
+            </div>
+            <br>
+
+            {% if taglist %}
+
+              {% for i in taglist %}
+
+                 <a href='{{i.get_absolute_url}}' class="btn btn-outline-primary tagstyle"><b>{{ i }} ({{i.counter}})</b></a>&nbsp;&nbsp;
+
+              {% endfor %}
+
+
+            {% else %}
+            <br>
+              <small><b>There are no entries yet.</b></small>
+            <br>
+            {% endif %}
+
+      </div>
+    </div>
+
+
+
+
+</div> <!-- /container -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+{% endblock %}

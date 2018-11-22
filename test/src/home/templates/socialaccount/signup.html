@@ -1,0 +1,31 @@
+{% extends "socialaccount/base.html" %}
+{% load crispy_forms_tags %}
+{% load i18n %}
+{% load account socialaccount %}
+
+{% block head_title %}{% trans "Signup" %}{% endblock %}
+
+{% block content %}
+<div class='col-sm-6 col-sm-offset-3'>
+<h1>{% trans "Sign In Issue" %}</h1>
+
+{% get_providers as socialaccount_providers %}
+
+
+<p>Please select the first social account that you signed in with</p>
+
+<br><div class="socialaccount_ballot">
+
+<!--   <ul class="socialaccount_providers"> -->
+    {% include "socialaccount/snippets/provider_list.html" with process="login" %}
+<!--   </ul> -->
+
+</div>
+
+{% include "socialaccount/snippets/login_extra.html" %}
+
+
+
+<div>
+
+{% endblock %}
