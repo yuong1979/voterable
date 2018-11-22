@@ -99,7 +99,6 @@ class PollTopicsView(ListView, FormView):
         context = super(PollTopicsView, self).get_context_data(**kwargs)
 
 
-
         # if the user clicks on the the quick links from basepage it doesnt have a saved session so 
         # the cat will be not capture anything and result in error therefore specify cat as pop
 
