@@ -15,6 +15,7 @@ from polls.models import Ptype, PollItem
 from django.contrib.auth.models import User
 from analytics.models import ViewPollTypeUnique, ViewPollItemsUnique, Ranking
 from django.db.models import Sum
+from messaging.models import Message
 
 class PUserDetail(DetailView):
     model = PUser
@@ -31,49 +32,93 @@ class PUserDetail(DetailView):
 
         context["user"] = self.object
 
-        context["pollsCreated"] = Ptype.objects.filter(c_user=user).count()
+        puser = PUser.objects.get(user=user)
+
+
+        # Count the number polls that the user has created
         context["pollsECreated"] = PollItem.objects.filter(user_submit=user).count()
 
 
-        user = PUser.objects.get(user=user)
+        # count the number of times users voted
+        try:
+            context["votedtimes"] = PollVoting.objects.filter(vote_user=user).count()
+        except:
+            context["votedtimes"] = 0
 
-        context["points"] = user.score
-        context["rank"] = user.rank
+
+        # extracting the count for the number of times the users have been voted up for polls and comments
+        posi = PollItem.objects.filter(user_submit=user).aggregate(Sum('posi')).get('posi__sum')
+        nega = PollItem.objects.filter(user_submit=user).aggregate(Sum('nega')).get('nega__sum')
+
+        comment_likes = Message.objects.filter(senduser=user).aggregate(Sum('likes')).get('likes__sum')
+
+        if posi is None:
+            posi = 0
+        if nega is None:
+            nega = 0
+        if comment_likes is None:
+            comment_likes = 0
+
+        # nega is a negative number so this below should be a plus
+        pvote = (posi + nega + comment_likes)
+
+        context["points"] = pvote
+        context["downvotes"] = nega
+        context["upvotes"] = posi
+        context["comment_likes"] = comment_likes
 
 
 
-        # context["votes_poll_entries"] =  PollItem.objects.filter(user_submit=user).aggregate(Sum('score')).get('score__sum')
+        # counting the number of users who have viewed the user created poll
+        # get user created pitems
+        created_items = PollItem.objects.filter(user_submit=user)
+        # get list of views that belong to the pytypes created by user
+        pitem_list = ViewPollItemsUnique.objects.filter(p_item__in=created_items)
+        # get user created polls - you need to add distinct if you want to only count the unique no of visitors
+        context["votes_poll_entries_views"] = pitem_list.values_list('userview',flat=True).count()
 
-        # pvote = PollItem.objects.filter(user_submit=user).aggregate(Sum('score')).get('score__sum')
 
-        # if pvote is None:
-        #     context["votes_poll_entries"] = 0
-        # else:
-        #     context["votes_poll_entries"] = pvote
 
-        # # get user created pitems
-        # created_items = PollItem.objects.filter(user_submit=user)
-        # # get list of views that belong to the pytypes created by user
-        # pitem_list = ViewPollItemsUnique.objects.filter(p_item__in=created_items)
-        # # get user created polls
-        # context["votes_poll_entries_views"] = pitem_list.values_list('userview',flat=True).distinct().count()
-        # context["points"] = context["votes_poll_entries_views"] + context["votes_poll_entries"]
+        #ranks the user
+        pt = context["points"]
 
-        # pt = context["points"]
+        if pt < 0:
+            pt = 0
 
-        # if pt < 0:
-        #     pt = 0
+        rk = Ranking.objects.get(low_score__lte=pt, high_score__gte=pt)
 
-        # #vlookup ranking table
-        # rk = Ranking.objects.get(low_score__lte=pt, high_score__gte=pt)
+        context["rank"] = rk
 
-        # context["rank"] = rk
+        #calculate next rank statistics
+        next_id = rk.id + 1
+        nextrk = Ranking.objects.get(id = next_id)
+        #calculate the number of points to the next rank
+        context["nextpts"] = int(nextrk.low_score)
+        context["nextrank"] = nextrk
+        context["nextfrdays"] = nextrk.add_days
 
-        # # saving the data inside user profile
-        # user = PUser.objects.get(user=user)
-        # user.rank = str(rk)
-        # user.score = pt
-        # user.save()
+        #recording the user rank and points inside the PUser profile
+        puser_obj = PUser.objects.get(user=user)
+        puser_obj.rank = str(rk)
+        puser_obj.score = pt
+        puser_obj.save()
+
+
+
+
+
+
+
+
+        #retrieving pollitems lists created by user
+        user_obj = User.objects.get(puser=puser)
+        ptype_userc = Ptype.objects.filter(pollitem__user_submit=user_obj, active=True).distinct()
+        if ptype_userc:
+            context["pollcreatelist"] = ptype_userc
+
+
+
+
 
 
         return context

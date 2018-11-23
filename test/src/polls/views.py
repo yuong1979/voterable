@@ -35,7 +35,7 @@ from django.utils.timezone import utc
 # import datetime
 from itertools import chain
 from notifications.models import Notification
-
+import time
 
 # class PollVoteTopicsView(ListView, FormView):
 #     model = Ptype
@@ -862,13 +862,17 @@ class PollsListView(ListView, PollTypeMixin):
 
             #retrieve the entries or whether or not the users voted
             user = self.request.user
+
+            # start = time.time()
             voteposi = PollVoting.objects.filter(vote_user=user, vote=1).values_list("poll_id",flat=True)
             pollposi = PollItem.objects.filter(id__in=voteposi, polltype=ptype_obj)
-            # votenega = PollVoting.objects.filter(vote_user=user, vote=-1).values_list("poll_id",flat=True)
-            # pollnega = PollItem.objects.filter(id__in=votenega, polltype=ptype_obj)
+            votenega = PollVoting.objects.filter(vote_user=user, vote=-1).values_list("poll_id",flat=True)
+            pollnega = PollItem.objects.filter(id__in=votenega, polltype=ptype_obj)
+            # end = time.time()
+            # print(end - start)
 
             context['pollposi'] = pollposi
-            # context['pollnega'] = pollnega
+            context['pollnega'] = pollnega
 
 
             #exclude entries that have been voted down more then 10 votes
@@ -1915,8 +1919,6 @@ def api_votes(request):
             vote_obj.save()
 
             poll.calc_score()
-
-
 
             #include the below if you need to vote numbers back to the user
             return JsonResponse({"result": poll.score, "resultvote": vote_obj.vote, "pvote": poll.posi})

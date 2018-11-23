@@ -161,16 +161,23 @@ class PollItem(models.Model):
 
 
     def calc_score(self):
+
         votes = PollVoting.objects.filter(poll=self).aggregate(Sum('vote')).get('vote__sum')
+        if votes is None:
+            votes = 0
+
         pvotes = PollVoting.objects.filter(poll=self, vote__gte=0).aggregate(Sum('vote')).get('vote__sum')
+        if pvotes is None:
+            pvotes = 0
+
         nvotes = PollVoting.objects.filter(poll=self, vote__lte=0).aggregate(Sum('vote')).get('vote__sum')
+        if nvotes is None:
+            nvotes = 0
 
         self.posi = pvotes
         self.nega = nvotes
         self.score = votes
-
         self.save()
-
         # sum_lst = ptype_lst.aggregate(Sum('score'))
         # self.score = votes
         # self.save()
