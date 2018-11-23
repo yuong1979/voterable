@@ -7,7 +7,7 @@
     {% if listtitle == "All" %}
 
 
-    <span class="" id="poll-badge-{{ poll.id }}" style="margin:10px; font-size: 12px; white-space:nowrap">
+    <span class="" id="poll-badge-{{ poll.id }}" style="margin:10px; font-size: 12px; white-space:nowrap"><br><br>
 <!--       <b id="poll-score-{{ poll.id }}">{{ poll.score }} </b> -->
                       <b id="pvote-{{ poll.id }}">{{ poll.posi }} </b>
       <b style="font-size: 12px">Upvotes</b>
@@ -22,9 +22,10 @@
         <a href="#" class="vote-up" poll_id="{{ poll.id }}"><i id="pcolor-id-{{ poll.id }}" class="iconmg allbtniconcolor fas fa-arrow-alt-circle-up fa-lg"></i></a>
         {% endif %}
 
-
         {% if request.user.is_authenticated %}
-        <i class="iconmg allbtniconcolor fa fa-flag fa-lg modalclick" id="{{ poll.id }}" aria-hidden="true" data-toggle="modal" data-target="#ReportModal"></i>
+            {% if poll.user_submit != request.user %}
+            <i class="iconmg allbtniconcolor fa fa-flag fa-lg modalclick" id="{{ poll.id }}" aria-hidden="true" data-toggle="modal" data-target="#ReportModal"></i>
+            {% endif %}
         {% else %}
         <a href="/accounts/login/"><i class="iconmg fa fa-flag fa-lg"></i></a>
         {% endif %}
