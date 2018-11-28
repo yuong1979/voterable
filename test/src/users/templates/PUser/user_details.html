@@ -82,18 +82,37 @@
           <div class="col-12" style="padding:10px;">
 
             <ul class="list-group">
+
               <li class="list-group-item">
-                <small><b>Reputation Points:</b></small>
+                <b class="wdstyle">Reputation Points:</b>
                 <span class="badge badge-pill badge-secondary" style="float:right"> {{points}} </span>
               </li>
+
               <li class="list-group-item">
-                <small><b>Rank:</b></small>
+                <b class="wdstyle">Rank:</b>
                 <span class="badge badge-pill badge-secondary" style="float:right"> {{rank}} </span>
               </li>
+
               <li class="list-group-item">
-                <small><b>Tips Created:</b></small>
-                <span class="badge badge-pill badge-secondary" style="float:right"> {{pollsECreated}} </span>
+                <b class="wdstyle">Tips created:</b>
+                <span class="badge badge-pill badge-secondary" style="float:right"> {{ pollsECreated }} </span>
               </li>
+
+              <li class="list-group-item">
+                <b class="wdstyle">Times tips were viewed:</b>
+                <span class="badge badge-pill badge-secondary" style="float:right"> {{ votes_poll_entries_views }} </span>
+              </li>
+
+              <li class="list-group-item">
+                <b class="wdstyle">Tip Upvotes:</b>
+                <span class="badge badge-pill badge-secondary" style="float:right"> {{ upvotes }} </span>
+              </li>
+
+              <li class="list-group-item">
+                <b class="wdstyle">Comment Upvotes:</b>
+                <span class="badge badge-pill badge-secondary" style="float:right"> {{ comment_likes }} </span>
+              </li>
+
             </ul>
             
           </div>
@@ -105,6 +124,36 @@
 
       </div>
     </div>
+
+
+{% if pollcreatelist %}
+    <div class="card cardstyle">
+      <div class="card-body">
+        <h4 class="card-title allfontcolor"><i class="allfontcolor fas fa-edit fa-1x"></i>&nbsp;&nbsp;&nbsp;&nbsp;User Created Tips</h4><hr>
+
+        <ul class="nav nav-pills">
+
+              {% for i in pollcreatelist %}
+
+                <div class="col-xs-12 col-sm-4">
+                <div class="boxstyle">
+
+                    <b><a href="/polls_favorite/?create={{ i.slug }}">{{ i.title }}</a></b>
+
+                      {% if i.freepoll == True %}
+                      &nbsp;&nbsp;<i class="allfontcolor fas fa-check-circle fa-1x"></i><b class="allfontcolor"></b>
+                      {% endif %}
+
+                </div>
+                </div>
+
+              {% endfor %}
+
+          <br>
+        </ul>
+      </div>
+    </div>
+{% endif %}
 
 
 </div> <!-- /container -->
