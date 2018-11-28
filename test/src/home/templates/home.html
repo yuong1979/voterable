@@ -54,22 +54,27 @@
     messaging
             .requestPermission()
             .then(function () {
-//                MsgElem.innerHTML = "Notification permission granted."
                 console.log("Notification permission granted.");
                 // get the token in the form of promise
                 return messaging.getToken()
             })
             .then(function(token) {
-//                TokenElem.innerHTML = "token is : " + token
                 console.log(token);
+                $.post("/fcm/v1/devices/",
+                    {
+                        "dev_id": token,
+                        "reg_id": token,
+                        "name":"voterable device"
+                    },
+                    function(data, status){
+                        console.log("Data: " + data + "\nStatus: " + status);
+                    });
             })
             .catch(function (err) {
-//                ErrElem.innerHTML =  ErrElem.innerHTML + "; " + err
                 console.log("Unable to get permission to notify.", err);
             });
         messaging.onMessage(function(payload) {
             console.log("Message received. ", payload);
-//            NotisElem.innerHTML = NotisElem.innerHTML + JSON.stringify(payload)
         });
 
 

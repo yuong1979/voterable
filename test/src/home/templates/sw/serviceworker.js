@@ -51,20 +51,23 @@ self.addEventListener('install', function(event) {
 
 self.addEventListener('fetch', function(e) {
 //  console.log('[ServiceWorker] Fetch', e.request.url);
-  e.respondWith(
-    fetch(e.request).then(function(response){
-        var response2 = response.clone();
-         caches.open(staticCacheName).then(function(cache) {
-              cache.match(e.request).then(function(r){
-                    cache.put(e.request, response2);
+//  console.log('[ServiceWorker] Fetch', e.request.method);
+  if(e.request.method == 'GET'){
+      e.respondWith(
+        fetch(e.request).then(function(response){
+            var response2 = response.clone();
+             caches.open(staticCacheName).then(function(cache) {
+                  cache.match(e.request).then(function(r){
+                        cache.put(e.request, response2);
+                  });
               });
-          });
-         return response;
-        }
-      ).catch(function() {
-          return caches.match(e.request);
-       })
-  );
+             return response;
+            }
+          ).catch(function() {
+              return caches.match(e.request);
+           })
+      );
+  }
 });
 
 
