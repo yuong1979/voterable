@@ -42,7 +42,7 @@ from django.views.decorators.csrf import csrf_exempt
 
 @shared_task(name='send-email-task')
 def send_email_task():
-    # testasyncemail()
+    testasyncemail()
     print ("boom it works")
 
 

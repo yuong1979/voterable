@@ -33,7 +33,7 @@ class Message(models.Model):
 		self.save()
 		return totallikes
 
-
+	#dont think the below works because the reverse should be using a url name and not class name
 	def get_absolute_url(self):
 
 		return reverse("PollDetailView", kwargs={"pk":self.pollitem.pk})
