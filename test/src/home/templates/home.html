@@ -18,7 +18,6 @@
 {% block pwa %}
 
 
-<script src="https://www.gstatic.com/firebasejs/5.5.7/firebase.js"></script>
 <script src="https://www.gstatic.com/firebasejs/5.5.7/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/5.5.7/firebase-messaging.js"></script>
 
@@ -26,12 +25,8 @@
 
     // Initialize Firebase
       var config = {
-        apiKey: "AIzaSyCvd2Dw2i7rtNDByl6mmplyPebHMUy9bis",
-        authDomain: "voterable-yuong.firebaseapp.com",
-        databaseURL: "https://voterable-yuong.firebaseio.com",
-        projectId: "voterable-yuong",
-        storageBucket: "voterable-yuong.appspot.com",
-        messagingSenderId: "838519391446"
+        apiKey: "{{API_KEY}}",
+        messagingSenderId: "{{SENDER_ID}}"
       };
       firebase.initializeApp(config);
       const messaging = firebase.messaging();
@@ -48,29 +43,48 @@
         },function(err){
             console.log('service worker not registered ',err);
         });
-    }
+        
 
 
-    messaging
-            .requestPermission()
-            .then(function () {
-//                MsgElem.innerHTML = "Notification permission granted."
-                console.log("Notification permission granted.");
-                // get the token in the form of promise
-                return messaging.getToken()
-            })
-            .then(function(token) {
-//                TokenElem.innerHTML = "token is : " + token
-                console.log(token);
-            })
-            .catch(function (err) {
-//                ErrElem.innerHTML =  ErrElem.innerHTML + "; " + err
-                console.log("Unable to get permission to notify.", err);
-            });
-        messaging.onMessage(function(payload) {
-            console.log("Message received. ", payload);
-//            NotisElem.innerHTML = NotisElem.innerHTML + JSON.stringify(payload)
-        });
+    {% if register_token %}
+            function getCookieValue(a) {
+                    var b = document.cookie.match('(^|;)\\s*' + a + '\\s*=\\s*([^;]+)');
+                    return b ? b.pop() : '';
+                }
+            messaging
+                    .requestPermission()
+                    .then(function () {
+                        console.log("Notification permission granted.");
+                        // get the token in the form of promise
+                        return messaging.getToken()
+                    })
+                    .then(function(token) {
+                        console.log(token);
+                        var $crf_token = getCookieValue("csrftoken");
+                        $.ajax({
+                                type: "POST",
+                                url: "/fcm/v1/devices/",
+                                data:{
+                                            "dev_id": token,
+                                            "reg_id": token,
+                                            "name":"voterable device"
+                                       },
+                                headers:{"X-CSRFToken": $crf_token},
+                                success: function (data,status) {
+                                    console.log("Data: " + data + "\nStatus: " + status);
+                                },
+                                error: function () {
+                                    console.log("There was an error")
+                                }
+                            });
+                    })
+                    .catch(function (err) {
+                        console.log("Unable to get permission to notify.", err);
+                    });
+                messaging.onMessage(function(payload) {
+                    console.log("Message received. ", payload);
+                });
+    {% endif %}
 
 
 
