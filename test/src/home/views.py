@@ -261,6 +261,12 @@ class HomeView(TemplateView):
 
         context = super(HomeView, self).get_context_data(*args, **kwargs)
 
+        # Firebase context variables
+        context['API_KEY'] = settings.API_KEY
+        context['SENDER_ID'] = settings.SENDER_ID
+        context['register_token'] = False
+
+
         # if user is not authenticated to display generic poll stuff
         if not self.request.user.is_authenticated():
 
@@ -302,7 +308,8 @@ class HomeView(TemplateView):
             context["tags"] = TagPoll.objects.filter(active=True)[:30]
 
         else:
-            # if user is authenticated 
+            # if user is authenticated
+            context['register_token'] = True
 
             ##################################################################
             ######collecting user favorite polls/tags and created polls#######
@@ -765,4 +772,9 @@ class ContactView(FormView):
 # View to serve serviceworker
 class ServiceWorkerview(TemplateView):
     template_name = 'sw/serviceworker.js'
-    content_type = 'application/javascript' 
+    content_type = 'application/javascript'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['SENDER_ID'] = settings.SENDER_ID
+        return context
