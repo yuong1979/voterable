@@ -25,11 +25,11 @@ app.conf.beat_schedule = {
     #     'schedule': 10.0,
     # },
 
-    # send email every monday at 8 a.m.
-    'send_email_monday': {
-        'task': 'send-email-task',
-        'schedule': crontab(hour=17, minute=39, day_of_week=3),
-    },
+    # # send email every monday at 8 a.m.
+    # 'send_email_monday': {
+    #     'task': 'send-email-task',
+    #     'schedule': crontab(hour=8, minute=0, day_of_week=1),
+    # },
 
 }
 
