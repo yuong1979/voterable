@@ -40,18 +40,18 @@ from django.views.decorators.csrf import csrf_exempt
 
 #Two ways to run celery tasks
 
-@shared_task(name='send-email-task')
-def send_email_task():
-    # testasyncemail()
-    print ("boom it works")
+# @shared_task(name='send-email-task')
+# def send_email_task():
+#     # testasyncemail()
+#     print ("boom it works")
 
 
 
 
-@periodic_task(run_every=crontab(hour=14, minute=38, day_of_week="tue"))
+@periodic_task(run_every=crontab(hour=22, minute=27, day_of_week="fri"))
 def every_monday_morning():
     #insert the tasks here
-    # testasyncemail()
+    testasyncemail()
     print ("Ran successfully")
 
 
