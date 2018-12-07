@@ -121,6 +121,4 @@ elasticbeanstalk/*
 !elasticbeanstalk/*.global.yml
 
 # exclude setting files
-local.py
-test.py
 production.py
