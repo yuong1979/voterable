@@ -24,6 +24,8 @@ class PollAdmin(admin.ModelAdmin):
     search_fields = ['title']
     forms = PollModelForm
 
+    def __str__(self,obj):
+        return obj.__str__()
 
 class PollVotingAdmin(admin.ModelAdmin):
     list_display = ('id','vote_user','poll','vote')

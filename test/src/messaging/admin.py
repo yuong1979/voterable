@@ -10,5 +10,8 @@ class MessageAdmin(admin.ModelAdmin):
 	class Meta:
 		model = Message
 
+	def __str__(self,obj):
+		return obj.__str__()
+
 
 admin.site.register(Message, MessageAdmin)

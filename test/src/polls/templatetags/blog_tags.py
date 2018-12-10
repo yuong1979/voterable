@@ -15,8 +15,8 @@ def total_posts():
 	return test
 
 
-# assignment_tags are for queries
-@register.assignment_tag
+# previously assignment_tags - now changed to simple_tag - for queries
+@register.simple_tag
 def get_most_commented_posts(count=5):
 	test1 = Message.objects.filter()
 	return test1

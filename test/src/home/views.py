@@ -171,7 +171,7 @@ class PollRedirect(TemplateView):
     def dispatch(self, *args, **kwargs):
         dispatch = super(PollRedirect, self).dispatch(*args, **kwargs)
         #redirect to user create checkbox on terms and conditions not checked but user has signed in
-        if self.request.user.is_authenticated():
+        if self.request.user.is_authenticated:
             try: 
                 test = PUser.objects.get(user_id=self.request.user.id)
             except:
@@ -203,7 +203,7 @@ class HomeView(TemplateView):
     def dispatch(self, *args, **kwargs):
         dispatch = super(HomeView, self).dispatch(*args, **kwargs)
         #exit to home if user is not authenticated or exit to terms and condition agreement if user does agree
-        if self.request.user.is_authenticated():
+        if self.request.user.is_authenticated:
             try:
                 test = PUser.objects.get(user_id=self.request.user.id)
             except:
@@ -268,7 +268,7 @@ class HomeView(TemplateView):
 
 
         # if user is not authenticated to display generic poll stuff
-        if not self.request.user.is_authenticated():
+        if not self.request.user.is_authenticated:
 
             #######################################################################################
             ######collecting milestones tip tips and top polls  for display on landing page #######
@@ -550,7 +550,7 @@ def SubNews(self, *args, **kwargs):
 def api_subnews(request):
 
     if request.POST:
-        if request.user.is_authenticated():
+        if request.user.is_authenticated:
 
             urequest_id = request.POST.get('urequest_id')
 
@@ -592,7 +592,7 @@ class ContactView(FormView):
         dispatch = super(ContactView, self).dispatch(*args, **kwargs)
         
         #redirect to user create checkbox on terms and conditions not checked but user has signed in
-        if self.request.user.is_authenticated():
+        if self.request.user.is_authenticated:
             try: 
                 print (PUser.objects.get(user_id=self.request.user.id))
             except:
@@ -608,7 +608,7 @@ class ContactView(FormView):
         # grab the current set of form #kwargs
         kwargs = super(ContactView, self).get_form_kwargs()
         # Update the kwargs with the user_id, so that it can be pushed as a parameter into the form
-        if self.request.user.is_authenticated():
+        if self.request.user.is_authenticated:
             kwargs['loggedin'] = True
         return kwargs
 
@@ -617,7 +617,7 @@ class ContactView(FormView):
 
 
 
-        if self.request.user.is_authenticated():
+        if self.request.user.is_authenticated:
             # form_email = self.request.user.email
 
             if self.request.user.email != "":

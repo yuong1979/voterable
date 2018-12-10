@@ -23,7 +23,7 @@ def api_survey(request):
 
 	if request.POST:
 
-		if request.user.is_authenticated():
+		if request.user.is_authenticated:
 			#inserts the posted ajax into the form to check for issues
 			form = surveyForm(request.POST)
 

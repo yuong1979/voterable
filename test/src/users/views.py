@@ -16,6 +16,8 @@ from django.contrib.auth.models import User
 from analytics.models import ViewPollTypeUnique, ViewPollItemsUnique, Ranking
 from django.db.models import Sum
 from messaging.models import Message
+from mixins.mixins import LoginRequiredMixin
+
 
 class PUserDetail(DetailView):
     model = PUser
@@ -128,7 +130,7 @@ class PUserDetail(DetailView):
 
 
 
-class PUserCreate(CreateView):
+class PUserCreate(CreateView, LoginRequiredMixin):
     model = PUser
     form_class = PUserAddForm
     # fields = ['name']
@@ -136,6 +138,21 @@ class PUserCreate(CreateView):
     template_name = 'PUser/create.html'
     # function = FunctionType.objects.filter(title="Employer").first()
 
+    def dispatch(self, *args, **kwargs):
+        dispatch = super(PUserCreate, self).dispatch(*args, **kwargs)
+
+        #exit if user is not authenticated
+        if not self.request.user.is_authenticated:
+            return redirect('Home')
+
+        #exit to updating terms and condition agreement if users already signed up
+        try:
+            user = PUser.objects.get(user_id=self.request.user.id)
+            return redirect(reverse('PUserUpdate', kwargs={'pk':user.id}))
+        except:
+            pass
+
+        return dispatch
 
 
     def form_valid(self, form):
@@ -183,8 +200,8 @@ class PUserUpdate(UserChangeManagerMixin,UpdateView): #if user is request user o
     def dispatch(self, *args, **kwargs):
         dispatch = super(PUserUpdate, self).dispatch(*args, **kwargs)
 
-        #exit if user did not create poll and is not a staff
-        if not (self.object.user == self.request.user) and not (self.request.user.is_staff):
+        #exit if user did not create poll
+        if self.object.user != self.request.user:
             return redirect('Home')
 
         return dispatch

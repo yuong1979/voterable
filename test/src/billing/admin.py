@@ -9,11 +9,14 @@ class TransactionAdmin(admin.ModelAdmin):
     search_fields = ['transaction_id']
     list_filter = ('timestamp', 'price')
 
+    def __str__(self,obj):
+        return obj.__str__()
 
 class PriceToDaysAdmin(admin.ModelAdmin):
     list_display = ('id','label','cashprice','daystoadd','subplan','discount','active')
 
-
+    def __str__(self,obj):
+        return obj.__str__()
 
 admin.site.register(Transaction, TransactionAdmin)
 admin.site.register(PriceToDays, PriceToDaysAdmin)

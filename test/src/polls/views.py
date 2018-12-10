@@ -509,7 +509,7 @@ def api_sugglikes(request):
     sugg_id =  request.POST.get('sugg_id')
 
     if request.POST:
-        if request.user.is_authenticated():
+        if request.user.is_authenticated:
 
             sugg_id =  request.POST.get('sugg_id')
             sugg_obj = SuggestedPoll.objects.filter(id=sugg_id, vote_user=request.user)
@@ -591,7 +591,7 @@ class PollListCreate(LoginRequiredMixin, CreateView):
     # def dispatch(self, *args, **kwargs):
     #     dispatch = super(PollRecoView, self).dispatch(*args, **kwargs)
     #     #redirect to user create checkbox on terms and conditions not checked but user has signed in
-    #     if self.request.user.is_authenticated():
+    #     if self.request.user.is_authenticated:
     #         try: 
     #             test = PUser.objects.get(user_id=self.request.user.id)
     #         except:
@@ -1680,7 +1680,7 @@ def api_report(request):
 
     if request.POST:
 
-        if request.user.is_authenticated():
+        if request.user.is_authenticated:
 
             form = reportForm(request.POST)
 
@@ -1775,7 +1775,7 @@ def api_like(request):
     msg_id =  request.POST.get('msg_id')
 
     if request.POST:
-        if request.user.is_authenticated():
+        if request.user.is_authenticated:
 
             msg_id =  request.POST.get('msg_id')
             # poll_id =  request.POST.get('poll_id')
@@ -1820,7 +1820,7 @@ def api_like(request):
 def api_fav(request):
 
     if request.POST:
-        if request.user.is_authenticated():
+        if request.user.is_authenticated:
             poll_id =  request.POST.get('poll_id')
             pollitem_obj = PollItem.objects.get(id=poll_id)
             poll_fav = PollFav.objects.filter(poll=pollitem_obj, fav_user=request.user)
@@ -1876,7 +1876,7 @@ def api_votes(request):
 
     if request.POST:
 
-        if request.user.is_authenticated():
+        if request.user.is_authenticated:
 
             # #if no longer the same year implement this in the new year to close off the year
             # todateyear = datetime.today().year
