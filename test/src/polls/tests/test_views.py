@@ -246,7 +246,7 @@ class TestViews(TestCase):
 
 		self.client.login(username="notcreateuser", password="secret123")
 		res = self.client.get(path, data)
-		assert res.status_code == 200, 'users can view their favorite list'
+		assert res.status_code == 200, 'users can view their create list'
 
 
 

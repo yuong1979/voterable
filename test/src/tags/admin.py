@@ -24,12 +24,16 @@ from tags.models import TagPoll, TopicPoll
 class TopicPollAdmin(admin.ModelAdmin):
 	list_display = ('title', 'active')
 
+	def __str__(self,obj):
+		return obj.__str__()
 
 class TagPollAdmin(admin.ModelAdmin):
 	list_display = ('title', 'active', 'counter')
 	search_fields = ['title']
 	# ordering = ('-counter',)
 
+	def __str__(self,obj):
+		return obj.__str__()
 
 # admin.site.register(Ptype, PtypeAdmin)
 

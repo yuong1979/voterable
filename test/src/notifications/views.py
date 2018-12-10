@@ -78,7 +78,7 @@ def get_notifications_ajax(request):
 class MsgCountView(View):
 	def get(self, request, *args, **kwargs):
 		#counting the number of notification a users have on the navbar
-		if request.user.is_authenticated():
+		if request.user.is_authenticated:
 			
 			notifications = Notification.objects.all_for_user(request.user).unread()
 			# removed recent because you want to show how many unread messages instead of only recent ones

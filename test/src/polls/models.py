@@ -142,8 +142,8 @@ class PollItem(models.Model):
     def get_update(self):
         return reverse('polls_detail_update', kwargs={'pk': self.pk})
 
-    def get_delete(self):
-        return reverse('polls_detail_delete', kwargs={'pk': self.pk})
+    # def get_delete(self):
+    #     return reverse('polls_detail_delete', kwargs={'pk': self.pk})
 
     def get_absolute_url(self):
         return reverse("polls_detail", kwargs={"pk":self.pk})

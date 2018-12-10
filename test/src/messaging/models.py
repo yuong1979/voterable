@@ -3,7 +3,7 @@ from __future__ import unicode_literals
 from django.db import models
 
 from polls.models import PollItem
-
+from django.core.urlresolvers import reverse
 # Create your models here.
 from django.contrib.auth.models import User
 # from django.conf import settings
@@ -33,10 +33,10 @@ class Message(models.Model):
 		self.save()
 		return totallikes
 
-
+	#dont think the below works because the reverse should be using a url name and not class name
 	def get_absolute_url(self):
 
-		return reverse("PollDetailView", kwargs={"pk":self.pollitem.pk})
+		return reverse("polls_detail", kwargs={"pk":self.pollitem.pk})
 
 	# def check_like(self, user):
 

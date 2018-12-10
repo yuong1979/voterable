@@ -292,6 +292,18 @@ class StripeCheckOut(LoginRequiredMixin, TemplateView):
 class SuccessSub(LoginRequiredMixin, TemplateView):
 	template_name = "success_sub.html"
 
+
+	def dispatch(self, *args, **kwargs):
+		dispatch = super(SuccessSub, self).dispatch(*args, **kwargs)
+
+		#if credit package id is not selected to exit
+		try:
+			subtype_id = self.request.session.get("subtype_id")
+		except:
+			return reverse('Home')
+		return dispatch
+
+
 	def get_context_data(self, *args, **kwargs):
 		context = super(SuccessSub, self).get_context_data(*args, **kwargs)
 

@@ -22,7 +22,7 @@ class TagAllView(ListView, FormView):
 		dispatch = super(TagAllView, self).dispatch(*args, **kwargs)
 
 		#redirect to user create checkbox on terms and conditions not checked but user has signed in
-		if self.request.user.is_authenticated():
+		if self.request.user.is_authenticated:
 			try: 
 				test = PUser.objects.get(user_id=self.request.user.id)
 			except:
@@ -59,7 +59,7 @@ class TagView(DetailView):
 	def dispatch(self, *args, **kwargs):
 		dispatch = super(TagView, self).dispatch(*args, **kwargs)
 		#redirect to user create checkbox on terms and conditions not checked but user has signed in
-		if self.request.user.is_authenticated():
+		if self.request.user.is_authenticated:
 			try: 
 				test = PUser.objects.get(user_id=self.request.user.id)
 			except:
@@ -67,9 +67,9 @@ class TagView(DetailView):
 
 		return dispatch
 
-	def get_object(self, *args, **kwargs):
-		obj = super(TagView, self).get_object(*args, **kwargs)
-		return obj
+	# def get_object(self, *args, **kwargs):
+	# 	obj = super(TagView, self).get_object(*args, **kwargs)
+	# 	return obj
 
 
 	def get_context_data(self, **kwargs):
@@ -78,15 +78,16 @@ class TagView(DetailView):
 		tag = self.object
 		context["tag"] = tag
 
-		if self.request.user.is_authenticated():
+		if self.request.user.is_authenticated:
 			#see of the tag has been favorited by the user
-			test = TagPoll.objects.filter(title=tag, tagfav=self.request.user).first()
-			if test is None:
+			favtag = TagPoll.objects.filter(title=tag, tagfav=self.request.user).first()
+			if favtag is None:
 				context["fav"] = False
 			else:
 				context["fav"] = True
 		else:
 			context["fav"] = False
+
 
 		tag_lst = TagPoll.objects.filter(title=tag)
 		p_lst = tag_lst.values_list("polltype",flat=True)
@@ -105,7 +106,7 @@ def api_fav(request):
 
 	if request.POST:
 
-		if request.user.is_authenticated():
+		if request.user.is_authenticated:
 			tag_id =  request.POST.get('tag_id')
 			tagitem_obj = TagPoll.objects.get(id=tag_id)
 			tag_fav = TagPoll.objects.filter(title=tagitem_obj, tagfav=request.user)

@@ -16,12 +16,16 @@ class PtypeAdmin(admin.ModelAdmin):
     search_fields = ['title']
     list_filter = ('location', 'topic')
 
+    def __str__(self,obj):
+        return obj.__str__()
 
 class PollAdmin(admin.ModelAdmin):
     list_display = ('id','title', 'allowed', 'published', 'user_submit', 'score', 'date', 'modifieddate')
     search_fields = ['title']
     forms = PollModelForm
 
+    def __str__(self,obj):
+        return obj.__str__()
 
 class PollVotingAdmin(admin.ModelAdmin):
     list_display = ('id','vote_user','poll','vote')

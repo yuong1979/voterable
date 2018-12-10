@@ -6,9 +6,15 @@ from analytics.models import ViewPollItemsUnique, ViewPollTypeUnique, Ranking, S
 class ViewPollItemsUniqueAdmin(admin.ModelAdmin):
     list_display = ('p_item', 'vcount', 'updated', 'timestamp')
 
+    def __str__(self,obj):
+        return obj.__str__()
+
 class ViewPollTypeUniqueAdmin(admin.ModelAdmin):
     list_display = ('p_type', 'id', 'vcount', 'ecount', 'updated', 'timestamp')
 
+    def __str__(self,obj):
+        return obj.__str__()
+        
 class RankingAdmin(admin.ModelAdmin):
     list_display = ('__str__', 'low_score', 'high_score', 'add_days')
 

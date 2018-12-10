@@ -22,4 +22,8 @@ class PUserAdmin(admin.ModelAdmin):
 		model = PUser
 
 
+	def __str__(self,obj):
+		return obj.__str__()
+
+
 admin.site.register(PUser, PUserAdmin)

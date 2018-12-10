@@ -26,8 +26,12 @@ class Transaction(models.Model):
 	# payment method
 	# last_four
 
-	def __unicode__(self):
-		return "%s" %(self.transaction_id)
+	# old
+	# def __unicode__(self):
+	# 	return "%s" %(self.transaction_id)
+
+	def __str__(self):
+		return str(self.transaction_id)
 
 
 

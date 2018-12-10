@@ -34,8 +34,7 @@ class UserChangeManagerMixin(object):
 class PollTypeMixin(object):
 	def get_pobject(self, *args, **kwargs):
 		type_slug = self.request.GET.get("type")
-		chosen_ptype = Ptype.objects.get(slug = type_slug)
-		poll_type = chosen_ptype
+		poll_type = Ptype.objects.get(slug = type_slug)
 		return poll_type
 
 
