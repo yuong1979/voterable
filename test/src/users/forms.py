@@ -149,8 +149,8 @@ class PUserEditForm(forms.ModelForm):
 
 	def clean_description(self):
 		description = self.cleaned_data['description']
-		if len(str(description)) > 500:
-			raise forms.ValidationError("Please use less then 500 characters")
+		if len(str(description)) > 300:
+			raise forms.ValidationError("Please use less then 300 characters")
 		return description
 
 
