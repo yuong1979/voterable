@@ -92,7 +92,7 @@
                 {% for i in Tags %}
 
                   {% if i.title != "" %}
-                  <a href='{{i.get_absolute_url}}' class="btn btn-outline-primary tagstyle"> <b>{{i}} ({{i.counter}})</b></a>
+                  <a href='{{i.get_absolute_url}}' class="btn btn-outline-primary tagstyle" style="margin:1px"> <b>{{i}} ({{i.counter}})</b></a>
                   {% endif %}
 
                 {% endfor %}
@@ -149,7 +149,7 @@
 
 
 
-
+      <br><br>
 
       {% if request.GET.sort == 'Score' %}
       <a href="/polls/?type={{ Type }}&sort=Score" class='btn btn-link btn-sm disabled'><b>Popular</b></a>|
