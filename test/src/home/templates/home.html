@@ -191,22 +191,23 @@
 
               
                 {% if user.member == True %}
-                <b class="wdstyle">Subscription Type:</b>
+                <b>Your Subscription</b><br><br>
+                <b class="wdstyle">Type:</b>
                 <span class="badge badge-pill badge-secondary" style="float:right"> Basic </span>
 
                 <br><br>
 
-                <b class="wdstyle">Subscription End date in:</b>
+                <b class="wdstyle">End date:</b>
                 <span class="badge badge-pill badge-secondary" style="float:right"> {{ user.subenddate|timeuntil }} </span>
                 {% endif %}
 
                 {% if user.memberp == True %}
-                <b class="wdstyle">Subscription Type:</b>
+                <b class="wdstyle">Type:</b>
                 <span class="badge badge-pill badge-secondary" style="float:right"> Premium </span>
 
                 <br><br>
-
-                <b class="wdstyle">Subscription End date in:</b>
+                <b>Your Subscription</b><br><br>
+                <b class="wdstyle">End date:</b>
                 <span class="badge badge-pill badge-secondary" style="float:right"> {{ user.subenddatep|timeuntil }} </span>
                 {% endif %}
 
@@ -219,7 +220,7 @@
                 <form action='' method='POST'  style="display: inline-block;">{% csrf_token %}
                   <input type="hidden" name="freeday_count_id" value="{{ freedays }}">
                   &nbsp;&nbsp;&nbsp;
-                  <input type="submit" class='btn btn-sm btn-primary'  style="font-weight: bold" value="Activate {{ freedays }} days of free premium access">
+                  <input type="submit" class='btn btn-sm btn-primary'  style="font-weight: bold; white-space: normal;" value="Activate {{ freedays }} days of free premium access">
                 </form><br>
 
                 {% else %}
@@ -272,41 +273,32 @@
           <ul class="list-group">
             <li class="list-group-item">
               <b class="wdstyle">Your Reputation Points:</b>
-              <i class="fas fa-question-circle fa-md" tabindex="0" role="button" data-toggle="popover" data-trigger="focus" data-content="Points are awarded based on the votes to your contributed tips and reviews."></i>
-              <span class="badge badge-pill badge-secondary" style="float:right"> {{points}} </span>
+              <span class="badge badge-pill badge-secondary" style="float:right" tabindex="0" role="button" data-toggle="popover" data-trigger="focus" data-content="Points are awarded based on the votes to your contributed tips and comments."> {{points}} </span>
             </li>
 
             <li class="list-group-item">
               <b class="wdstyle">Your Rank:</b>
-              <span class="badge badge-pill badge-secondary" style="float:right"> {{rank}} </span>
+              <span class="badge badge-pill badge-secondary" style="float:right" tabindex="0" role="button" data-toggle="popover" data-trigger="focus" data-content="Earn {{nextpts}} points to get to {{nextrank}} rank."> {{rank}} </span>
             </li>
 
             <li class="list-group-item">
-              <b class="wdstyle">Your Next Rank:</b>
-              <i class="fas fa-question-circle fa-md" tabindex="0" role="button" data-toggle="popover" data-trigger="focus" data-content="Earn  {{nextpts}} points to get additional {{nextfrdays}} FREE premium package days"></i>
-              <span class="badge badge-pill badge-secondary" style="float:right"> {{nextrank}} </span> 
-            </li>
-
-            <li class="list-group-item">
-              <b class="wdstyle">Tips you created:</b>
+              <b class="wdstyle">Tips created:</b>
               <span class="badge badge-pill badge-secondary" style="float:right"> {{ pollsECreated }} </span>
             </li>
 
             <li class="list-group-item">
-              <b class="wdstyle">Times your tips were viewed:</b>
-              <span class="badge badge-pill badge-secondary" style="float:right"> {{ votes_poll_entries_views }} </span>
+              <b class="wdstyle">Tips viewed:</b>
+              <span class="badge badge-pill badge-secondary" style="float:right" tabindex="0" role="button" data-toggle="popover" data-trigger="focus" data-content="The number of times your tips were viewed by others"> {{ votes_poll_entries_views }} </span>
             </li>
 
             <li class="list-group-item">
               <b class="wdstyle">Your Tip Upvotes:</b>
-              <i class="fas fa-question-circle fa-md" tabindex="0" role="button" data-toggle="popover" data-trigger="focus" data-content="Earn 1 reputation point for 1 upvote."></i>
-              <span class="badge badge-pill badge-secondary" style="float:right"> {{ upvotes }} </span>
+              <span class="badge badge-pill badge-secondary" style="float:right" tabindex="0" role="button" data-toggle="popover" data-trigger="focus" data-content="Get 1 point every time you get an upvote for your tip."> {{ upvotes }} </span>
             </li>
 
             <li class="list-group-item">
               <b class="wdstyle">Your Comment Upvotes:</b>
-              <i class="fas fa-question-circle fa-md" tabindex="0" role="button" data-toggle="popover" data-trigger="focus" data-content="Earn 1 reputation point for 1 upvote."></i> 
-              <span class="badge badge-pill badge-secondary" style="float:right"> {{ comment_likes }} </span>
+              <span class="badge badge-pill badge-secondary" style="float:right" tabindex="0" role="button" data-toggle="popover" data-trigger="focus" data-content="Get 1 point every time you get an upvote for your comment."> {{ comment_likes }} </span>
             </li>
 
         <!--     <li class="list-group-item">
@@ -320,7 +312,7 @@
             </li>
             <li class="list-group-item">
               <b class="wdstyle">Free subscription days:</b>
-              <span class="badge badge-pill badge-secondary" style="float:right"> {{ freedays }} </span>
+              <span class="badge badge-pill badge-secondary" style="float:right" tabindex="0" role="button" data-toggle="popover" data-trigger="focus" data-content="Earn {{nextpts}} points to get an additional {{nextfrdays}} free premium subscription days.""> {{ freedays }} </span>
             </li>
         <!--     <li class="list-group-item">
               <span class="badge"> {{ freedays }} </span>Days of Free Subscription:

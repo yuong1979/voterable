@@ -43,13 +43,13 @@ class PollItemMessageAddForm(forms.ModelForm):
 		self.helper.add_input(Submit('submit', value='Post', css_class='buttonspace btn-success'))
 
 
-	# def clean_content(self):
-	# 	content = self.cleaned_data.get("content")
+	def clean_content(self):
+		content = self.cleaned_data.get("content")
 
-	# 	if len(content) > 50:
-	# 		raise forms.ValidationError("Please limit your message to less the 50 characters")
+		if len(str(content)) > 200:
+			raise forms.ValidationError("Please limit your message to less the 200 characters")
 
-	# 	return content
+		return content
 
 
 
@@ -94,11 +94,15 @@ class PollItemMessageUpdateForm(forms.ModelForm):
 
 		self.fields['content'].value = 'bar'
 
-	# def clean_content(self):
-	# 	content = self.cleaned_data.get("content")
+	def clean_content(self):
+		content = self.cleaned_data.get("content")
 
-	# 	if len(content) > 50:
-	# 		raise forms.ValidationError("Please limit your message to less the 50 characters")
+		if len(str(content)) > 200:
+			raise forms.ValidationError("Please limit your message to less the 200 characters")
 
-	# 	return content
+		return content
+
+
+
+
 

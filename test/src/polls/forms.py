@@ -554,24 +554,23 @@ class PollItemAddForm(forms.ModelForm):
 	def clean_image(self):
 		return self.common_clean_images('image')
 
-	# # poll item
-	# def clean_title(self):
-	# 	title = self.cleaned_data.get("title")
-	# 	if len(str(title)) > 80:
-	# 		raise forms.ValidationError("Please limit your title to less than 80 characters")
-	# 	if len(str(title)) < 20:
-	# 		raise forms.ValidationError("Please do your title with more than the 20 characters")
-	# 	return title
+	# poll item
+	def clean_title(self):
+		title = self.cleaned_data.get("title")
+		if len(str(title)) > 120:
+			raise forms.ValidationError("Please limit your title to less than 120 characters")
+		if len(str(title)) < 20:
+			raise forms.ValidationError("Please do your title with more than the 20 characters")
+		return title
 
 	# poll item
 	def clean_description(self):
 		description = self.cleaned_data['description']
-		# if len(str(description)) > 700:
-		# 	raise forms.ValidationError("Please limit your description to less than 700 characters")
+		if len(str(description)) > 2400:
+			raise forms.ValidationError("Please limit your description to less than 2400 characters")
 		if len(str(description)) < 20:
 			raise forms.ValidationError("Please input your tip description with more then 20 characters")
 		return description
-
 
 
 
@@ -751,20 +750,20 @@ class PollItemEditForm(forms.ModelForm):
 		return self.common_clean_images('image')
 
 
-	# # poll item
-	# def clean_title(self):
-	# 	title = self.cleaned_data.get("title")
-	# 	if len(str(title)) > 80:
-	# 		raise forms.ValidationError("Please limit your title to less than 80 characters")
-	# 	if len(str(title)) < 20:
-	# 		raise forms.ValidationError("Please do your title with more than the 20 characters")
-	# 	return title
+	# poll item
+	def clean_title(self):
+		title = self.cleaned_data.get("title")
+		if len(str(title)) > 120:
+			raise forms.ValidationError("Please limit your title to less than 120 characters")
+		if len(str(title)) < 20:
+			raise forms.ValidationError("Please do your title with more than the 20 characters")
+		return title
 
 	# poll item
 	def clean_description(self):
 		description = self.cleaned_data['description']
-		# if len(str(description)) > 700:
-		# 	raise forms.ValidationError("Please limit your description to less than 700 characters")
+		if len(str(description)) > 2400:
+			raise forms.ValidationError("Please limit your description to less than 2400 characters")
 		if len(str(description)) < 20:
 			raise forms.ValidationError("Please input your tip description with more then 20 characters")
 		return description
