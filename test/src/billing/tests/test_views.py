@@ -13,6 +13,7 @@ from users.models import PUser
 from polls.views import PollsListView
 
 from datetime import datetime, timedelta
+from billing.models import PriceToDays, Transaction
 
 
 
@@ -58,6 +59,7 @@ class TestBillingViews(TestCase):
 		obj_puser_premium.subenddatep = datetime.now() + timedelta(days=365)
 		obj_puser_premium.memberp = True
 		obj_puser_premium.save()
+
 
 
 
@@ -122,63 +124,35 @@ class TestBillingViews(TestCase):
 		assert res.status_code == 404, 'Premium User cannot view without a selected plan'
 
 
-		# session = self.client.session
-		# session['subtype_id'] = 1
-		# session.save()
+		session = self.client.session
+		session['subtype_id'] = 1
+		session['transaction_pk'] = 1
+		session.save()
 
+		self.client.login(username="normaluser", password="secret123")
+		res = self.client.get(path)
+		assert res.status_code == 404, 'Normal User without without sub cannot access'
 
-		# self.client.login(username="normaluser", password="secret123")
-		# res = self.client.get(path)
-		# assert res.status_code == 404, 'Normal User cannot view without a selected plan'
+		self.client.login(username="basicuser", password="secret123")
 
-		# self.client.login(username="basicuser", password="secret123")
-		# res = self.client.get(path)
-		# assert res.status_code == 200, 'Basic User cannot view without a selected plan'
+		session = self.client.session
+		session['subtype_id'] = 1
+		session['transaction_pk'] = 1
+		session.save()
 
-		# self.client.login(username="premiumuser", password="secret123")
-		# res = self.client.get(path)
-		# assert res.status_code == 200, 'Premium User cannot view without a selected plan'
+		res = self.client.get(path)
+		assert res.status_code == 200, 'Basic User cannot view without a selected plan and trans id'
 
+		self.client.login(username="premiumuser", password="secret123")
 
+		session = self.client.session
+		session['subtype_id'] = 1
+		session['transaction_pk'] = 1
+		session.save()
 
+		res = self.client.get(path)
+		assert res.status_code == 200, 'Premium User cannot view without a selected plan and trans id'
 
-
-		# # self.client.login(username="normaluser", password="secret123")
-		# # assert res.status_code == 200, 'Normal User cannot view - error'
-
-		# self.client.login(username="basicuser", password="secret123")
-		# session = self.client.session
-		# session['subtype_id'] = 1
-		# session.save()
-		# print (session.keys())
-		# print (session.values())
-		# assert res.status_code == 200, 'Basic User can view'
-
-		# self.client.login(username="premiumuser", password="secret123")
-		# assert res.status_code == 200, 'Premium User can view'
-
-
-
-
-		# # need to include the normal user trying to access will fail
-		# self.client.login(username="normaluser", password="secret123")
-
-
-		# session = self.client.session
-		# session['subtype_id'] = 1
-		# session.save()
-
-
-		# res = self.client.get(path)
-		# assert res.status_code == 200, 'Basic User cannot view without a selected plan'
-
-		# self.client.login(username="basicuser", password="secret123")
-		# res = self.client.get(path)
-		# assert res.status_code == 404, 'Basic User cannot view without a selected plan'
-
-		# self.client.login(username="premiumuser", password="secret123")
-		# res = self.client.get(path)
-		# assert res.status_code == 404, 'Premium cannot view without a selected plan'
 
 
 

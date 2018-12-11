@@ -281,6 +281,12 @@ class StripeCheckOut(LoginRequiredMixin, TemplateView):
 
 		trans_obj.save()
 
+		#save the transactionpk in the session
+		print (trans_obj)
+		print (trans_obj.pk)
+		print (trans_obj.id)
+		self.request.session["transaction_pk"] = trans_obj.id
+
 		messages.success(self.request, "Thank you for you subscription.")
 		
 		return redirect("SuccessSub")
@@ -296,6 +302,12 @@ class SuccessSub(LoginRequiredMixin, TemplateView):
 	def dispatch(self, *args, **kwargs):
 		dispatch = super(SuccessSub, self).dispatch(*args, **kwargs)
 
+		#retrieve the transaction pk in the session if not exit
+		try:
+			transaction_pk = self.request.session.get("transaction_pk")
+		except:
+			return reverse('Home')
+
 		#if credit package id is not selected to exit
 		try:
 			subtype_id = self.request.session.get("subtype_id")
@@ -307,16 +319,26 @@ class SuccessSub(LoginRequiredMixin, TemplateView):
 	def get_context_data(self, *args, **kwargs):
 		context = super(SuccessSub, self).get_context_data(*args, **kwargs)
 
+
 		subtype_id = self.request.session.get("subtype_id")
 		subtypeobj = get_object_or_404(PriceToDays, id=subtype_id)
 		context['subtype'] = subtypeobj.label
-		
+
+
+		#retrieve transaction pk in the session get the transaction convert to long digits
+		transaction_pk = self.request.session.get("transaction_pk")
+		transactionobj = get_object_or_404(Transaction, id=transaction_pk)
+		transid = transactionobj.id
+
+
 		#membersubscription
 		user = self.request.user
 		context['name'] = user
 		context['price'] = "%.2f" % round(subtypeobj.cashprice,2)
 		context['email'] = PUser.objects.get(user=user).email
-		context['invoiceno'] = PUser.objects.get(user=user).invoiceno
+		context['refno'] = PUser.objects.get(user=user).invoiceno
+
+		context['transno'] = ("{:09}".format(transid))
 
 		#if premium then use premium dates of basic check for basic dates
 		try:
@@ -325,6 +347,11 @@ class SuccessSub(LoginRequiredMixin, TemplateView):
 		except:
 			context['startdate'] = PUser.objects.get(user=user).substartdate.date()
 			context['enddate'] = PUser.objects.get(user=user).subenddate.date()
+
+
+		#delete request transactions so users cannot log back into see the invoice
+		del self.request.session['subtype_id']
+		del self.request.session['transaction_pk']
 
 		return context	
 
