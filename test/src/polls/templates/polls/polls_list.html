@@ -48,14 +48,14 @@
           <div class="" style="margin-left:7px; float:right;">
 
             {% if free == True %}
-              <i class="allfontcolor fas fa-check-circle fa-1x"></i><b class="allfontcolor">&nbsp;Free</b>
+              <i style="font-size: 12px" class="allfontcolor fas fa-check-circle fa-1x"></i><b class="allfontcolor">&nbsp;Free</b>
             {% endif %}
             &nbsp;&nbsp;&nbsp;&nbsp;
 
           {% if user_authorised == True or request.user.is_staff %}
             {% for pt in Ptype %}
             {% if request.GET.type == pt.slug %}
-                <a href='{{ pt.get_update }}' class='btn-link' ><b><i class="fas fa-edit fa-1x" aria-hidden="true"></i>&nbsp;Edit</b></a>
+                <a style="font-size: 16px" href='{{ pt.get_update }}' class='btn-link' ><b><i class="fas fa-edit fa-1x" aria-hidden="true"></i>&nbsp;Edit</b></a>
             {% endif %}
             {% endfor %}
 
@@ -64,7 +64,8 @@
 
         <h4 class="card-title allfontcolor"><i class="allfontcolor fas fa-list-ol fa-1x"></i>&nbsp;&nbsp;&nbsp;&nbsp;Lists</h4><hr>
 
-        <h5>
+        <h6>
+          <b>
         {% for pt in Ptype %}
           {% if request.GET.type == pt.slug %}
             {{ pt.title }}
@@ -77,7 +78,8 @@
 
           {% endif %}
         {% endfor %}
-        </h5>
+          </b>
+        </h6>
 
         <hr>
 

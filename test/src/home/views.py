@@ -370,7 +370,7 @@ class HomeView(TemplateView):
             if comment_likes is None:
                 comment_likes = 0
 
-            pvote = (posi + nega + comment_likes)
+            pvote = (posi + nega + (comment_likes*0.2))
 
             context["points"] = pvote
             context["downvotes"] = nega

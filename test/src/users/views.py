@@ -62,7 +62,7 @@ class PUserDetail(DetailView):
             comment_likes = 0
 
         # nega is a negative number so this below should be a plus
-        pvote = (posi + nega + comment_likes)
+        pvote = (posi + nega + (comment_likes*0.2))
 
         context["points"] = pvote
         context["downvotes"] = nega
