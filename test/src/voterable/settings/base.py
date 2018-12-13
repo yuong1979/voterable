@@ -415,6 +415,7 @@ CELERY_TIMEZONE = TIME_ZONE
 # CELERY_SEND_TASK_ERROR_EMAILS = True
 
 
+
 # # Firebase Related Settings
 
 # Server Key found under project settings -> cloud messaging
