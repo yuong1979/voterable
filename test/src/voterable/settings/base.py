@@ -110,7 +110,10 @@ INSTALLED_APPS = [
     'django_summernote',
 
     # firebase
-    'fcm',
+    'firebasenotifications',
+    # 'fcm',
+
+    'rest_framework',
 
 ]
 
@@ -415,12 +418,21 @@ CELERY_TIMEZONE = TIME_ZONE
 # # Firebase Related Settings
 
 # Server Key found under project settings -> cloud messaging
-FCM_APIKEY = 'AAAAwzumhNY:APA91bGN8Gwj7-vwre05XzZcrQFXBDxd-NIOQjlpE_kcfPOSP_o0k2ECxzgQH0' \
+SERVER_KEY = 'AAAAwzumhNY:APA91bGN8Gwj7-vwre05XzZcrQFXBDxd-NIOQjlpE_kcfPOSP_o0k2ECxzgQH0' \
              'fh_LJhWDlz9H4ROTlho40H4Qf39xX3FQ42FOjQM0PrINq_30ewgIHTDkdeKhh3OCdMMIi_5HsQC4UH'
 
 
 # apiKey
 API_KEY = 'AIzaSyCvd2Dw2i7rtNDByl6mmplyPebHMUy9bis'
 
-#messagingSenderId
+# messagingSenderId
 SENDER_ID = 838519391446
+
+# topic name
+TOPIC_NAME = 'voterable'
+
+MESSAGE_BODY='Checkout new and exciting updates at voterable!'
+
+MESSAGE_TITLE = 'Hello User'
+
+CLICK_ACTION = 'http://localhost:8000/tags/'
