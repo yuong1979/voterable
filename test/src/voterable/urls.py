@@ -161,8 +161,8 @@ urlpatterns = [
     # service worker view
     url(r'^serviceworker(.*.js)$', ServiceWorkerview.as_view() , name='service-worker'),
 
-    # for firebase  
-    url(r'fcm/', include('fcm.urls')),
+    # for firebasenotifications
+    url(r'devicetoken/',include('firebasenotifications.urls')),
 
 ]
 

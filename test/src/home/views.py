@@ -310,6 +310,7 @@ class HomeView(TemplateView):
         else:
             # if user is authenticated
             context['register_token'] = True
+            context['userid'] = self.request.user.id
 
             ##################################################################
             ######collecting user favorite polls/tags and created polls#######
