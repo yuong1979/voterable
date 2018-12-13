@@ -72,7 +72,7 @@ urlpatterns = [
     url(r'^termsandconditions/$', TermsAndConditionView.as_view(), name='TermsAndCondition'),
     url(r'^disclaimer/$', DisclaimerView.as_view(), name='Disclaimer'),
     url(r'^privacypolicy/$', PrivacyPolicyView.as_view(), name='PrivacyPolicy'),
-    # url(r'^refundpolicy/$', RefundPolicyView.as_view(), name='RefundPolicy'),
+    url(r'^refundpolicy/$', RefundPolicyView.as_view(), name='RefundPolicy'),
 
     url(r'^FAQ/$', FAQView.as_view(), name='FAQ'),
     url(r'^customersupport/$', CSupportView.as_view(), name='Customer_Support'),
