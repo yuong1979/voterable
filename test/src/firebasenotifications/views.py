@@ -43,20 +43,22 @@ class DeviceTokenListView(generics.ListAPIView):
 
 @csrf_exempt
 def SendMessage(request):
-    if request.method == 'POST':
-        headers = {
-            'Authorization': 'key={}'.format(settings.SERVER_KEY),
-            'Content-Type': 'application/json'
-        }
+    headers = {
+        'Authorization': 'key={}'.format(settings.SERVER_KEY),
+        'Content-Type': 'application/json'
+    }
 
-        data = {
-                  "to" : f"/topics/{settings.TOPIC_NAME}",
-                  "priority" : "high",
-                  "notification" : {
-                    "body" : settings.MESSAGE_BODY,
-                    "title" : settings.MESSAGE_TITLE,
-                    "click_action": settings.CLICK_ACTION
-                  },
-                }
-        r = requests.post('https://fcm.googleapis.com/fcm/send',data=json.dumps(data), headers=headers)
-        return JsonResponse({'message_sent':data,'fcm_response':r.text,'status_code':r.status_code})
+    data = {
+        "to": f"/topics/{settings.TOPIC_NAME}",
+        "priority": "high",
+        "notification": {
+            "body": settings.MESSAGE_BODY,
+            "title": settings.MESSAGE_TITLE,
+            "click_action": settings.CLICK_ACTION
+        },
+    }
+
+    if request.method == 'POST':
+        data = requests.POST['data']
+    r = requests.post('https://fcm.googleapis.com/fcm/send',data=json.dumps(data), headers=headers)
+    return JsonResponse({'message_sent':data,'fcm_response':r.text,'status_code':r.status_code})
