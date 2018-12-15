@@ -19,7 +19,7 @@ from analytics.models import ViewPollTypeUnique, ViewPollItemsUnique, Ranking, S
 from django.db.models import Sum
 from variable.models import TypeYear
 # from datetime import datetime, timedelta
-from tags.models import TagPoll
+from tags.models import TagPoll, runtagcount
 import time
 from django.db.models import Q
 from celery.schedules import crontab
@@ -260,6 +260,8 @@ class HomeView(TemplateView):
     def get_context_data(self, *args, **kwargs):
 
         context = super(HomeView, self).get_context_data(*args, **kwargs)
+        #update the number of tags count to only count the number of active tags
+        runtagcount()
 
         # Firebase context variables
         context['API_KEY'] = settings.API_KEY
@@ -310,6 +312,7 @@ class HomeView(TemplateView):
         else:
             # if user is authenticated
             context['register_token'] = True
+            context['userid'] = self.request.user.id
 
             ##################################################################
             ######collecting user favorite polls/tags and created polls#######

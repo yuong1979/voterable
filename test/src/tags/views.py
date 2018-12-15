@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse, JsonResponse, HttpResponseRedirect, Http404
 # Create your views here.
-from tags.models import TagPoll
+from tags.models import TagPoll, runtagcount
 from django.views.generic import TemplateView, ListView, DetailView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView, FormView
 from polls.models import Ptype
@@ -9,7 +9,7 @@ from tags.forms import TagSearchForm
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.models import User
 from users.models import PUser
-
+from tags.models import TagPoll, runtagcount
 
 
 
@@ -35,7 +35,8 @@ class TagAllView(ListView, FormView):
 		context = super(TagAllView, self).get_context_data(**kwargs)
 		search = self.request.GET.get('search')
 
-
+		#update the number of tags count to only count the number of active tags
+		runtagcount()
 
 		# exclude inactive polls
 		exin = Ptype.objects.filter(active=True)

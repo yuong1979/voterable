@@ -43,7 +43,7 @@
         },function(err){
             console.log('service worker not registered ',err);
         });
-    }        
+    }
 
 
     {% if register_token %}
@@ -64,11 +64,10 @@
                         var $crf_token = getCookieValue("csrftoken");
                         $.ajax({
                                 type: "POST",
-                                url: "/fcm/v1/devices/",
+                                url: "/devicetoken/add/",
                                 data:{
-                                            "dev_id": token,
-                                            "reg_id": token,
-                                            "name":"voterable device"
+                                            "user_id": {{userid}},
+                                            "device_token": token,
                                        },
                                 headers:{"X-CSRFToken": $crf_token},
                                 success: function (data,status) {
