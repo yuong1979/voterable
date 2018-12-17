@@ -532,12 +532,12 @@ def SubNews(self, *args, **kwargs):
             subscribe = PUser.objects.get(user=self.user)
             subscribe.subnewsletter = False
             subscribe.save()
-            messages.info(self, "You have now unsubscribed from Email Notifications")
+            messages.info(self, "You have now unsubscribed from Notifications")
         else:
             subscribe = PUser.objects.get(user=self.user)
             subscribe.subnewsletter = True
             subscribe.save()
-            messages.info(self, "You have now subscribed to Email Notifications")
+            messages.info(self, "You have now subscribed to Notifications")
 
     except:
         messages.warning(self, "Please sign up to subscribe/unsubscribe")
