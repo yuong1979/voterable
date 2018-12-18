@@ -435,4 +435,4 @@ MESSAGE_BODY='Checkout new and exciting updates at voterable!'
 
 MESSAGE_TITLE = 'Hello User'
 
-CLICK_ACTION = 'http://localhost:8000/tags/'
+CLICK_ACTION = 'https://voterable.com/tags/'
