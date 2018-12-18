@@ -41,6 +41,8 @@ class DeviceTokenListView(generics.ListAPIView):
     serializer_class = DeviceTokenSerializer
 
 
+
+
 @csrf_exempt
 def SendMessage(request):
     headers = {

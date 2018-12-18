@@ -19,7 +19,7 @@ from analytics.models import ViewPollTypeUnique, ViewPollItemsUnique, Ranking, S
 from django.db.models import Sum
 from variable.models import TypeYear
 # from datetime import datetime, timedelta
-from tags.models import TagPoll
+from tags.models import TagPoll, runtagcount
 import time
 from django.db.models import Q
 from celery.schedules import crontab
@@ -260,6 +260,8 @@ class HomeView(TemplateView):
     def get_context_data(self, *args, **kwargs):
 
         context = super(HomeView, self).get_context_data(*args, **kwargs)
+        #update the number of tags count to only count the number of active tags
+        runtagcount()
 
         # Firebase context variables
         context['API_KEY'] = settings.API_KEY
@@ -371,7 +373,7 @@ class HomeView(TemplateView):
             if comment_likes is None:
                 comment_likes = 0
 
-            pvote = (posi + nega + comment_likes)
+            pvote = (posi + nega + (comment_likes*0.2))
 
             context["points"] = pvote
             context["downvotes"] = nega
@@ -530,12 +532,12 @@ def SubNews(self, *args, **kwargs):
             subscribe = PUser.objects.get(user=self.user)
             subscribe.subnewsletter = False
             subscribe.save()
-            messages.info(self, "You have now unsubscribed from Email Notifications")
+            messages.info(self, "You have now unsubscribed from Notifications")
         else:
             subscribe = PUser.objects.get(user=self.user)
             subscribe.subnewsletter = True
             subscribe.save()
-            messages.info(self, "You have now subscribed to Email Notifications")
+            messages.info(self, "You have now subscribed to Notifications")
 
     except:
         messages.warning(self, "Please sign up to subscribe/unsubscribe")

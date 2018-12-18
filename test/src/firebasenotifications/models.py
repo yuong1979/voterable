@@ -11,5 +11,3 @@ class DeviceToken(models.Model):
 
     class Meta:
         ordering = ('created',)
-
-

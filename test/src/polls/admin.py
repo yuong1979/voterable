@@ -12,9 +12,9 @@ class PollModelForm(forms.ModelForm):
 
 
 class PtypeAdmin(admin.ModelAdmin):
-    list_display = ('id','title', 'location', 'topic', 'subtopic', 'active', 'freepoll', 'c_user', 'date', 'vote_count','locked')
+    list_display = ('id','title', 'active', 'freepoll','locked', 'c_user', 'vote_count', 'date')
     search_fields = ['title']
-    list_filter = ('location', 'topic')
+    list_filter = ('active', 'freepoll','locked')
 
     def __str__(self,obj):
         return obj.__str__()

@@ -43,7 +43,7 @@
         },function(err){
             console.log('service worker not registered ',err);
         });
-    }        
+    }
 
 
     {% if register_token %}
@@ -171,10 +171,10 @@
           <ul class="list-group">
 
 <!-- unhide the below and integrate that with notification when notification is sorted out -->
-<!--             <li class="list-group-item">
-              <b class="wdstyle">Email Notifications:</b> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <li class="list-group-item">
+              <b class="wdstyle">Notifications:</b> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
               <input id="toggle-event" urequest_id="{{ request.user.id }}" type="checkbox" data-toggle="toggle" data-size="small" data-width="80">
-            </li> -->
+            </li>
 
             <li class="list-group-item">
 
@@ -223,7 +223,7 @@
 
                 {% else %}
 
-                    <a href='{% url 'SelectPlan' %}' class='btn buttonspace btn-sm btn-primary' data-action='show-spinner' ><b>Subscribe</b></a>
+                    <a href='{% url 'SelectPlan' %}' class='btn buttonspace btn-sm btn-primary' data-action='show-spinner' ><b>Start subscription</b></a>
 
                 {% endif %}
 
@@ -233,6 +233,23 @@
 
           </ul>
 
+
+<br>
+
+<!-- enable and disable newsletter -->
+<!--               {% if request.user.puser.subnewsletter == True %}
+
+              <form method='GET' action="{% url 'SubNews' %}">
+                <input class="btn buttonspace btn-sm btn-primary tagmargin" style="font-weight:bold" type="submit" value="Email Notifications Off" />
+              </form>
+
+              {% else %}
+
+              <form method='GET' action="{% url 'SubNews' %}">
+                <input class="btn buttonspace btn-sm btn-primary tagmargin" style="font-weight:bold" type="submit" value="Email Notifications On" />
+              </form>
+
+              {% endif %} -->
 
 
 
@@ -465,21 +482,6 @@
 
 
 
-<!-- enable and disable newsletter -->
-<!--               {% if request.user.puser.subnewsletter == True %}
-
-              <form method='GET' action="{% url 'SubNews' %}">
-                <input class="btn buttonspace btn-sm btn-primary tagmargin" style="font-weight:bold" type="submit" value="Email Notifications Off" />
-              </form>
-
-              {% else %}
-
-              <form method='GET' action="{% url 'SubNews' %}">
-                <input class="btn buttonspace btn-sm btn-primary tagmargin" style="font-weight:bold" type="submit" value="Email Notifications On" />
-              </form>
-
-              {% endif %}
- -->
 
 
 

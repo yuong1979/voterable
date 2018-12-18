@@ -12,6 +12,7 @@ from django.conf import settings
 def runtagcount():
 
 	tagcounter = TagPoll.objects.all()
+
 	for i in tagcounter:
 		i.counter = i.polltype.filter(active=True).count()
 
