@@ -418,15 +418,14 @@ CELERY_TIMEZONE = TIME_ZONE
 # # Firebase Related Settings
 
 # Server Key found under project settings -> cloud messaging
-SERVER_KEY = 'AAAAwzumhNY:APA91bGN8Gwj7-vwre05XzZcrQFXBDxd-NIOQjlpE_kcfPOSP_o0k2ECxzgQH0' \
-             'fh_LJhWDlz9H4ROTlho40H4Qf39xX3FQ42FOjQM0PrINq_30ewgIHTDkdeKhh3OCdMMIi_5HsQC4UH'
-
+SERVER_KEY = 'AAAAZp1PDlM:APA91bGvEYakMq956I2iHA8wsHN9E9L3GO6S-AuWvs520cX-R7qminSiv' \
+             'PBGvjejCVgoe4waDappEVV2eCLOzQSGlQaFgF5iGzz4X0uf8-CNSEudEcjDDCpiJTyEh_oEKOWCVc_9wc4J'
 
 # apiKey
-API_KEY = 'AIzaSyCvd2Dw2i7rtNDByl6mmplyPebHMUy9bis'
+API_KEY = 'AIzaSyANxM3W8UaFMNYixRe15NY61p4WNoEBqog'
 
 # messagingSenderId
-SENDER_ID = 838519391446
+SENDER_ID = 440725868115
 
 # topic name
 TOPIC_NAME = 'voterable'
