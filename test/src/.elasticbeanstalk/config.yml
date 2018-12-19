@@ -1,6 +1,6 @@
 branch-defaults:
   default:
-    environment: vttestenv
+    environment: null
     group_suffix: null
   yu_changes:
     environment: vttestenv1
