@@ -26,7 +26,7 @@ def debug_task(self):
 app.conf.beat_schedule = {
 
     'add-every-10-seconds': {
-        'task': 'send-email-task',
+        'task': 'send-notification-task',
         'schedule': 300.0,
     },
 
