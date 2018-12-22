@@ -359,15 +359,19 @@ AWS_SECRET_ACCESS_KEY='8LSQ2WXHM8Rvfdpdy99LSzvy9yddsdskgF+Eb7HZ'
 
 CELERY_BROKER_URL = 'sqs://%s:%s@' % (AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY)
 CELERY_BROKER_TRANSPORT = 'sqs'
-CELERY_BROKER_TRANSPORT_OPTIONS = {
-    'region': 'ap-southeast-1',
-}
+# CELERY_BROKER_TRANSPORT_OPTIONS = {
+#     'region': 'ap-southeast-1',
+# }
 CELERY_BROKER_USER = AWS_ACCESS_KEY_ID
 CELERY_BROKER_PASSWORD = AWS_SECRET_ACCESS_KEY
 CELERY_WORKER_STATE_DB = '/var/run/celery/worker.db'
 CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers:DatabaseScheduler'
 CELERY_WORKER_PREFETCH_MULTIPLIER = 0
-broker_transport_options = {'region': 'ap-southeast-1'}
+BROKER_TRANSPORT_OPTIONS = {
+    'region': 'ap-southeast-1',
+    'polling_interval': 3,
+    'visibility_timeout': 3600,
+}
 
 
 # CELERY_BROKER_URL = 'redis://localhost:6379'
