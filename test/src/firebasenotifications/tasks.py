@@ -10,7 +10,7 @@ from firebasenotifications.views import post_to_firebase
 
 
 @task(name='send-notification-task')
-def send_custom_message(request):
+def send_custom_message():
     usersub = PUser.objects.filter(subnewsletter=True)
 
     results = []
