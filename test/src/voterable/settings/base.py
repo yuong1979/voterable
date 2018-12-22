@@ -114,6 +114,8 @@ INSTALLED_APPS = [
 
     'rest_framework',
 
+    'django_celery_beat',
+
 ]
 
 
@@ -352,17 +354,36 @@ BLEACH_ALLOWED_ATTRIBUTES = {
 BLEACH_ALLOWED_STYLES = ['width', 'height']
 ### END BLEACH
 
+AWS_ACCESS_KEY_ID='AKIAIHIMTXXYUBBENRVA'
+AWS_SECRET_ACCESS_KEY='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'
+
+CELERY_BROKER_URL = 'sqs://%s:%s@' % (AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY)
+CELERY_BROKER_TRANSPORT = 'sqs'
+CELERY_BROKER_TRANSPORT_OPTIONS = {
+    'region': 'ap-southeast-1',
+}
+CELERY_BROKER_USER = AWS_ACCESS_KEY_ID
+CELERY_BROKER_PASSWORD = AWS_SECRET_ACCESS_KEY
+CELERY_WORKER_STATE_DB = '/var/run/celery/worker.db'
+CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers:DatabaseScheduler'
+CELERY_WORKER_PREFETCH_MULTIPLIER = 0
+broker_transport_options = {'region': 'ap-southeast-1'}
 
 
-
-
-
-CELERY_BROKER_URL = 'redis://localhost:6379'
-CELERY_RESULT_BACKEND = 'redis://localhost:6379'
+# CELERY_BROKER_URL = 'redis://localhost:6379'
+# CELERY_RESULT_BACKEND = 'redis://localhost:6379'
 CELERY_ACCEPT_CONTENT = ['application/json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
 CELERY_TIMEZONE = TIME_ZONE
+
+CELERY_DEFAULT_QUEUE = 'celery'
+CELERY_QUEUES = {
+    CELERY_DEFAULT_QUEUE: {
+        'exchange': CELERY_DEFAULT_QUEUE,
+        'binding_key': CELERY_DEFAULT_QUEUE,
+    }
+}
 
 
 
@@ -435,3 +456,5 @@ MESSAGE_BODY='Checkout new and exciting updates at voterable!'
 MESSAGE_TITLE = 'Hello User'
 
 CLICK_ACTION = 'https://voterable.com/tags/'
+
+NOTIFICATION_ICON = 'https://s3-ap-southeast-1.amazonaws.com/voterable-prod-bucket/static/img/voterable+logo.JPG'

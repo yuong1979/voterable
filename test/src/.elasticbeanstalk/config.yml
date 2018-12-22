@@ -1,6 +1,6 @@
 branch-defaults:
   default:
-    environment: null
+    environment: celerytest
     group_suffix: null
   yu_changes:
     environment: vttestenv1
@@ -11,10 +11,13 @@ environment-defaults:
   testenv1:
     branch: null
     repository: null
+  vttestenv:
+    branch: null
+    repository: null
 global:
   application_name: voterable
   branch: null
-  default_ec2_keyname: ExternalUser
+  default_ec2_keyname: voter
   default_platform: Python 3.6
   default_region: ap-southeast-1
   include_git_submodules: true
