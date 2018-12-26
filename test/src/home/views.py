@@ -24,7 +24,7 @@ import time
 from django.db.models import Q
 from celery.schedules import crontab
 from celery.task import periodic_task
-from celery import shared_task
+from celery import shared_task, task
 from users.models import PUser
 from messaging.models import Message
 from django.views.decorators.csrf import csrf_exempt
@@ -37,13 +37,21 @@ from django.views.decorators.csrf import csrf_exempt
 # import pytz
 
 
-
 #Two ways to run celery tasks
 
-@shared_task(name='send-email-task')
+# @shared_task(name='send-email-task')
+# def send_email_task():
+#     # testasyncemail()
+#     print ("boom it works")
+
+
+
+@task(name='send-test-task')
 def send_email_task():
-    # testasyncemail()
-    print ("boom it works")
+    testasyncemail()
+
+    my_date = datetime.now(pytz.timezone('Singapore'))
+    print (my_date)
 
 
 
@@ -67,7 +75,9 @@ def testasyncemail():
         else:
             from_email = settings.DEFAULT_FROM_EMAIL
 
-        subject = "test"
+        my_date = datetime.now(pytz.timezone('Singapore'))
+
+        subject = "testing " + str(my_date)
         contact_message = "test message"
         form_email = "jumper23sierra@yahoo.com"
         to_email = [from_email, form_email]  # [from_email, 'jumper23sierra@yahoo.com']
@@ -267,7 +277,6 @@ class HomeView(TemplateView):
         context['API_KEY'] = settings.API_KEY
         context['SENDER_ID'] = settings.SENDER_ID
         context['register_token'] = False
-
 
         # if user is not authenticated to display generic poll stuff
         if not self.request.user.is_authenticated:
