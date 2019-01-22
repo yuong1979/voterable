@@ -6,6 +6,10 @@ from django.core.mail import send_mail
 from django.conf import settings
 # Create your views here.
 
+from celery.schedules import crontab
+from celery.task import periodic_task
+from celery import shared_task, task, app
+
 
 # def index(request):
 #     return HttpResponse("Hello, world. You're at the polls index.")
@@ -14,8 +18,21 @@ from django.conf import settings
 from django import forms
 
 
+
+@task()
+def async_survey_mail(subject, contact_message, from_email, to_email):
+    send_mail(
+        subject=subject,
+        message="",
+        html_message=contact_message,
+        from_email=from_email,
+        recipient_list=to_email,
+        fail_silently=False
+    )
+
+
 class surveyForm(forms.Form):
-    # user_id = forms.CharField()	
+    # user_id = forms.CharField()
     review_id = forms.CharField()
     star_id = forms.IntegerField()
 
@@ -47,20 +64,24 @@ def api_survey(request):
 					to_email = [from_email]  # [from_email, 'jumper23sierra@yahoo.com']
 
 
-				contact_message = "User " + str(request.user) + " has given " + str(stars) + " for " + str(review)
+				contact_message = "User " + str(request.user) + " --- " + str(stars) + " stars: " + str(review)
 
-				# truncate review
-				review = str(review[:10])
+				# old send email with does not send asynchronously
+				# send_mail(
+				# 	subject=subject,
+				# 	message= str(stars) + " stars : " + str(review),
+				# 	html_message=contact_message,
+				# 	from_email=from_email,
+				# 	recipient_list=to_email,
+				# 	fail_silently=False
+				# )
 
-				send_mail(
+				async_survey_mail.delay(
 					subject=subject,
-					message= str(stars) + " stars : " + str(review),
-					html_message=contact_message,
+					contact_message=contact_message,
 					from_email=from_email,
-					recipient_list=to_email,
-					fail_silently=False
-				)
-
+					to_email=to_email
+					)
 
 				result = "Success"
 

@@ -20,7 +20,7 @@ class PtypeAdmin(admin.ModelAdmin):
         return obj.__str__()
 
 class PollAdmin(admin.ModelAdmin):
-    list_display = ('id','title', 'allowed', 'published', 'user_submit', 'score', 'date', 'modifieddate')
+    list_display = ('id','title','polltype', 'allowed', 'published', 'user_submit', 'score', 'modifieddate')
     search_fields = ['title']
     forms = PollModelForm
 

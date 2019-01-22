@@ -28,6 +28,7 @@ textarea:focus {
 
 
 
+
 </style>
 
 
@@ -62,12 +63,12 @@ textarea:focus {
 
 
   <!-- The survey Modal -->
-  <div class="modal fade" id="SurveyModal">
+  <div class="modal fade" id="SurveyModal" style="margin:0% 1% 0% 1%; width:95%">
     <div class="modal-dialog">
       <div class="modal-content">
       
-        <div class="modal-header">
-          <h4 class="modal-title">Review Us</h4>
+        <div class="modal-header" style="background-color:#0A8082">
+          <h4 class="modal-title" style="color:white">Review us</h4>
           <button type="button" class="close" data-dismiss="modal">&times;</button>
         </div>
 
@@ -103,6 +104,8 @@ textarea:focus {
                 <input id="reviewsubmit" class='btn btn-sm btn-warning btn-block' user_id="{{ request.user }}" data-action='show-spinner' type="submit" value="Send" style="font-weight: bold; margin-top:20px">
                 </div>
 
+                <br>
+
 
             <!-- import the older version of font awesome for this spinner because the latest version is not the coolest -->
             <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -130,21 +133,46 @@ textarea:focus {
 
 <script>
 
+//converting into minutes and microseconds
+var surveypoptime = {{ surveypop }} * 60 * 1000
+
+//determine when to show the popup. this shows popup 120 seconds into session
+window.onload=function(){setTimeout(surveyPopup,surveypoptime)};
 
 
 
-//determine when to show the popup. this shows popup 20 seconds into session
-window.onload=function(){setTimeout(surveyPopup,1000)};
+//old surveypopup for testing
+// function surveyPopup()
+//   {
+//     var usertype = $("#authenticated_user").text()
+//     // capturing all users who have signed up
+//       if (usertype == "Member" || usertype == "NotMember" ) 
+//       {
+//         $("#SurveyModal").modal('show');
+//       }
+// }
 
+
+console.log("survey loaded:" + sessionStorage.getItem('Surveyload'))
+
+//new surveypopup that prompts user every time there is a new session so not to overwhelm users
 function surveyPopup()
   {
     var usertype = $("#authenticated_user").text()
-    // capturing all users who have signed up
+
       if (usertype == "Member" || usertype == "NotMember" ) 
       {
-        $("#SurveyModal").modal('show');
+
+        if (sessionStorage.getItem('Surveyload') !== 'true')
+          {
+            $("#SurveyModal").modal('show');
+            sessionStorage.setItem('Surveyload','true'); 
+          }
+
       }
 }
+
+
 
 
 

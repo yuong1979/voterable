@@ -27,12 +27,12 @@
 
         <hr><br>
 
-      <div class="container">
+<!--       <div class="container"> -->
         <small>
 
         {% if user.is_authenticated %}
 
-          <form method='POST' action="" enctype='multipart/form-data'>{% csrf_token %}
+          <form method='POST' action="" enctype='multipart/form-data' style="margin:-6px">{% csrf_token %}
             <input type="hidden" name="type_slug" value="{{ type_slug }}">
 
           {% crispy form %}
@@ -55,7 +55,7 @@
 
 
         </small>
-      </div>
+<!--       </div> -->
 
 
       </div>

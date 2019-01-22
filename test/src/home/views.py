@@ -24,10 +24,15 @@ import time
 from django.db.models import Q
 from celery.schedules import crontab
 from celery.task import periodic_task
-from celery import shared_task
+from celery import shared_task, task, app
 from users.models import PUser
 from messaging.models import Message
 from django.views.decorators.csrf import csrf_exempt
+import string
+import random
+from django.contrib.sessions.backends.db import SessionStore
+from analytics.models import ControlTable, PromoAnalytic
+
 # from django.conf import settings
 # from django.contrib.auth.models import User
 # from django.contrib.sites.models import Site
@@ -35,8 +40,6 @@ from django.views.decorators.csrf import csrf_exempt
 # # from datetime import datetime
 # import datetime
 # import pytz
-
-
 
 #Two ways to run celery tasks
 
@@ -48,17 +51,45 @@ from django.views.decorators.csrf import csrf_exempt
 
 
 
-@periodic_task(run_every=crontab(hour=22, minute=27, day_of_week="fri"))
-def every_monday_morning():
-    #insert the tasks here
+## For testing notifications
+# http://localhost:8000/devicetoken/firebase/
+
+
+@task()
+def async_contact_mail(subject, contact_message, from_email, to_email):
+    send_mail(
+        subject=subject,
+        message="",
+        html_message=contact_message,
+        from_email=from_email,
+        recipient_list=to_email,
+        fail_silently=False
+    )
+
+
+
+
+# testing your periodic tasks
+@task(name='send-test-task')
+def send_email_task():
     testasyncemail()
-    print ("Ran successfully")
+    my_date = datetime.now(pytz.timezone('Singapore'))
+    time = my_date.strftime("%H:%M:%S")
+
+
+
+## run periodic tasks on views instead of celery.py
+# @periodic_task(run_every=crontab(hour=20, minute=29, day_of_week="tue"))
+# def every_monday_morning():
+#     #insert the tasks here
+#     # testasyncemail()
+#     print ("Ran successfully")
 
 
 
 
 
-#for emails to be sent asynchronously
+#for for the testing of sending periodic emails
 def testasyncemail():
 
     try:
@@ -66,8 +97,11 @@ def testasyncemail():
             from_email = settings.EMAIL_HOST_USER
         else:
             from_email = settings.DEFAULT_FROM_EMAIL
+        
+        my_date = datetime.now(pytz.timezone('Singapore'))
+        time = my_date.strftime("%H:%M:%S")
 
-        subject = "test"
+        subject = "testing " + str(time)
         contact_message = "test message"
         form_email = "jumper23sierra@yahoo.com"
         to_email = [from_email, form_email]  # [from_email, 'jumper23sierra@yahoo.com']
@@ -80,13 +114,11 @@ def testasyncemail():
             recipient_list=to_email,
             fail_silently=False
         )
-
         print ("email sent!")
 
     except:
 
         print ("email failed!")
-
         pass
 
 
@@ -192,6 +224,17 @@ class PollRedirect(TemplateView):
     #     return context
 
 
+# def referral(request):
+#     print (request)
+#     return redirect("Home")
+
+
+def id_generator(size=6, chars=string.ascii_uppercase + string.digits):
+    return ''.join(random.choice(chars) for _ in range(size))
+
+
+
+
 
 
 class HomeView(TemplateView):
@@ -260,6 +303,36 @@ class HomeView(TemplateView):
     def get_context_data(self, *args, **kwargs):
 
         context = super(HomeView, self).get_context_data(*args, **kwargs)
+
+
+        # http://localhost:8000/?ref=4B17MW
+
+        #this is not working because the sessions is not working in tranferring the referralid after user login/logout
+        # if self.request.GET.get("ref") == None:
+        #     pass
+        #     print ("skip because no referral id is used")
+        # else:
+        #     referralid = self.request.GET.get("ref")
+        #     try:
+        #         referring_obj = PUser.objects.get(referralid=referralid)
+        #         self.request.session["referralid"] = referralid
+        #         self.request.session.modified = True
+        #         self.request.session.save()
+        #         messages.success(self.request, "Your referral code allows you 3 days of additional free content when you sign up now.")
+
+        #     except PUser.DoesNotExist:
+        #         messages.success(self.request, "The referral code you used is invalid, please check.")
+
+        #     except:
+        #         print ('other errors')
+
+        # try:
+        #     print (self.request.session["referralid"])
+
+        # except:
+        #     print ('none captured')
+
+
         #update the number of tags count to only count the number of active tags
         runtagcount()
 
@@ -313,6 +386,22 @@ class HomeView(TemplateView):
             # if user is authenticated
             context['register_token'] = True
             context['userid'] = self.request.user.id
+
+            try:
+                #using a try command because the dispatch will only run after context is run and it would pop an error if puser is not created and therefore not detected
+
+                #getting the number of days given for free if a referral is done
+                ctable = ControlTable.objects.get(id=1)
+                context['refdays'] = ctable.freedaysreferral
+
+                context['refurl'] = str(self.request.user.puser.referralid)
+
+                #pulling whether the user is subbed to the newsletter
+                puserobj = PUser.objects.get(user=self.request.user)
+                if puserobj.subnewsletter == True:
+                    context['usernewsletter'] = "checked"
+            except:
+                pass
 
             ##################################################################
             ######collecting user favorite polls/tags and created polls#######
@@ -443,7 +532,7 @@ class HomeView(TemplateView):
             nowdate = pytz.utc.localize(d)
             membership_obj = PUser.objects.get(user=self.request.user)
 
-            # for normal member
+            # for normal member - although I remove normal member this code remains because it is try method and I need to remove anyone who is still subscribed under normal member
             try:
                 dendate = PUser.objects.get(user=self.request.user).subenddate
                 if nowdate > dendate:
@@ -522,7 +611,7 @@ class HomeView(TemplateView):
 
 
 
-
+# this option to enable users to allow email notifications is unsubscribed since notifications sent by browser and not email
 def SubNews(self, *args, **kwargs):
 
     try:
@@ -548,7 +637,7 @@ def SubNews(self, *args, **kwargs):
 
 
 
-
+# this option to enable users to allow notifications is currently disabled
 @csrf_exempt # ok to exempt no input
 def api_subnews(request):
 
@@ -576,8 +665,6 @@ def api_subnews(request):
             return JsonResponse({"result": "error", "msg": "login_requred"})
     else:
         return redirect('/')
-
-
 
 
 
@@ -656,14 +743,12 @@ class ContactView(FormView):
 
 
         try:
-            send_mail(
+            async_contact_mail.delay(
                 subject=subject,
-                message="",
-                html_message=contact_message,
+                contact_message=contact_message,
                 from_email=from_email,
-                recipient_list=to_email,
-                fail_silently=False
-            )
+                to_email=to_email
+                )
 
             messages.info(self.request, "Thank you for your message, we will reply to you soon")
 

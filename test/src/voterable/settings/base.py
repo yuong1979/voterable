@@ -111,9 +111,10 @@ INSTALLED_APPS = [
 
     # firebase
     'firebasenotifications',
-    # 'fcm',
 
     'rest_framework',
+
+    'django_celery_beat',
 
 ]
 
@@ -358,16 +359,6 @@ BLEACH_ALLOWED_STYLES = ['width', 'height']
 
 
 
-CELERY_BROKER_URL = 'redis://localhost:6379'
-CELERY_RESULT_BACKEND = 'redis://localhost:6379'
-CELERY_ACCEPT_CONTENT = ['application/json']
-CELERY_TASK_SERIALIZER = 'json'
-CELERY_RESULT_SERIALIZER = 'json'
-CELERY_TIMEZONE = TIME_ZONE
-
-
-
-
 
 # import djcelery
 # djcelery.setup_loader()
@@ -419,15 +410,24 @@ CELERY_TIMEZONE = TIME_ZONE
 # # Firebase Related Settings
 
 # Server Key found under project settings -> cloud messaging
-SERVER_KEY = 'AAAAwzumhNY:APA91bGN8Gwj7-vwre05XzZcrQFXBDxd-NIOQjlpE_kcfPOSP_o0k2ECxzgQH0' \
-             'fh_LJhWDlz9H4ROTlho40H4Qf39xX3FQ42FOjQM0PrINq_30ewgIHTDkdeKhh3OCdMMIi_5HsQC4UH'
+# SERVER_KEY = 'AAAAZp1PDlM:APA91bGvEYakMq956I2iHA8wsHN9E9L3GO6S-AuWvs520cX-R7qminSiv' \
+#              'PBGvjejCVgoe4waDappEVV2eCLOzQSGlQaFgF5iGzz4X0uf8-CNSEudEcjDDCpiJTyEh_oEKOWCVc_9wc4J'
+
+SERVER_KEY = 'AAAAeQG8tYI:APA91bGvvs29a2MgSu8PCcuk3VXXNMUGaJT1sxCUqK576C5Gkqx-ZKNbQ2R' \
+             'rSgR-cWplJ9Vg75mInoOxxzy32ng6Q_2YCw0ibOOE_WEwrh-s8n-u-1L87sdd67K_ZVFL1A7gU_32YxrA'
 
 
-# apiKey
-API_KEY = 'AIzaSyCvd2Dw2i7rtNDByl6mmplyPebHMUy9bis'
+# # apiKey
+# API_KEY = 'AIzaSyANxM3W8UaFMNYixRe15NY61p4WNoEBqog'
 
-# messagingSenderId
-SENDER_ID = 838519391446
+# new apiKey
+API_KEY = 'AIzaSyCrt7-QOYmxzNDZoJqJhorIWJBytBoLoPc'
+
+# # messagingSenderId
+# SENDER_ID = 440725868115
+
+# new messagingSenderId
+SENDER_ID = 519720187266
 
 # topic name
 TOPIC_NAME = 'voterable'
@@ -436,4 +436,65 @@ MESSAGE_BODY='Checkout new and exciting updates at voterable!'
 
 MESSAGE_TITLE = 'Hello User'
 
-CLICK_ACTION = 'http://localhost:8000/tags/'
+CLICK_ACTION = 'http://localhost:8000/notifications/'
+
+NOTIFICATION_ICON = 'https://s3-ap-southeast-1.amazonaws.com/voterable-prod-bucket/static/img/voterable+logo.JPG'
+
+
+
+
+
+#using redis
+CELERY_BROKER_URL = 'redis://localhost:6379'
+CELERY_RESULT_BACKEND = 'redis://localhost:6379'
+CELERY_ACCEPT_CONTENT = ['application/json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_TIMEZONE = TIME_ZONE
+
+
+
+
+
+
+
+
+
+
+# #using aws sqs
+# AWS_ACCESS_KEY_ID='AKIAIHIMTXXYUBBENRVA'
+# AWS_SECRET_ACCESS_KEY='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'
+
+# CELERY_BROKER_URL = 'sqs://%s:%s@' % (AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY)
+# CELERY_BROKER_TRANSPORT = 'sqs'
+# # CELERY_BROKER_TRANSPORT_OPTIONS = {
+# #     'region': 'ap-southeast-1',
+# # }
+# CELERY_BROKER_USER = AWS_ACCESS_KEY_ID
+# CELERY_BROKER_PASSWORD = AWS_SECRET_ACCESS_KEY
+# CELERY_WORKER_STATE_DB = '/var/run/celery/worker.db'
+# CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers:DatabaseScheduler'
+# CELERY_WORKER_PREFETCH_MULTIPLIER = 0
+# BROKER_TRANSPORT_OPTIONS = {
+#     'region': 'ap-southeast-1',
+#     'polling_interval': 3,
+#     'visibility_timeout': 3600,
+# }
+
+
+# # CELERY_BROKER_URL = 'redis://localhost:6379'
+# # CELERY_RESULT_BACKEND = 'redis://localhost:6379'
+# CELERY_ACCEPT_CONTENT = ['application/json']
+# CELERY_TASK_SERIALIZER = 'json'
+# CELERY_RESULT_SERIALIZER = 'json'
+# CELERY_TIMEZONE = TIME_ZONE
+
+# CELERY_DEFAULT_QUEUE = 'celery'
+# CELERY_QUEUES = {
+#     CELERY_DEFAULT_QUEUE: {
+#         'exchange': CELERY_DEFAULT_QUEUE,
+#         'binding_key': CELERY_DEFAULT_QUEUE,
+#     }
+# }
+
+

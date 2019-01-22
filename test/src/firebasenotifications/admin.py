@@ -5,7 +5,8 @@ from firebasenotifications.models import DeviceToken
 
 
 class DeviceTokenAdmin(admin.ModelAdmin):
-	list_display = ['__str__','user_id','device_token','created']
+	# list_display = ['__str__','user_id','device_token','created']
+	list_display = ['__str__','userdt','user_id','device_token','created']
 
 	# inlines = [
 	# ]

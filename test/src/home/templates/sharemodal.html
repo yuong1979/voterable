@@ -9,7 +9,7 @@
 </style>
 
   <!-- The Modal -->
-  <div class="modal fade" id="ShareModal">
+  <div class="modal fade" id="ShareModal" style="margin:0% 1% 0% 1%; width:95%">
     <div class="modal-dialog modal-sm">
       <div class="modal-content">
       
@@ -22,17 +22,17 @@
         <!-- Modal body -->
         <div class="modal-body">
 
-          <a class="btn btn-primary btn-circle"
+          <a class="btn btn-primary btn-circle" style="margin:2px"
              href="https://www.facebook.com/sharer/sharer.php?u={{ request.build_absolute_uri }}">
               <i class="fab fa-facebook fa-2x" aria-hidden="true"></i>
           </a>
-          <a class="btn btn-info btn-circle" href="https://twitter.com/home?status={{ request.build_absolute_uri }}">
+          <a class="btn btn-info btn-circle" style="margin:2px" href="https://twitter.com/home?status={{ request.build_absolute_uri }}">
               <i class="fab fa-twitter fa-2x" aria-hidden="true"></i>
           </a>
-          <a class="btn btn-danger btn-circle" href="https://plus.google.com/share?url={{ request.build_absolute_uri }}">
+          <a class="btn btn-danger btn-circle" style="margin:2px" href="https://plus.google.com/share?url={{ request.build_absolute_uri }}">
               <i class="fab fa-google-plus fa-2x" aria-hidden="true"></i>
           </a>
-          <a class="btn btn-primary btn-circle"
+          <a class="btn btn-primary btn-circle" style="margin:2px"
              href="https://www.linkedin.com/shareArticle?mini=true&url={{ request.build_absolute_uri }}&title={{ instance.title }}">
               <i class="fab fa-linkedin fa-2x" aria-hidden="true"></i>
           </a>

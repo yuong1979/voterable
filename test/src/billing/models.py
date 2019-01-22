@@ -9,7 +9,7 @@ from django.conf import settings
 
 
 class Transaction(models.Model):
-	user = models.ForeignKey(settings.AUTH_USER_MODEL)
+	user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
 	price = models.DecimalField(max_digits=100, decimal_places=2, default=0, null=True)
 	# beforedate = models.DateTimeField(null=True)
 	# adddays = models.IntegerField(default=0)

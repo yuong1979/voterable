@@ -32,7 +32,6 @@
       const messaging = firebase.messaging();
 
 
-
     if('serviceWorker' in navigator){
       // registering the service worker
         navigator.serviceWorker.register('/serviceworker.js',{
@@ -46,22 +45,75 @@
     }
 
 
+
+
+
+
+
+
+// var refid = "{{referralid}}";
+
+// //check if refid is part of the url
+// if (!refid){
+//   console.log('no refid in url')
+  
+//   //if refid is not part of the url - check to see if can retrieve it from the sessionstorage
+//   if (sessionStorage.getItem('Refid') == "undefined"){
+//     //user does not have a ref id
+//     console.log("user does not have ref id")
+
+//   } else {
+//     var refid = sessionStorage.getItem('Refid')
+//   }
+
+// } else {
+
+// //the user is using a ref url to sign in so store that in sessionstorage so when he signs up he is given referral bonus
+// // var refid = {{referralid}}
+// sessionStorage.setItem('Refid',refid)
+// }
+
+// console.log(sessionStorage.getItem('Refid'))
+
+
+
+
+
+
+
+
+
+//checking if the the user has been prompted the notification already during current session
+console.log("Notification loaded:" + sessionStorage.getItem('Notification'))
+
+
+// session storage ensures popup only shows once per session for each user
+  if (sessionStorage.getItem('Notification') !== 'true')
+    {
+
+
+
+    //if user is signed in
     {% if register_token %}
 
             function getCookieValue(a) {
                     var b = document.cookie.match('(^|;)\\s*' + a + '\\s*=\\s*([^;]+)');
                     return b ? b.pop() : '';
                 }
+
             messaging
                     .requestPermission()
                     .then(function () {
+                        // user has allowed notification
                         console.log("Notification permission granted.");
                         // get the token in the form of promise
                         return messaging.getToken()
                     })
                     .then(function(token) {
-                        console.log(token);
+                        // adding the token to our database
+                        // console.log(token);
                         var $crf_token = getCookieValue("csrftoken");
+                        // attributing the token to the designated user for notification sending
                         $.ajax({
                                 type: "POST",
                                 url: "/devicetoken/add/",
@@ -71,20 +123,39 @@
                                        },
                                 headers:{"X-CSRFToken": $crf_token},
                                 success: function (data,status) {
-                                    console.log("Data: " + data + "\nStatus: " + status);
+                                    // console.log("Data: " + data + "\nStatus: " + status);
+                                    console.log("notification subscription successful")
+                                    //adding token to database successful
                                 },
-                                error: function () {
-                                    console.log("There was an error")
+                                error: function (err) {
+                                    //user already has signed in already
+                                    console.log("Error: " + err.responseText)
                                 }
                             });
+
                     })
                     .catch(function (err) {
+                      //if users refuse or block popup requesting notification
                         console.log("Unable to get permission to notify.", err);
+                      //if users refuse notification stop for this session, only request when user is on next session
+                        sessionStorage.setItem('Notification','true');
                     });
+
+
                 messaging.onMessage(function(payload) {
                     console.log("Message received. ", payload);
                 });
     {% endif %}
+
+ 
+    }
+
+
+
+
+
+
+
 
 
 
@@ -168,14 +239,34 @@
         <h4 class="card-title allfontcolor"><i class="allfontcolor fas fa-sliders fa-1x"></i>&nbsp;&nbsp;&nbsp;&nbsp;Settings</h4><hr>
 
 
-
+<!-- unhide the below if you want to give user ability to control their notifications -->
           <ul class="list-group">
 
-<!-- unhide the below and integrate that with notification when notification is sorted out -->
+
             <li class="list-group-item">
-              <b class="wdstyle">Notifications:</b> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-              <input id="toggle-event" urequest_id="{{ request.user.id }}" type="checkbox" data-toggle="toggle" data-size="small" data-width="80">
+              <b class="wdstyle">Enable Notifications:</b>
+
+              <a href="#" title="Notifications" data-toggle="popover" data-trigger="focus" data-content="Get notified on latest updates to your favorite tags and polls by turning on notifications"><i class="fas fa-question-circle"></i></a>
+
+            <br><br>
+              <input id="toggle-event" style="font-weight:bold" urequest_id="{{ request.user.id }}" type="checkbox" data-toggle="toggle" data-size="small" data-width="80" {{usernewsletter}}>
+            
             </li>
+
+
+            <li class="list-group-item">
+              <b class="wdstyle">Your referral code:</b>
+
+              <a href="#" title="Referral code" data-toggle="popover" data-trigger="focus" data-content="Share your referral code with your friends to get {{ refdays }} additional days of premium access for both yourself and your friends"><i class="fas fa-question-circle"></i></a>
+
+              <br><br>
+
+              <h5><span class="badge badge-secondary">{{ refurl }}</span></h5>
+            </li>
+
+
+
+
 
             <li class="list-group-item">
 
@@ -189,7 +280,7 @@
 <!--             <a href='' class='buttonspace btn-sm btn-danger' data-action='show-spinner' ><b>Cancel Subscription</b></a> -->
 
               
-                {% if user.member == True %}
+<!--                 {% if user.member == True %}
                 <b>Your Subscription</b><br><br>
                 <b class="wdstyle">Type:</b>
                 <span class="badge badge-pill badge-secondary" style="float:right"> Basic </span>
@@ -198,14 +289,14 @@
 
                 <b class="wdstyle">End date:</b>
                 <span class="badge badge-pill badge-secondary" style="float:right"> {{ user.subenddate|timeuntil }} </span>
-                {% endif %}
+                {% endif %} -->
 
+                <br>
+                <b>Your Subscription</b><br><br>
                 {% if user.memberp == True %}
                 <b class="wdstyle">Type:</b>
                 <span class="badge badge-pill badge-secondary" style="float:right"> Premium </span>
-
                 <br><br>
-                <b>Your Subscription</b><br><br>
                 <b class="wdstyle">End date:</b>
                 <span class="badge badge-pill badge-secondary" style="float:right"> {{ user.subenddatep|timeuntil }} </span>
                 {% endif %}
@@ -216,10 +307,14 @@
 
                 {% if freedays %}
 
+              <b class="wdstyle">Available premium days</b>
+
+              <a href="#" title="Free Premium Days" data-toggle="popover" data-trigger="focus" data-content="Click to activate the number of days of free access"><i class="fas fa-question-circle"></i></a><br>
+
                 <form action='' method='POST'  style="display: inline-block;">{% csrf_token %}
                   <input type="hidden" name="freeday_count_id" value="{{ freedays }}">
                   &nbsp;&nbsp;&nbsp;
-                  <input type="submit" class='btn btn-sm btn-primary'  style="font-weight: bold; white-space: normal;" value="Activate {{ freedays }} days of free premium access">
+                  <input type="submit" class='btn btn-sm btn-primary'  style="font-weight: bold; white-space: normal;" value="Activate to get access to {{ freedays }} days free premium access">
                 </form><br>
 
                 {% else %}
@@ -473,11 +568,14 @@
 
 
 
-
 </div> 
 
-
 <br><br>
+
+{% include 'footer.html' %}
+
+
+
 
 
 
@@ -538,10 +636,10 @@
         success: function(jsondata) {
 
         if (jsondata.result=="Subscribed"){
-          var message = "Email Notifications On"
+          var message = "Notifications On"
           // $('#toggle-event').bootstrapToggle('off')
         }else{
-          var message = "Email Notifications Off"
+          var message = "Notifications Off"
           // $('#toggle-event').bootstrapToggle('on')
         }
         showFlashMessage(message)
@@ -558,12 +656,14 @@
   })
 
 
-
-
-
 $(function () {
   $('[data-toggle="popover"]').popover()
 })
+
+
+
+
+
 
 
 // function Test() {

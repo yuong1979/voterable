@@ -22,8 +22,6 @@ class TestViewPollTypeUnique:
 		assert result == "/polls/?type=" + str(obj.p_type.slug), 'Should be absolute url to the ptype'
 
 
-
-
 class TestViewPollItemUnique:
 	def test_model_pitemview_create(self):
 		pobj = mixer.blend('polls.PollItem')
@@ -37,8 +35,6 @@ class TestViewPollItemUnique:
 
 		result = obj.get_user_count()
 		assert result == 1, 'number of users viewed should be 1'
-
-
 
 
 class TestRanking:
@@ -56,5 +52,29 @@ class TestPostReport:
 		obj = mixer.blend('analytics.PostReport', Puser=uobj, p_item=pobj)
 
 		assert obj.pk == 1, 'Should create a new report instance'
+
+
+class TestPromoAnalytic:
+	def test_model_promoanalytic_create(self):
+		uobj = User.objects.create_user(
+			username='normaluser', email='s@gmail.com', password='secret123')
+		obj = mixer.blend('analytics.PromoAnalytic', promouser=uobj)
+		assert obj.pk == 1, 'Should create a view instance'
+
+
+class TestMarketingPromo:
+	def test_model_marketingpromo_create(self):
+		uobj = User.objects.create_user(
+			username='normaluser', email='s@gmail.com', password='secret123')
+		obj = mixer.blend('analytics.MarketingPromo', referrer=uobj)
+		assert obj.pk == 1, 'Should create a view instance'
+
+
+class TestControlTable:
+	def test_model_controltable_create(self):
+		obj = mixer.blend('analytics.ControlTable')
+		assert obj.pk == 1, 'Should create a view instance'
+
+
 
 

@@ -83,14 +83,14 @@ class NotificationManager(models.Manager):
 
 
 class Notification(models.Model):
-	sender = models.ForeignKey(settings.AUTH_USER_MODEL, null=True)
-	recipient = models.ForeignKey(settings.AUTH_USER_MODEL, related_name="notifications")
+	sender = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, on_delete=models.CASCADE)
+	recipient = models.ForeignKey(settings.AUTH_USER_MODEL, related_name="notifications", on_delete=models.CASCADE)
 	action = models.CharField(max_length=255)
 
-	polltype = models.ForeignKey(Ptype, on_delete=models.PROTECT, blank=True, null=True, default=None)
-	pollitem = models.ForeignKey(PollItem, on_delete=models.PROTECT, blank=True, null=True, default=None)
-	tagpoll = models.ForeignKey(TagPoll, on_delete=models.PROTECT, blank=True, null=True, default=None)
-	pollreview = models.ForeignKey(Message, on_delete=models.PROTECT, blank=True, null=True, default=None)
+	polltype = models.ForeignKey(Ptype, on_delete=models.CASCADE, blank=True, null=True, default=None)
+	pollitem = models.ForeignKey(PollItem, on_delete=models.CASCADE, blank=True, null=True, default=None)
+	tagpoll = models.ForeignKey(TagPoll, on_delete=models.CASCADE, blank=True, null=True, default=None)
+	pollreview = models.ForeignKey(Message, on_delete=models.CASCADE, blank=True, null=True, default=None)
 
 	message = models.CharField(max_length=255)
 	active = models.BooleanField(default=True)

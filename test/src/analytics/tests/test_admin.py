@@ -33,3 +33,43 @@ class TestAnalyticsAdmin:
 		result = polls_admin.__str__(obj)
 		assert result == str(obj.p_item), 'Should return the pollitem'
 
+
+
+	def test_promoanalytic__str__(self):
+		site = AdminSite()
+		promoanalytic_admin = admin.PromoAnalyticAdmin(models.PromoAnalytic, site)
+
+		uobj = User.objects.create_user(
+			username='normaluser', email='s@gmail.com', password='secret123')
+		obj = mixer.blend('analytics.PromoAnalytic', promouser=uobj)
+
+		result = promoanalytic_admin.__str__(obj)
+		assert result == str(obj.promouser), 'Should return the name of the promouser'
+
+
+
+	def test_marketingpromo__str__(self):
+		site = AdminSite()
+		marketingpromo_admin = admin.MarketingPromoAdmin(models.MarketingPromo, site)
+
+		# uobj = User.objects.create_user(
+		# 	username='normaluser', email='s@gmail.com', password='secret123')
+		obj = mixer.blend('analytics.MarketingPromo')
+
+		result = marketingpromo_admin.__str__(obj)
+		assert result == str(obj.promoname), 'Should return the name of the promoname'
+
+
+
+	def test_promoanalytic__str__(self):
+		site = AdminSite()
+		ctrltable_admin = admin.ControlTableAdmin(models.ControlTable, site)
+
+		# uobj = User.objects.create_user(
+		# 	username='normaluser', email='s@gmail.com', password='secret123')
+		obj = mixer.blend('analytics.ControlTable')
+
+		result = ctrltable_admin.__str__(obj)
+		assert result == str(obj.controlname), 'Should return the name of the controlname'
+
+

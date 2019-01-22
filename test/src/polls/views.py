@@ -36,6 +36,8 @@ from django.utils.timezone import utc
 from itertools import chain
 from notifications.models import Notification
 import time
+from celery import shared_task, task, app
+from analytics.models import ControlTable
 
 # class PollVoteTopicsView(ListView, FormView):
 #     model = Ptype
@@ -54,6 +56,20 @@ import time
 #     template_name = "polls/polls_types.html"
 #     form_class = SearchForm
 
+
+
+
+
+@task()
+def async_report_mail(subject, contact_message, from_email, to_email):
+    send_mail(
+        subject=subject,
+        message="",
+        html_message=contact_message,
+        from_email=from_email,
+        recipient_list=to_email,
+        fail_silently=False
+    )
 
 
 
@@ -345,7 +361,8 @@ class PollRecoView(LoginRequiredMixin, ListView, FormView):
 
             d = datetime.utcnow()
             nowdate = pytz.utc.localize(d)
-            okdate = lpostdate + timedelta(hours=1)
+            # okdate = lpostdate + timedelta(hours=1)
+            okdate = lpostdate + timedelta(minutes=1)
 
             if nowdate >= okdate:
                 context["Addpost"] = True
@@ -837,7 +854,8 @@ class PollsListView(ListView, PollTypeMixin):
         context['Type_Slug'] = type_slug
         context['listtitle'] = "All"
 
-
+        surveypoptime = ControlTable.objects.get(id=1).delaypopsurvey
+        context['surveypop'] = surveypoptime
 
         # context['order_by'] = self.request.GET.get('orderby', '-score')
         # favorite = self.request.GET.get('favorite', None)
@@ -875,27 +893,27 @@ class PollsListView(ListView, PollTypeMixin):
             context['pollnega'] = pollnega
 
 
-            #exclude entries that have been voted down more then 10 votes
-            todisallow = PollItem.objects.filter(allowed=True, polltype=ptype_obj, score__lte=-10)
-            if todisallow:
+            # #exclude entries that have been voted down more then 10 votes
+            # todisallow = PollItem.objects.filter(allowed=True, polltype=ptype_obj, score__lte=-10)
+            # if todisallow:
 
-                for i in todisallow:
-                    # #remove all the people who favorited the disallowed post - removed as it might be confusing and take too much time
-                    # rmvfav = PollFav.objects.filter(poll=i)
-                    # if rmvfav:
-                    #     for j in rmvfav:
-                    #         j.poll.remove(i)
+            #     for i in todisallow:
+            #         # #remove all the people who favorited the disallowed post - removed as it might be confusing and take too much time
+            #         # rmvfav = PollFav.objects.filter(poll=i)
+            #         # if rmvfav:
+            #         #     for j in rmvfav:
+            #         #         j.poll.remove(i)
 
-                    #remove the notifications when the post is downvoted
-                    rmvnoti = Notification.objects.filter(pollitem=i)
-                    if rmvnoti:
-                        for k in rmvnoti:
-                            k.active=False
-                            k.save()
+            #         #remove the notifications when the post is downvoted
+            #         rmvnoti = Notification.objects.filter(pollitem=i)
+            #         if rmvnoti:
+            #             for k in rmvnoti:
+            #                 k.active=False
+            #                 k.save()
 
-                    #disallow the poll from showing on polllist
-                    i.allowed=False
-                    i.save()
+            #         #disallow the poll from showing on polllist
+            #         i.allowed=False
+            #         i.save()
 
 
             #retrieve the entries that the users have favorited
@@ -924,8 +942,8 @@ class PollsListView(ListView, PollTypeMixin):
 
 
             #allow basic view of each poll only of user is subscribed
-            if self.request.user.puser.member == True:
-                context["Subscribed"] = True
+            # if self.request.user.puser.member == True:
+            #     context["Subscribed"] = True
 
             #allow premium view of each poll only of user is subscribed
             if self.request.user.puser.memberp == True:
@@ -940,16 +958,21 @@ class PollsListView(ListView, PollTypeMixin):
             context["Addpost"] = True
 
 
-        # check if user can post based on 1 hours after the user posted
+        # check if user can post based on "cpostdelay" minutes after the user posted
+
+        ctable = ControlTable.objects.get(id=1)
+        cpostdelay = ctable.postadddelay
+
         user = self.request.user
         # if the user has not posted anything before
+
         try:
         # last time the user posted
             lpostdate = PollItem.objects.filter(user_submit=user).last().date
 
             d = datetime.utcnow()
             nowdate = pytz.utc.localize(d)
-            okdate = lpostdate + timedelta(hours=1)
+            okdate = lpostdate + timedelta(minutes=cpostdelay)
 
             if nowdate >= okdate:
                 context["Addpost"] = True
@@ -1464,8 +1487,8 @@ class PollDetailView(LoginRequiredMixin, DetailView, FormView):
 
 
             #allow basic view of each poll only of user is subscribed
-            if self.request.user.puser.member == True:
-                context["Subscribed"] = True
+            # if self.request.user.puser.member == True:
+            #     context["Subscribed"] = True
 
             #allow premium view of each poll only of user is subscribed
             if self.request.user.puser.memberp == True:
@@ -1618,8 +1641,8 @@ class PollsListFavoriteView(ListView):
         context['order_by'] = self.order
 
         #allow basic view of each poll only of user is subscribed
-        if self.request.user.puser.member == True:
-            context["Subscribed"] = True
+        # if self.request.user.puser.member == True:
+        #     context["Subscribed"] = True
 
         #allow premium view of each poll only of user is subscribed
         if self.request.user.puser.memberp == True:
@@ -1750,15 +1773,23 @@ def api_report(request):
                 preport.save()
 
 
+                # original email send without async
+                # send_mail(
+                #     subject=subject,
+                #     message="Poll item " + str(pollid) + " has been reported for issue " + issueid,
+                #     html_message=contact_message,
+                #     from_email=from_email,
+                #     recipient_list=to_email,
+                #     fail_silently=False
+                # )
 
-                send_mail(
+
+                async_report_mail.delay(
                     subject=subject,
-                    message="Poll item " + str(pollid) + " has been reported for issue " + issueid,
-                    html_message=contact_message,
+                    contact_message=contact_message,
                     from_email=from_email,
-                    recipient_list=to_email,
-                    fail_silently=False
-                )
+                    to_email=to_email
+                    )
             
             return JsonResponse({"result": result })
 
@@ -1769,10 +1800,36 @@ def api_report(request):
 
 
 
+#counting the number of views when a poll has when dropdown is clicked on
+@csrf_exempt # ok to exempt no input
+def api_vcount(request):
+
+    if request.POST:
+        if request.user.is_authenticated:
+            poll_id = request.POST.get('poll_id')
+
+            pobj = PollItem.objects.get(id=poll_id)
+
+            if pobj.user_submit != request.user:
+                view_obj = ViewPollItemsUnique.objects.get_or_create(p_item=pobj)[0]
+                view_obj.userview.add(request.user)
+                view_obj.vcount = view_obj.userview.count()
+                view_obj.save()
+
+            result = "success"
+
+            return JsonResponse({"result": result})
+        else:
+            return JsonResponse({"result": "error", "msg": "login_requred"})
+    else:
+        return redirect('/')
+
+
+
 
 @csrf_exempt # ok to exempt no input
 def api_like(request):
-    msg_id =  request.POST.get('msg_id')
+    # msg_id =  request.POST.get('msg_id')
 
     if request.POST:
         if request.user.is_authenticated:
@@ -1915,6 +1972,26 @@ def api_votes(request):
                     vote_obj.vote = 0
                 else:
                     vote_obj.vote = -1
+
+                    #exclude entries that have been voted down more the number of votes stipulated in the database
+                    print (poll.score)
+
+                    ctable = ControlTable.objects.get(id=1)
+                    rmvotesno = ctable.removepostdvotes
+
+                    if poll.score <= -rmvotesno:
+                        print ("remove poll")
+                        poll.allowed=False
+                        poll.save()
+
+                        #remove the notifications when the post is downvoted
+                        rmvnoti = Notification.objects.filter(pollitem=poll)
+                        if rmvnoti:
+                            for k in rmvnoti:
+                                k.active=False
+                                k.save()
+
+
 
             vote_obj.save()
 

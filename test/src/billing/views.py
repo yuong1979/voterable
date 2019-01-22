@@ -89,41 +89,42 @@ class SelectPlan(LoginRequiredMixin, TemplateView):
 	def get_context_data(self, *args, **kwargs):
 		context = super(SelectPlan, self).get_context_data(*args, **kwargs)
 
-		Plan02 = get_object_or_404(PriceToDays, subplan="Plan02")
-		Plan03 = get_object_or_404(PriceToDays, subplan="Plan03")
+		Plan04 = get_object_or_404(PriceToDays, subplan="Plan04")
 		Plan05 = get_object_or_404(PriceToDays, subplan="Plan05")
+		Plan06 = get_object_or_404(PriceToDays, subplan="Plan06")
 
-		# totaltipcount = (PollItem.objects.filter(allowed=True).count())*30
+		
+		totaltipcount = (PollItem.objects.filter(allowed=True).count())
 
-		#Price per month
-		context['Plan02price'] = round(Plan02.cashprice/Plan02.daystoadd*30,2)
-		context['Plan03price'] = round(Plan03.cashprice/Plan03.daystoadd*30,2)
+		#Price per days
+		context['Plan04price'] = round(Plan04.cashprice/Plan04.daystoadd*30,2)
 		context['Plan05price'] = round(Plan05.cashprice/Plan05.daystoadd*30,2)
+		context['Plan06price'] = round(Plan06.cashprice/Plan06.daystoadd*30,2)
 
-		# #Price per tip
-		# context['Plan02pricepertip'] = round(context['Plan02price']/totaltipcount,4)
-		# context['Plan03pricepertip'] = round(context['Plan03price']/totaltipcount,4)
-		# context['Plan05pricepertip'] = round(context['Plan05price']/totaltipcount,4)
+		#Price per tip
+		context['Plan04pricepertip'] = round(context['Plan04price']/totaltipcount,2)
+		context['Plan05pricepertip'] = round(context['Plan05price']/totaltipcount,2)
+		context['Plan06pricepertip'] = round(context['Plan06price']/totaltipcount,2)
 
-		# # numbers of days
-		# context['Plan02days'] = Plan02.daystoadd
-		# context['Plan03days'] = Plan03.daystoadd
-		# context['Plan05days'] = Plan05.daystoadd
+		# numbers of days
+		context['Plan04days'] = Plan04.daystoadd
+		context['Plan05days'] = Plan05.daystoadd
+		context['Plan06days'] = Plan06.daystoadd
 		
 		# cashprice of the package
-		context['Plan02total'] = Plan02.cashprice
-		context['Plan03total'] = Plan03.cashprice
+		context['Plan04total'] = Plan04.cashprice
 		context['Plan05total'] = Plan05.cashprice
+		context['Plan06total'] = Plan06.cashprice
 
 		#name of the submission button
-		context['Plan02'] = Plan02.subplan
-		context['Plan03'] = Plan03.subplan
+		context['Plan04'] = Plan04.subplan
 		context['Plan05'] = Plan05.subplan
+		context['Plan06'] = Plan06.subplan
 
 		# Name of the plan
-		context['Plan02subplan'] = Plan02.label
-		context['Plan03subplan'] = Plan03.label
+		context['Plan04subplan'] = Plan04.label
 		context['Plan05subplan'] = Plan05.label
+		context['Plan06subplan'] = Plan06.label
 
 		return context
 
@@ -244,6 +245,8 @@ class StripeCheckOut(LoginRequiredMixin, TemplateView):
 		plantype = subtypeobj.label
 
 		print (plantype[:5])
+
+		#leaving this code although I removed basic (normal subscriber) because all the members will fall under else (premium)
 
 		if plantype[:5] == "Basic":
 			#membersubscription

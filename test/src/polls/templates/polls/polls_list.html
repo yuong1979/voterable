@@ -24,9 +24,7 @@
 
 {% block content %}
 
-<!-- popups to conduct surveys and to announce deals -->
-{# {% include "survey.html" %} #}
-{# {% include "offer.html" %} #}
+
 
 {% include 'scrollbar.html' %} <!-- for users to estimate how many on the list -->
 
@@ -229,7 +227,10 @@
                           {% if poll.description|striptags_except:"a, p, ol, ul, li, br, i"|safe|length < 150 %}
 
                             {% if poll.textatt %}<small> Credits: {{ poll.textatt }}</small>{% endif %}
+
+                            {% if Subscribedp == True or poll.user_submit == request.user or free == True %}
                             {% include 'poll_features.html' %}
+                            {% endif %}
 
                           {% else %}
 
@@ -237,7 +238,7 @@
 
                               {% if Subscribedp == True or poll.user_submit == request.user or free == True %}
 
-                                <button class="btn btn-link poll-button" style="padding:0px; margin-top:-5px">
+                                <button class="btn btn-link poll-button"  poll_id="{{ poll.id }}" style="padding:0px; margin-top:-5px">
                                   <small>Read More</small>
                                 </button>
 
@@ -251,7 +252,7 @@
 
                               {% elif Subscribed == True %}
 
-                                <button class="btn btn-link poll-button" style="padding:0px; margin-top:-5px">
+                                <button class="btn btn-link poll-button" poll_id="{{ poll.id }}" style="padding:0px; margin-top:-5px">
                                   <small>Read More</small>
                                 </button>
 
@@ -326,7 +327,10 @@
                           {% if poll.description|striptags_except:"a, p, ol, ul, li, i"|safe|length < 150 %}
 
                             {% if poll.textatt %}<small> Credits: {{ poll.textatt }}</small>{% endif %}
+                            
+                            {% if Subscribedp == True or poll.user_submit == request.user or free == True %}
                             {% include 'poll_features.html' %}
+                            {% endif %}
 
                           {% else %}
 
@@ -334,7 +338,7 @@
 
                               {% if Subscribedp == True or poll.user_submit == request.user or free == True  %}
 
-                                <button class="btn btn-link poll-button" style="padding:0px; margin-top:-5px">
+                                <button class="btn btn-link poll-button" poll_id="{{ poll.id }}" style="padding:0px; margin-top:-5px">
                                   <small>Read More</small>
                                 </button>
 
@@ -349,7 +353,7 @@
 
                               {% elif Subscribed == True %}
 
-                                <button class="btn btn-link poll-button" style="padding:0px; margin-top:-5px">
+                                <button class="btn btn-link poll-button" poll_id="{{ poll.id }}" style="padding:0px; margin-top:-5px">
                                   <small>Read More</small>
                                 </button>
 
@@ -443,10 +447,9 @@
 
 
 
-
-
-
-
+<!-- popups to conduct surveys and to announce deals -->
+{% include "surveypopup.html" %}
+{# {% include "offerpopup.html" %} #}
 
 
 
@@ -467,7 +470,7 @@
 
 
   <!-- The Modal -->
-  <div class="modal fade" id="ReportModal">
+  <div class="modal fade" id="ReportModal" style="margin:0% 1% 0% 1%; width:95%">
     <div class="modal-dialog">
       <div class="modal-content">
       
@@ -584,7 +587,9 @@
 
 
 
+
 {#  <script>#}
+
 
 
 
@@ -619,6 +624,7 @@
         set_fav();
         set_more();
         set_report();
+
  
     $(".note-video-clip").attr("width", "100%");
     $(".note-video-clip").attr("height", "300");
@@ -633,14 +639,45 @@
 
 
 
+
   function set_more() {
     $(".poll-button").on('click', function (event) {
-      var $tipRow = $(event.target).closest('.row-tip');
+      var $tipRow = $(event.target).closest('.row-tip');   
+
       $tipRow.find('.row-tip-thumb').addClass('d-none');
       $tipRow.find('.row-tip-body').removeClass('col-sm-7');
       $tipRow.find('.tip-sliced').addClass('d-none');
       $tipRow.find('button').addClass('d-none');
       $tipRow.find('span.poll-collapse').removeClass('d-none');
+
+      //inserting the viewcount everytime a user views a poll
+      var poll_id = $(this).attr("poll_id");
+
+        $.ajax({
+          dataType: 'json',
+          type: 'POST',
+          data: 'poll_id=' + poll_id,
+          url: '/polls/vcount/',
+          success: function(jsondata) {
+
+              // var score_id = "#poll-score-" + poll_id;
+
+              if (jsondata.msg === "login_requred") {
+                  window.location.assign("/accounts/login/");
+              } else {
+
+                console.log(jsondata.result)
+
+              }
+          }
+        });
+
+
+
+
+
+
+
     });
   }
 
