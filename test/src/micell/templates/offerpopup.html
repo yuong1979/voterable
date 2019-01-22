@@ -33,6 +33,16 @@ textarea:focus {
 }
 
 
+i.circle {
+  display: inline-block;
+  border-radius: 100px;
+  border-style: solid;
+  border-width: 6px;
+  box-shadow: 0px 0px 2px #888;
+  padding: 0.6em 0.6em;
+
+}
+
 </style>
 
 
@@ -63,21 +73,27 @@ textarea:focus {
 
 
 
-
   <!-- The Offer Modal -->
   <div class="modal fade" id="OfferModal">
     <div class="modal-dialog">
       <div class="modal-content">
       
-        <div class="modal-header">
-          <h4 class="modal-title">Half Price off!</h4>
+        <div class="modal-header" style="background-color:#0A8082">
+          <h4 class="modal-title" style="color:white">Half Price off!</h4>
           <button type="button" class="close" data-dismiss="modal">&times;</button>
         </div>
         
         <div class="modal-body center">
+
+          <br><i class="circle fas fa-shopping-cart fa-2x" style="color:#0A8082"></i><br><br>
+
           <h4>Subscribe right now to get half price off!</h4><br>
-          <h2 id="timer" style="font-family:'Courier New'"></h2>
-          <a href='{% url 'SelectPlan' %}' class='buttonspace btn btn-primary' >Subscribe</a>
+          
+          <h5>Deal ends in</h5>
+
+          <h2 id="timer" style="font-family:'Courier New';background-color:lightgrey; padding:20px; font-size: xx-large; border-radius: 5px; font-weight: bold;"></h2>
+
+          <a href='{% url 'SelectPlan' %}' class='buttonspace btn btn-primary' ><b>Subscribe now</b></a>
         </div>
       
       </div>
@@ -112,7 +128,7 @@ if( $('#timer').length ) //if #timer selector exists then activate
 {
 
 // Set the date we're counting down to
-var countDownDate = new Date("Jan 1, 2019 00:00:00").getTime();
+var countDownDate = new Date("Jan 31, 2019 00:00:00").getTime();
 
 // Update the count down every 1 second
 var x = setInterval(function() {

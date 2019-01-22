@@ -37,6 +37,12 @@ class TestBillingViews(TestCase):
 			username='adminuser', email='s@gmail.com', password='secret123', is_staff=True)
 
 
+		#creating poll so poll per price is not divisbilble by zero error
+		obj_ptype = mixer.blend('polls.Ptype', active=True)
+		obj_pitem0 = mixer.blend('polls.PollItem', polltype=obj_ptype, user_submit=self.user, allowed=True)
+		obj_pitem1 = mixer.blend('polls.PollItem', polltype=obj_ptype, user_submit=self.user, allowed=True)
+
+
 		obj_puser = mixer.blend('users.PUser', user=self.user)
 		obj_puser_basic = mixer.blend('users.PUser', user=self.basicuser, member=True)
 		obj_puser_premium = mixer.blend('users.PUser', user=self.premiumuser, pmember=True)
@@ -46,9 +52,9 @@ class TestBillingViews(TestCase):
 		obj_transactionb = mixer.blend('billing.Transaction', user=self.basicuser)
 		obj_transactionp = mixer.blend('billing.Transaction', user=self.premiumuser)
 
-		obj_pricetodays02 = mixer.blend('billing.PriceToDays', active=True, subplan="Plan02", cashprice=20, daystoadd=30)
-		obj_pricetodays03 = mixer.blend('billing.PriceToDays', active=True, subplan="Plan03", cashprice=40, daystoadd=60)
-		obj_pricetodays04 = mixer.blend('billing.PriceToDays', active=True, subplan="Plan05", cashprice=60, daystoadd=90)
+		obj_pricetodays04 = mixer.blend('billing.PriceToDays', active=True, subplan="Plan04", cashprice=20, daystoadd=30)
+		obj_pricetodays05 = mixer.blend('billing.PriceToDays', active=True, subplan="Plan05", cashprice=40, daystoadd=60)
+		obj_pricetodays06 = mixer.blend('billing.PriceToDays', active=True, subplan="Plan06", cashprice=60, daystoadd=90)
 
 		obj_puser_basic.substartdate = datetime.now()
 		obj_puser_basic.subenddate = datetime.now() + timedelta(days=365)

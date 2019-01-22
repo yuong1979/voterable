@@ -259,7 +259,7 @@
         <hr>
 
 
-
+<!-- only display analytics if the user is premium or the person who created the poll -->
         {% if request.user.puser.memberp or poll.user_submit == request.user %}
         <div class="col-xs-12" style="padding:8px; margin:5px;  ">
 
@@ -505,7 +505,7 @@
 
 
   <!-- The Modal -->
-  <div class="modal fade" id="CommentModel">
+  <div class="modal fade" id="CommentModel" style="margin:30% 1% 0% 1%;">
     <div class="modal-dialog">
       <div class="modal-content">
       
@@ -564,7 +564,7 @@
 
 
 <!-- Modalcomment -->
-<div class="modal fade" id="CommentModel" role="dialog">
+<div class="modal fade" id="CommentModel" role="dialog" style="margin:30% 1% 0% 1%;">
   <div class="modal-dialog modal-sm">
     <div class="modal-content">
       <div class="modal-header">
@@ -586,7 +586,6 @@
           {{ user }}
           {% endif %}
           </b>
-
 
         </h4>
 

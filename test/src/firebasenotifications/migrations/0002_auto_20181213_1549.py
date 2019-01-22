@@ -17,7 +17,7 @@ class Migration(migrations.Migration):
             name='devicetoken',
             options={'ordering': ('created',)},
         ),
-        migrations.AddField(
+        migrations.AlterField(
             model_name='devicetoken',
             name='created',
             field=models.DateTimeField(auto_now_add=True, default=django.utils.timezone.now),

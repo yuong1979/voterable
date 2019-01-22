@@ -2,7 +2,7 @@ from django.conf.urls import url
 from polls.views import (PollsListView, PollDetailView, api_votes, favorite_poll, PollTopicsView,
     PollsListFavoriteView, PollDetailCreate, PollDetailUpdate, #PollDetailDelete,
     PollListCreate, PollListUpdate, PollSearchView, api_fav, api_like, api_report, api_sugglikes,
-    PollSuggView, PollRecoView, PollDetailPreview
+    PollSuggView, PollRecoView, PollDetailPreview, api_vcount
     )
 
 
@@ -34,7 +34,7 @@ urlpatterns = [
     url(r'^polls/like/$', api_like, name="like"),
     url(r'^polls/report/$', api_report, name="report"),
     url(r'^polls/sugglikes/$', api_sugglikes, name="sugglikes"),
-
+    url(r'^polls/vcount/$', api_vcount, name="countpviews"),
 
     url(r'^polls/(?P<pk>[0-9]+)/messages/add$', PollDetailView.as_view(), name="message_add"),
     url(r'^polls/(?P<pk>[0-9]+)/messages/(?P<id>[0-9]+)/edit$', PollDetailView.as_view(), name="message_edit"),

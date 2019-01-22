@@ -17,7 +17,7 @@ environment-defaults:
 global:
   application_name: voterable
   branch: null
-  default_ec2_keyname: voter
+  default_ec2_keyname: ExternalUser
   default_platform: Python 3.6
   default_region: ap-southeast-1
   include_git_submodules: true

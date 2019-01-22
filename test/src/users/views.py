@@ -17,7 +17,7 @@ from analytics.models import ViewPollTypeUnique, ViewPollItemsUnique, Ranking
 from django.db.models import Sum
 from messaging.models import Message
 from mixins.mixins import LoginRequiredMixin
-
+from analytics.models import PromoAnalytic, ControlTable,MarketingPromo
 
 class PUserDetail(DetailView):
     model = PUser
@@ -145,10 +145,12 @@ class PUserCreate(CreateView, LoginRequiredMixin):
         if not self.request.user.is_authenticated:
             return redirect('Home')
 
-        #exit to updating terms and condition agreement if users already signed up
+        #exit to home if puser is created and users have agreed to terms and conditions
         try:
             user = PUser.objects.get(user_id=self.request.user.id)
-            return redirect(reverse('PUserUpdate', kwargs={'pk':user.id}))
+            # return redirect(reverse('PUserUpdate', kwargs={'pk':user.id}))
+            return redirect('Home')
+
         except:
             pass
 
@@ -163,7 +165,44 @@ class PUserCreate(CreateView, LoginRequiredMixin):
         i.save()
 
         valid_data = super(PUserCreate, self).form_valid(form)
+
+
+        ctable = ControlTable.objects.get(id=1)
+
+        signupdays = ctable.signupdays
+        referraldays = ctable.freedaysreferral
+
         
+        try:
+
+            referralid = form.cleaned_data['referralcode']
+
+            #checking if the referral code is valid and inside the puser dataset
+            referring_obj = PUser.objects.get(referralid=referralid)
+            
+            #adding freedays to the referring user dataset
+            referring_obj.freedays = referring_obj.freedays + referraldays
+            referring_obj.save()
+
+            #adding freedays to the referred user dataset
+            referred_obj = PUser.objects.get(user=self.request.user)
+            referred_obj.freedays = referred_obj.freedays + referraldays
+            referred_obj.save()
+
+            #updating the PromoAnalytic table
+            referral = PromoAnalytic.objects.get_or_create(referrer=referring_obj.user, promouser=referred_obj.user)[0]
+            referral.promoname = "userreferral " + str(self.request.user)[:45]
+            referral.promotype = "userreferral "
+            referral.ref_id = referralid
+
+            referral.save()
+
+            messages.success(self.request, "You have been given an additional " + str(referraldays) + " extra days of premium package free for using your referral code.")
+
+        except:
+            pass
+
+
         #Create a Puser        
         user = PUser.objects.get_or_create(user=self.request.user)[0]
 
@@ -172,16 +211,30 @@ class PUserCreate(CreateView, LoginRequiredMixin):
         # on the create, update poll, create, update poll entry, if puser = banned, exit and tell user he is banned
 
         #add one day of free trial for complete content?
-        user.freedays = user.freedays + 1
+        user.freedays = user.freedays + signupdays
         user.save()
-        messages.success(self.request, "You have been given 1 days of premium package free trial, activate anytime.")
+
+
+
+        #creating a new MarketingPromo to create the referrer promo id for the user
+        newpromo = MarketingPromo.objects.get_or_create(promotype="userreferral", referrer=self.request.user)[0]
+        newpromo.promoname = "userreferral " + str(self.request.user)[:45]
+        newpromo.save()
+        user.referralid = newpromo.promoid
+        user.save() 
+
+        messages.success(self.request, "You have been given " + str(signupdays) + " days of premium package free trial, activate anytime.")
+
+
+
+
 
         return valid_data
 
     def get_success_url(self):
         user = self.request.user
-        obj = get_object_or_404(PUser, user=user)
-        pk = obj.pk
+        # obj = get_object_or_404(PUser, user=user)
+        # pk = obj.pk
         # url = reverse('PUserDetail', kwargs={'pk': pk})
         messages.info(self.request, "Your profile has been created.")
         return reverse('Home')

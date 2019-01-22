@@ -8,6 +8,7 @@ import datetime
 class PUserAddForm(forms.ModelForm):
 	class Meta:
 		model = PUser
+		error_css_class = 'error'
 
 		fields = [
 			# "name",
@@ -27,7 +28,14 @@ class PUserAddForm(forms.ModelForm):
 		Fieldset(
 
 			HTML("""<br><br>"""),
+
+			HTML("""<div class="container">"""),	
+
 			Div(Field('termsandconditions'), css_class='col-xs-12'),
+
+			HTML("""</div>"""),
+
+			Div(Field('referralcode'), css_class='col-xs-12 col-sm-4 col-md-3'),
 
 		)
 
@@ -49,19 +57,30 @@ class PUserAddForm(forms.ModelForm):
 	)
 
 
-	# name = forms.CharField(
-	# 	# widget=forms.CheckboxSelectMultiple,
-	# 	# queryset=Level_Expertise.objects.all(),
-	# 	label="name",
-	# 	required=True
-	# )
+	referralcode = forms.CharField(
+		required=False,
+		label="""
+		<b>
+        Referral code (if any)
+        </b>
+
+        """
+	)
 
 
-	# def clean_description(self):
-	# 	description = self.cleaned_data['description']
-	# 	if len(str(description)) > 200:
-	# 		raise forms.ValidationError("Please use less then 200 characters")
-	# 	return description
+	def clean_referralcode(self):
+		referralcode = self.cleaned_data.get("referralcode")
+
+		if referralcode != "":
+			try:
+				referring_obj = PUser.objects.get(referralid=referralcode)
+			except PUser.DoesNotExist:
+				# check if the referral code belongs to a puser
+				raise forms.ValidationError("Please use a valid referral code")
+		return referralcode
+
+
+
 
 
 

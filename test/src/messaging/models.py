@@ -14,8 +14,8 @@ from django.utils import timezone
 
 
 class Message(models.Model):
-	senduser = models.ForeignKey(User)
-	pollitem = models.ForeignKey(PollItem)
+	senduser = models.ForeignKey(User, on_delete=models.CASCADE)
+	pollitem = models.ForeignKey(PollItem, on_delete=models.CASCADE)
 	content = models.TextField()
 	# think about inserting the number of likes to this can be sequenced upwards
 	userlikes = models.ManyToManyField(User, related_name='ulikes', blank=True, default=None)

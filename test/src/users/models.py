@@ -9,7 +9,6 @@ from django.contrib.admin.widgets import AdminDateWidget
 from django.db.models.signals import pre_save, post_save
 # from variables.models import Country, Level_Expertise, Region
 
-
 # def image_upload_to(instance, filename):
 # 	student_name = instance.user
 # 	student_id = instance.id
@@ -36,6 +35,11 @@ def image_upload_to(instance, filename):
 	olddir = "%s/users/%s/img" %(settings.MEDIA_ROOT, user_id)
 	shutil.rmtree(olddir, ignore_errors=True)
 	return "users/%s/img/%s" %(user_id, new_filename)
+
+
+
+
+
 
 
 
@@ -73,32 +77,10 @@ class PUser(models.Model):
 	substartdatep = models.DateTimeField(null=True, blank=True)#paying member start date
 	subenddatep = models.DateTimeField(null=True, blank=True)#paying member end date - to be updated when payment issues or cancellation
 
+	referralid = models.CharField(max_length=6, null=True, blank=False, default="None")
 
 
 
-
-	# last_name = models.CharField(max_length=60)
-	# contact = models.CharField(max_length=20,validators=[phone_regex], blank=False, null=False) # validators should be a list
-	# phone_regex = RegexValidator(regex=r'^\d{4}-\d{4}$', message="Phone number must be entered in the format: 'XXXX-XXXX'.")
-	# street = models.CharField(max_length=120, null=True, blank=True)
-	# city = models.CharField(max_length=120, null=True, blank=True)
-	# state = models.CharField(max_length=120, null=True, blank=True)
-	# zipcode = models.CharField(max_length=120, null=True, blank=True)
-	# country = models.ForeignKey(Country, on_delete=models.CASCADE, null=True, blank=True)
-
-	# parent = models.BooleanField(default=False)
-	# postal_code = models.CharField(max_length=6, null=True, blank=True)
-	# region = models.ForeignKey(Region, on_delete=models.CASCADE, null=True, blank=True)
-	# timestamp = models.DateTimeField(auto_now_add=True, auto_now=False)
-	
-	# image = models.ImageField(blank=True, null=True, upload_to=image_upload_to)
-	# doc1 = models.ImageField(blank=True, null=True, upload_to=doc_upload_to1)
-
-	# def get_absolute_url(self):
-	# 	return reverse('PUserDetail', kwargs={'pk': self.pk})
-
-	# def get_update(self):
-	# 	return reverse('PUserUpdate', kwargs={'pk': self.pk})
 
 	def __str__(self):
 		return str(self.user)

@@ -281,8 +281,8 @@ Score = (
 
 
 class PollVoting(models.Model):
-    vote_user = models.ForeignKey(User, on_delete=models.PROTECT)
-    poll = models.ForeignKey(PollItem, on_delete=models.PROTECT)
+    vote_user = models.ForeignKey(User, on_delete=models.CASCADE)
+    poll = models.ForeignKey(PollItem, on_delete=models.CASCADE)
     vote = models.IntegerField(default=0)
     date = models.DateTimeField(auto_now=True)
 
@@ -311,7 +311,7 @@ class PollFav(models.Model):
     # polltype = models.ForeignKey(Ptype, blank=True, default=None)
     # fav_user = models.ForeignKey(User, on_delete=models.PROTECT)
     # models.OneToOneField(settings.AUTH_USER_MODEL)
-    fav_user = models.OneToOneField(User, on_delete=models.PROTECT)
+    fav_user = models.OneToOneField(User, on_delete=models.CASCADE)
     poll = models.ManyToManyField(PollItem, blank=True, default=None)
     # poll = models.ForeignKey(PollItem, blank=True, default=None)
     updated = models.DateTimeField(auto_now=True)
@@ -343,7 +343,7 @@ class SuggestedPoll(models.Model):
 
     typePoll = models.CharField(max_length=20, choices=typechoices, blank=True, default=None)
     title = models.CharField(max_length=250, unique=True)
-    user_submit = models.ForeignKey(User, on_delete=models.PROTECT)
+    user_submit = models.ForeignKey(User, on_delete=models.CASCADE)
     vote_user = models.ManyToManyField(User, blank=True, default=None, related_name='vote_user')
     allowed = models.BooleanField(default=False)
     updated = models.DateTimeField(auto_now=True)
@@ -363,14 +363,5 @@ class SuggestedPoll(models.Model):
 
 
 
-
-# class SuggestVote(models.Model):
-#     spoll = models.ForeignKey(SuggestPoll, on_delete=models.PROTECT, blank=True, default=None)
-#     vote_user = models.ManyToManyField(User, blank=True, default=None)
-#     updated = models.DateTimeField(auto_now=True)
-#     date = models.DateTimeField(auto_now=True)
-
-#     def __str__(self):
-#         return "%s" %(self.spoll)
 
 

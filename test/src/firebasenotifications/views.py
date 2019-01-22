@@ -10,7 +10,7 @@ import json
 import requests
 from notifications.models import Notification
 from users.models import PUser
-
+from celery import task
 
 class DeviceTokenCreateView(generics.CreateAPIView):
     queryset = DeviceToken.objects.all()
@@ -18,8 +18,13 @@ class DeviceTokenCreateView(generics.CreateAPIView):
 
     def post(self, request, *args, **kwargs):
         data = dict(request.data.dict())
+        
+        user = self.request.user.pk
+        data['userdt'] = user
+
         if int(data['user_id']) != self.request.user.id:
             return JsonResponse({'message':'not allowed'},status=500)
+
         serializer = DeviceTokenSerializer(data=data)
         serializer.is_valid(raise_exception=True)
         self.perform_create(serializer)
@@ -43,30 +48,30 @@ class DeviceTokenListView(generics.ListAPIView):
     serializer_class = DeviceTokenSerializer
 
 
-@csrf_exempt
-def send_topic_message(request):
-    headers = {
-        'Authorization': 'key={}'.format(settings.SERVER_KEY),
-        'Content-Type': 'application/json'
-    }
+# @csrf_exempt
+# def send_topic_message(request):
+#     headers = {
+#         'Authorization': 'key={}'.format(settings.SERVER_KEY),
+#         'Content-Type': 'application/json'
+#     }
 
-    data = {
-        "to": f"/topics/{settings.TOPIC_NAME}",
-        "priority": "high",
-        "notification": {
-            "body": settings.MESSAGE_BODY,
-            "title": settings.MESSAGE_TITLE,
-            "click_action": settings.CLICK_ACTION
-        },
-    }
+#     data = {
+#         "to": f"/topics/{settings.TOPIC_NAME}",
+#         "priority": "high",
+#         "notification": {
+#             "body": settings.MESSAGE_BODY,
+#             "title": settings.MESSAGE_TITLE,
+#             "click_action": settings.CLICK_ACTION
+#         },
+#     }
 
-    if request.method == 'POST':
-        data = requests.POST['data']
-    r = requests.post('https://fcm.googleapis.com/fcm/send',data=json.dumps(data), headers=headers)
-    return JsonResponse({'message_sent':data,'fcm_response':r.text,'status_code':r.status_code})
+#     if request.method == 'POST':
+#         data = requests.POST['data']
+#     r = requests.post('https://fcm.googleapis.com/fcm/send',data=json.dumps(data), headers=headers)
+#     return JsonResponse({'message_sent':data,'fcm_response':r.text,'status_code':r.status_code})
 
 
-def send_custom_message(request):
+def create_message():
     usersub = PUser.objects.filter(subnewsletter=True)
 
     results = []
@@ -100,9 +105,27 @@ def send_custom_message(request):
             msgbody = None
 
         for token in tokens:
-            print(msgbody, token.device_token)
+            # print(msgbody, token.device_token)
             results.append(post_to_firebase(title=f'Hi {str(i.user)}', message=msgbody, token=token.device_token))
+
+    return results
+
+
+
+
+
+# this is for sending a manual notification because activating it requires a request and response
+def send_custom_message(request):
+    results = create_message()
     return JsonResponse({'results':results})
+
+# auto sending of notification using celery.py
+@task(name='send-notification-task')
+def auto_send_custom_message():
+    create_message()
+
+
+
 
 
 def post_to_firebase(title, message, token, clickaction = settings.CLICK_ACTION, icon = settings.NOTIFICATION_ICON):
@@ -123,5 +146,5 @@ def post_to_firebase(title, message, token, clickaction = settings.CLICK_ACTION,
     }
 
     r = requests.post('https://fcm.googleapis.com/fcm/send', data=json.dumps(data), headers=headers)
-    print(r.json())
+    # print(r.json())
     return {'message_sent':data, 'status_code':r.status_code, 'firebase_response':r.json()}

@@ -5,4 +5,4 @@ from .models import DeviceToken
 class DeviceTokenSerializer(serializers.ModelSerializer):
     class Meta:
         model = DeviceToken
-        fields = ('user_id','device_token','created')
+        fields = ('userdt','user_id','device_token','created')
