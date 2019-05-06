@@ -123,6 +123,8 @@ class PollItem(models.Model):
     posi = models.IntegerField(default=0)
     nega = models.IntegerField(default=0)
 
+    pollmodifydate = models.DateTimeField(auto_now_add=True, blank=False, null=True) #last modified timestamp
+
 #     slug = models.SlugField(unique=True, max_length=150, null=True, blank=True)
 
     # def save(self, force_insert=False, force_update=False):

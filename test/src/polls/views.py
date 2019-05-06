@@ -774,7 +774,7 @@ class PollsListView(ListView, PollTypeMixin):
                     new_context = PollItem.objects.filter(allowed=True, polltype=poll_type).order_by('-score')
                     cache.set('pollitems_score'+username, new_context)
                 else:
-                    new_context = PollItem.objects.filter(allowed=True, polltype=poll_type).order_by('-modifieddate')
+                    new_context = PollItem.objects.filter(allowed=True, polltype=poll_type).order_by('-pollmodifydate')
                     cache.set('pollitems_date'+username, new_context)
 
             # If authenticated user open non first page, we try get PollItems from cache
@@ -789,14 +789,14 @@ class PollsListView(ListView, PollTypeMixin):
                         new_context = PollItem.objects.filter(allowed=True, polltype=poll_type).order_by('-score')
                         cache.set('pollitems_score'+username, new_context)
                     else:
-                        new_context = PollItem.objects.filter(allowed=True, polltype=poll_type).order_by('-modifieddate')
+                        new_context = PollItem.objects.filter(allowed=True, polltype=poll_type).order_by('-pollmodifydate')
                         cache.set('pollitems_date'+username, new_context)
         # if users are not signed up then only restrict them to 5 entries
         else:
             if sort == "Score":
                 new_context = PollItem.objects.filter(allowed=True, polltype=poll_type).order_by('-score')[:8]
             else:
-                new_context = PollItem.objects.filter(allowed=True, polltype=poll_type).order_by('-modifieddate')[:8]
+                new_context = PollItem.objects.filter(allowed=True, polltype=poll_type).order_by('-pollmodifydate')[:8]
         return new_context
 
 
@@ -1151,6 +1151,12 @@ class PollDetailUpdate(LoginRequiredMixin, UpdateView): #if user is request user
         return context
 
     def form_valid(self, form):
+
+        my_date = datetime.now(pytz.timezone('Singapore'))
+        poll_obj = self.object
+        poll_obj.pollmodifydate = my_date
+        poll_obj.save()
+
         # user = self.request.user
         # form.instance.user = user
 

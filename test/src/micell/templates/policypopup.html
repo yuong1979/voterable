@@ -144,23 +144,23 @@
 
 <script>
 
+
+// if user is not authenticated when browsing and the localstorage indicates that the user has not agreed to the policies
+// then the policy would show, until the user agrees to it, then the policyload "true" will be stored in local storage
+// so it will not appear again
+
+
+
 // to insert if the user has already signed up to skip prompting them
 var userstatus = document.getElementById("authenticated_user").innerText;
 
 console.log("Policy loaded:" + localStorage.getItem('Policyload'))
 
-//determine when to show the popup. this shows popup 60 seconds into session
-setTimeout(policyPopup,500)
-
-
-//onload function no longer working?
-// window.onload=function(){
-//   setTimeout(policyPopup,500)
-// };
 
 //new policypopup that prompts user if they did not click on close
-function policyPopup()
+const policyPopup = () =>
 {
+
     //only if user has created his account and agreed to the checkbox on the policies
   if (userstatus == 'NotAuthenticated')
   {
@@ -172,13 +172,24 @@ function policyPopup()
   }
 }
 
+
+window.onload= () => {
+  setTimeout(policyPopup,500)
+};
+
+
+
 var closebtn = document.getElementById("okbtn");
-closebtn.onclick = function() {
+closebtn.onclick = () => {
   console.log("You have agreed to our polices")
 //if user clicks agree the session will confirm that the policy has been agreed upon and stop showing  
   localStorage.setItem('Policyload','true');
   $("#ModalPolicy").modal('hide');
 }
+
+
+
+
 
 
 

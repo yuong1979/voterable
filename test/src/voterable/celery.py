@@ -39,18 +39,22 @@ def debug_task(self):
 
 app.conf.beat_schedule = {
 
-#    test send notification every 60secs.
+# comment the below to test the celery tasks
+
+
+#    test send notification every 60secs - disable before going into production if not it will run this task which is unnecessary
+# this should sends a notification to the users desktop
     'add-every-60-seconds': {
         'task': 'send-notification-task',
         'schedule': 60.0,
     },
 
 
-#    test send notification every 30mins.
-    # 'add-every-15-minutes': {
-    #     'task': 'send-notification-task',
-    #     'schedule': 900.0,
-    # },
+   # # test send notification every 30mins.
+   #  'add-every-15-minutes': {
+   #      'task': 'send-notification-task',
+   #      'schedule': 900.0,
+   #  },
 
    # # send email every 20secs.
    #  'add-every-20-seconds': {
@@ -68,8 +72,16 @@ app.conf.beat_schedule = {
 }
 
 
+## to run celery start redis first and open up two cmd interfaces and run the two commands below
 # celery -A voterable beat -l info
 # celery -A voterable worker -l info -P eventlet
+
+
+# if the running of celery fails remember to delete all the celerybeat-schedule files inside voterable and try again
+
+
+
+
 
 ## For testing notifications
 # http://localhost:8000/devicetoken/firebase/

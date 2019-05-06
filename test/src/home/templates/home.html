@@ -31,13 +31,14 @@
       firebase.initializeApp(config);
       const messaging = firebase.messaging();
 
-
+    //go to application in browser control to clear storage or site data to clear all storage if you want to restart
     if('serviceWorker' in navigator){
-      // registering the service worker
+      // registering the service worker here - service worker stores part of your web app on the browser so the whole app does not need to refresh and this improves user experience also enables push notification
         navigator.serviceWorker.register('/serviceworker.js',{
             scope: '.'
         }).then(function(registration){
             messaging.useServiceWorker(registration);
+            //successfully registration loads some of the web app into the browser storage
             console.log('Registration successful with scope ',registration.scope);
         },function(err){
             console.log('service worker not registered ',err);
@@ -83,17 +84,17 @@
 
 
 
-//checking if the the user has been prompted the notification already during current session
+//checking if the the user has already been prompted for request for permission for notification updates
 console.log("Notification loaded:" + sessionStorage.getItem('Notification'))
 
 
-// session storage ensures popup only shows once per session for each user
+// session storage ensures popup only shows once per session for each user - if it has
+// not yet shown up then and then the user is signed in then activate the requestpermission for notification
+// else do not request for permission
   if (sessionStorage.getItem('Notification') !== 'true')
     {
 
-
-
-    //if user is signed in
+    //if user is signed in then register_token is true else it is false
     {% if register_token %}
 
             function getCookieValue(a) {
@@ -113,7 +114,8 @@ console.log("Notification loaded:" + sessionStorage.getItem('Notification'))
                         // adding the token to our database
                         // console.log(token);
                         var $crf_token = getCookieValue("csrftoken");
-                        // attributing the token to the designated user for notification sending
+                        // creating a token for the agreed user for notification sending
+                        // by going to DeviceTokenCreateView firebasenotification:view to create a new token in database
                         $.ajax({
                                 type: "POST",
                                 url: "/devicetoken/add/",
@@ -132,7 +134,6 @@ console.log("Notification loaded:" + sessionStorage.getItem('Notification'))
                                     console.log("Error: " + err.responseText)
                                 }
                             });
-
                     })
                     .catch(function (err) {
                       //if users refuse or block popup requesting notification
@@ -147,7 +148,6 @@ console.log("Notification loaded:" + sessionStorage.getItem('Notification'))
                 });
     {% endif %}
 
- 
     }
 
 
@@ -307,14 +307,15 @@ console.log("Notification loaded:" + sessionStorage.getItem('Notification'))
 
                 {% if freedays %}
 
-              <b class="wdstyle">Available premium days</b>
+              <b class="wdstyle">Your available premium days</b>
 
-              <a href="#" title="Free Premium Days" data-toggle="popover" data-trigger="focus" data-content="Click to activate the number of days of free access"><i class="fas fa-question-circle"></i></a><br>
+              <a href="#" title="Free Premium Days" data-toggle="popover" data-trigger="focus" data-content="Click to activate the {{ freedays }} days of free access to premium subscription"><i class="fas fa-question-circle"></i></a><br>
 
+              <br>
                 <form action='' method='POST'  style="display: inline-block;">{% csrf_token %}
                   <input type="hidden" name="freeday_count_id" value="{{ freedays }}">
-                  &nbsp;&nbsp;&nbsp;
-                  <input type="submit" class='btn btn-sm btn-primary'  style="font-weight: bold; white-space: normal;" value="Activate to get access to {{ freedays }} days free premium access">
+                  &nbsp;
+                  <input type="submit" class='btn btn-sm btn-primary'  style="font-weight: bold; white-space: normal;" value="Activate {{ freedays }} days of free access">
                 </form><br>
 
                 {% else %}

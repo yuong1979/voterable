@@ -133,30 +133,27 @@ textarea:focus {
 
 <script>
 
-//converting into minutes and microseconds
+
+// if user is a member or non member (and authenticated ) when browsing and the localstorage indicates that the user has
+// been prompted with the survey (surveyload = false) then it will show the survey and set survey loaded to true
+// so that it will not show up again and overwhelm the user
+
+
+
+//taking the model from the context from model and converting into minutes and microseconds
 var surveypoptime = {{ surveypop }} * 60 * 1000
 
 //determine when to show the popup. this shows popup 120 seconds into session
-window.onload=function(){setTimeout(surveyPopup,surveypoptime)};
-
-
-
-//old surveypopup for testing
-// function surveyPopup()
-//   {
-//     var usertype = $("#authenticated_user").text()
-//     // capturing all users who have signed up
-//       if (usertype == "Member" || usertype == "NotMember" ) 
-//       {
-//         $("#SurveyModal").modal('show');
-//       }
-// }
+window.onload= () => {
+  setTimeout(surveyPopup,surveypoptime)
+};
 
 
 console.log("survey loaded:" + sessionStorage.getItem('Surveyload'))
 
-//new surveypopup that prompts user every time there is a new session so not to overwhelm users
-function surveyPopup()
+//new surveypopup that prompts user every time there is a new session (in sessionstorage) so not to overwhelm users
+
+const surveyPopup = () =>
   {
     var usertype = $("#authenticated_user").text()
 
@@ -212,6 +209,8 @@ function surveyPopup()
 
 
 
+
+
 $(".star").on('click', function(){
 
   var starvalue = parseInt($(this).data('value'), 10)
@@ -255,11 +254,11 @@ $(".star").on('click', function(){
 
     }
 
-
-
 })
 
-function responseMessage(msg) {
+
+
+const responseMessage = (msg) => {
   // $('.success-box').fadeIn(2000);  
   $('.text-message').html("<span>" + msg + "</span>");
 }
@@ -290,7 +289,7 @@ function responseMessage(msg) {
           csrfmiddlewaretoken: '{{ csrf_token }}'
         },
         url: '/survey/',
-        success: function(jsondata) {
+        success: (jsondata) => {
 
           var message = "Thank you for your input!"
           showFlashMessage(message)

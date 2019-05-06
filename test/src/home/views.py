@@ -69,7 +69,7 @@ def async_contact_mail(subject, contact_message, from_email, to_email):
 
 
 
-# testing your periodic tasks
+# testing your periodic tasks - you need to enable send email every 20secs on celery.py
 @task(name='send-test-task')
 def send_email_task():
     testasyncemail()
@@ -741,7 +741,9 @@ class ContactView(FormView):
         contact_message = "<p>Message: %s.</p><br><p>From: %s</p><p>Email: %s</p>" % (
         form_message, form_full_name, form_email)
 
-
+        # include a delay behind the function that is running to run it asynchronously
+        # in this case the async_contact_mail is sending a list of parameters to the sendmail function so it
+        # so that asynchronously run the async_contact_mail
         try:
             async_contact_mail.delay(
                 subject=subject,

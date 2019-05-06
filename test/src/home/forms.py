@@ -29,7 +29,10 @@ class ContactForm(forms.Form):
     # message = forms.CharField(widget=forms.Textarea)
 
     def __init__(self, *args, **kwargs):
+
+        #pop will remove the keyword that has been stored inside the kwargs after extracting it.
         loggedin = kwargs.pop('loggedin', None)
+
         super(ContactForm, self).__init__(*args, **kwargs)
 
         if loggedin:
