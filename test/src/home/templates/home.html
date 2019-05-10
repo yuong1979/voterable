@@ -276,8 +276,7 @@ console.log("Notification loaded:" + sessionStorage.getItem('Notification'))
 
             {% if request.user.puser.member == True or request.user.puser.memberp == True %}
 
-<!--             Insert ConfirmCancel url link into the below when needed -->
-<!--             <a href='' class='buttonspace btn-sm btn-danger' data-action='show-spinner' ><b>Cancel Subscription</b></a> -->
+
 
               
 <!--                 {% if user.member == True %}
@@ -301,6 +300,11 @@ console.log("Notification loaded:" + sessionStorage.getItem('Notification'))
                 <span class="badge badge-pill badge-secondary" style="float:right"> {{ user.subenddatep|timeuntil }} </span>
                 {% endif %}
 
+                <br><br>
+
+<!--             Insert ConfirmCancel url link into the below when needed -->
+            <a href='{% url 'ConfirmCancel' %}' class='btn buttonspace btn-sm btn-danger' data-action='show-spinner' ><b>Cancel Subscription</b></a>
+
                 <br>
 
             {% else %}
@@ -319,6 +323,9 @@ console.log("Notification loaded:" + sessionStorage.getItem('Notification'))
                 </form><br>
 
                 {% else %}
+
+              <b class="wdstyle">Your Subscription:</b>
+              <br>
 
                     <a href='{% url 'SelectPlan' %}' class='btn buttonspace btn-sm btn-primary' data-action='show-spinner' ><b>Start subscription</b></a>
 

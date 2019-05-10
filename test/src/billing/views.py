@@ -242,28 +242,34 @@ class StripeCheckOut(LoginRequiredMixin, TemplateView):
 			return redirect('StripeCheckOut')
 
 
-		plantype = subtypeobj.label
+		# plantype = subtypeobj.label
 
-		print (plantype[:5])
+		# print (plantype[:5])
 
-		#leaving this code although I removed basic (normal subscriber) because all the members will fall under else (premium)
+		# if plantype[:5] == "Basic":
+		# 	#membersubscription - this is not used currently
+		# 	userobj.member = True
+		# 	userobj.substartdate = startdate
+		# 	userobj.subenddate = enddate
+		# 	userobj.memberp = False
+		# 	userobj.substartdatep = None
+		# 	userobj.subenddatep = None
+		# else:
+		# 	#pmembersubscription - only premium is used
+		# 	userobj.member = False
+		# 	userobj.substartdate = None
+		# 	userobj.subenddate = None
+		# 	userobj.memberp = True
+		# 	userobj.substartdatep = startdate
+		# 	userobj.subenddatep = enddate
 
-		if plantype[:5] == "Basic":
-			#membersubscription
-			userobj.member = True
-			userobj.substartdate = startdate
-			userobj.subenddate = enddate
-			userobj.memberp = False
-			userobj.substartdatep = None
-			userobj.subenddatep = None
-		else:
-			#pmembersubscription
-			userobj.member = False
-			userobj.substartdate = None
-			userobj.subenddate = None
-			userobj.memberp = True
-			userobj.substartdatep = startdate
-			userobj.subenddatep = enddate
+
+		userobj.member = False
+		userobj.substartdate = None
+		userobj.subenddate = None
+		userobj.memberp = True
+		userobj.substartdatep = startdate
+		userobj.subenddatep = enddate
 
 		userobj.email = customer.source.name
 		userobj.invoiceno = customer.id #Both are the same - for subscription I am using customer.invoice_prefix
@@ -619,8 +625,8 @@ class ConfirmCancel(LoginRequiredMixin, TemplateView):
 	def dispatch(self, *args, **kwargs):
 		dispatch = super(ConfirmCancel, self).dispatch(*args, **kwargs)
 
-		# if the user is not subscribed
-		if not self.request.user.puser.plan:
+		# if the user is not subscribed and not a member
+		if not self.request.user.puser.memberp:
 			return redirect('Home')
 		return dispatch
 
@@ -630,24 +636,34 @@ class ConfirmCancel(LoginRequiredMixin, TemplateView):
 
 def CancelSubscribe(request):
 
-	customer = stripe.Customer.retrieve(request.user.puser.stripe_id)
-
 	try:
-		customer = stripe.Customer.retrieve(request.user.puser.stripe_id)
-		customer.cancel_subscription(at_period_end=True)
-
 		planid_cancel_obj = PUser.objects.get(user=request.user)
-		planid_cancel_obj.plan = None
-		planid_cancel_obj.stripe_id = None
+		planid_cancel_obj.memberp = False
+		planid_cancel_obj.substartdatep = None
+		planid_cancel_obj.subenddatep = None
 		planid_cancel_obj.save()
-
-		messages.success(request, "You subscription has been cancelled")
-
-	# except Exception, e:
-	# 	messages.error(request, e)
 
 	except:
 		messages.info(request, "Cancellation issue. Please contact the admin")
+
+
+	# # old method - to delete
+	# try:
+	# 	customer = stripe.Customer.retrieve(request.user.puser.stripe_id)
+	# 	customer.cancel_subscription(at_period_end=True)
+
+	# 	planid_cancel_obj = PUser.objects.get(user=request.user)
+	# 	planid_cancel_obj.plan = None
+	# 	planid_cancel_obj.stripe_id = None
+	# 	planid_cancel_obj.save()
+
+	# 	messages.success(request, "You subscription has been cancelled")
+
+	# # except Exception, e:
+	# # 	messages.error(request, e)
+
+	# except:
+	# 	messages.info(request, "Cancellation issue. Please contact the admin")
 
 
 	return redirect("Home")

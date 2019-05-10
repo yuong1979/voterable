@@ -532,16 +532,16 @@ class HomeView(TemplateView):
             nowdate = pytz.utc.localize(d)
             membership_obj = PUser.objects.get(user=self.request.user)
 
-            # for normal member - although I remove normal member this code remains because it is try method and I need to remove anyone who is still subscribed under normal member
-            try:
-                dendate = PUser.objects.get(user=self.request.user).subenddate
-                if nowdate > dendate:
-                    membership_obj.member = False
-                    membership_obj.substartdate = None
-                    membership_obj.subenddate = None
-                    membership_obj.save() 
-            except:
-                pass
+            # for normal member - no longer used
+            # try:
+            #     dendate = PUser.objects.get(user=self.request.user).subenddate
+            #     if nowdate > dendate:
+            #         membership_obj.member = False
+            #         membership_obj.substartdate = None
+            #         membership_obj.subenddate = None
+            #         membership_obj.save() 
+            # except:
+            #     pass
 
             # for premium member
             try:
