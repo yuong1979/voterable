@@ -885,10 +885,19 @@ if ($("#msg-count-badge").length){
 
         } else {
 
-          $(data.notifications).each(() => {
-            var link = this;
-            $("#notification_dropdown").append("<p id='noti'>" + link + " </p>")
-          })
+
+          $.each(data.notifications, function (key, data) {
+              var link = this
+              $("#notification_dropdown").append("<p id='noti'>" + link + " </p>")
+          });
+
+          //// no longer working
+          // $(data.notifications).each((x) => {
+          //   console.log($(x).val())
+          //   var link = $(x).val();
+          //   $("#notification_dropdown").append("<p id='noti'>" + link + " </p>")
+          // })
+
           var url = '{% url "notifications_all" %}'
           $("#notification_dropdown").append("<br>&nbsp;&nbsp;&nbsp;&nbsp;<b><a href='" + url + "'>&nbsp;&nbsp; View All Notifications</a></b>")
 
