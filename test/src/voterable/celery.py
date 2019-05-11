@@ -44,10 +44,10 @@ app.conf.beat_schedule = {
 
 #    test send notification every 60secs - disable before going into production if not it will run this task which is unnecessary
 # this should sends a notification to the users desktop
-    'add-every-60-seconds': {
-        'task': 'send-notification-task',
-        'schedule': 60.0,
-    },
+    # 'add-every-60-seconds': {
+    #     'task': 'send-notification-task',
+    #     'schedule': 60.0,
+    # },
 
 
    # # test send notification every 30mins.

@@ -15,6 +15,9 @@ import stripe
 from django.template.context_processors import csrf
 from polls.models import PollItem
 
+from celery.task import periodic_task
+from celery import shared_task, task, app
+
 import random
 import string
 
@@ -22,6 +25,20 @@ import string
         # allowed_chars = ''.join((string.ascii_letters, string.digits))
         # unique_id = ''.join(random.choice(allowed_chars) for _ in range(32))
         # print (unique_id)
+
+
+
+@task()
+def async_contact_mail(subject, contact_message, from_email, to_email):
+    send_mail(
+        subject=subject,
+        message="",
+        html_message=contact_message,
+        from_email=from_email,
+        recipient_list=to_email,
+        fail_silently=False
+    )
+
 
 
 
@@ -241,29 +258,6 @@ class StripeCheckOut(LoginRequiredMixin, TemplateView):
 			messages.info(self.request, "This card has been declined.")
 			return redirect('StripeCheckOut')
 
-
-		# plantype = subtypeobj.label
-
-		# print (plantype[:5])
-
-		# if plantype[:5] == "Basic":
-		# 	#membersubscription - this is not used currently
-		# 	userobj.member = True
-		# 	userobj.substartdate = startdate
-		# 	userobj.subenddate = enddate
-		# 	userobj.memberp = False
-		# 	userobj.substartdatep = None
-		# 	userobj.subenddatep = None
-		# else:
-		# 	#pmembersubscription - only premium is used
-		# 	userobj.member = False
-		# 	userobj.substartdate = None
-		# 	userobj.subenddate = None
-		# 	userobj.memberp = True
-		# 	userobj.substartdatep = startdate
-		# 	userobj.subenddatep = enddate
-
-
 		userobj.member = False
 		userobj.substartdate = None
 		userobj.subenddate = None
@@ -272,6 +266,7 @@ class StripeCheckOut(LoginRequiredMixin, TemplateView):
 		userobj.subenddatep = enddate
 
 		userobj.email = customer.source.name
+		userobj.alt_email = customer.source.name
 		userobj.invoiceno = customer.id #Both are the same - for subscription I am using customer.invoice_prefix
 		userobj.stripe_id = customer.id
 		userobj.plan = adddays
@@ -296,7 +291,41 @@ class StripeCheckOut(LoginRequiredMixin, TemplateView):
 		print (trans_obj.id)
 		self.request.session["transaction_pk"] = trans_obj.id
 
-		messages.success(self.request, "Thank you for you subscription.")
+
+		try:
+
+			form_email = self.request.user.puser.alt_email
+
+			form_message = "<p>Name:" +  customer.source.name + "</p>" + "<p>Reference No: " + customer.id + "</p>"  + "<p>Subscription Start:" + str(startdate) + "</p>" + "<p>Subscription End:" + str(enddate) + "</p>"
+
+			form_full_name = self.request.user
+
+			subject = "Purchase Subscription Confirmation"
+
+			if settings.TYPE == "base":
+				from_email = settings.EMAIL_HOST_USER
+			else:
+				from_email = settings.DEFAULT_FROM_EMAIL
+
+			to_email = [from_email, form_email]  # [from_email, 'jumper23sierra@yahoo.com']
+			contact_message = "<p>Message: %s.</p><br><p>From: %s</p><p>Email: %s</p>" % (
+			form_message, form_full_name, form_email)
+
+			async_contact_mail.delay(
+				subject=subject,
+				contact_message=contact_message,
+				from_email=from_email,
+				to_email=to_email
+				)
+
+			messages.info(self.request, "Thank you for your subscription, please check your email for your invoice.")
+
+		except:
+			messages.warning(self.request, "Error in email delivery, please print your invoice.")
+
+  #       #insert and option to return back to home when cancelling subscription and send email when cancelled and add google subscription
+
+
 		
 		return redirect("SuccessSub")
 
@@ -642,6 +671,7 @@ def CancelSubscribe(request):
 		planid_cancel_obj.substartdatep = None
 		planid_cancel_obj.subenddatep = None
 		planid_cancel_obj.save()
+		messages.info(request, "Your cancellation is successful but we are sad to see you go.")
 
 	except:
 		messages.info(request, "Cancellation issue. Please contact the admin")

@@ -15,6 +15,4 @@ from .base import *
 
 
 
-# https://www.voterable.com
 
-# http://www.voterable.com
