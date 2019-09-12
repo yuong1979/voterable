@@ -6,6 +6,10 @@ from mixins.mixins import LoginRequiredMixin
 from users.models import PUser
 from django.views.generic import TemplateView, View, FormView
 from django.shortcuts import render, get_object_or_404, HttpResponseRedirect, redirect
+from django.http import HttpResponse
+# from django.core.mail import send_mail
+from home.views import async_contact_mail
+
 import datetime
 import pytz
 # Create your views here.
@@ -28,16 +32,16 @@ import string
 
 
 
-@task()
-def async_contact_mail(subject, contact_message, from_email, to_email):
-    send_mail(
-        subject=subject,
-        message="",
-        html_message=contact_message,
-        from_email=from_email,
-        recipient_list=to_email,
-        fail_silently=False
-    )
+# @task()
+# def async_contact_mail(subject, contact_message, from_email, to_email):
+#     send_mail(
+#         subject=subject,
+#         message="",
+#         html_message=contact_message,
+#         from_email=from_email,
+#         recipient_list=to_email,
+#         fail_silently=False
+#     )
 
 
 
@@ -102,6 +106,37 @@ stripe.api_key = settings.STRIPE_SECRET
 
 class SelectPlan(LoginRequiredMixin, TemplateView):
 	template_name = "select_sub_plan.html"
+
+	def dispatch(self, *args, **kwargs):
+		dispatch = super(SelectPlan, self).dispatch(*args, **kwargs)
+
+
+		# freedays = PUser.objects.get(user=self.request.user).freedays
+
+		# print (freedays)
+
+		# messages.info(self.request, "You have" + freedays + " days of free access available, activate the to access premium content")
+
+		try:
+
+			# if user has already paid - need to exit from http://localhost:8000/billing/selectplan so user doesnt double pay
+			if PUser.objects.get(user=self.request.user).memberp == True:
+				return redirect('Home')
+
+			# if user has freedays available need to exit from http://localhost:8000/billing/selectplan so user doesnt double pay
+			if PUser.objects.get(user=self.request.user).freedays > 0:
+
+				freedays = PUser.objects.get(user=self.request.user).freedays
+
+				messages.info(self.request, "You have " + str(freedays) + " days of free access available, activate them to access premium content")
+
+				return redirect('Home')
+
+		except:
+			pass
+
+		return dispatch
+
 
 	def get_context_data(self, *args, **kwargs):
 		context = super(SelectPlan, self).get_context_data(*args, **kwargs)
@@ -311,6 +346,8 @@ class StripeCheckOut(LoginRequiredMixin, TemplateView):
 			contact_message = "<p>Message: %s.</p><br><p>From: %s</p><p>Email: %s</p>" % (
 			form_message, form_full_name, form_email)
 
+
+			# remember that this operation requires redis to be working
 			async_contact_mail.delay(
 				subject=subject,
 				contact_message=contact_message,

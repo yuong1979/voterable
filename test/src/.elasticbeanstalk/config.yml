@@ -1,17 +1,9 @@
 branch-defaults:
   default:
-    environment: celerytest
+    environment: vttest
     group_suffix: null
-  yu_changes:
-    environment: vttestenv1
 environment-defaults:
-  testenv:
-    branch: null
-    repository: null
-  testenv1:
-    branch: null
-    repository: null
-  vttestenv:
+  vttest:
     branch: null
     repository: null
 global:

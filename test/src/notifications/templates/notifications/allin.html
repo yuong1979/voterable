@@ -34,10 +34,9 @@ th {
 
 
 <div class="container">
-    <div class="card cardstyle">
-      <div class="card-body">
+    <div class="mainboxstyle">
 
-        <h4 class="card-title allfontcolor"><i class="allfontcolor far fa-bell fa-1x"></i>&nbsp;&nbsp;&nbsp;&nbsp;Notifications</h4><hr>
+        <div class="mainheaderstyle"><i class="far fa-bell fa-1x"></i>&nbsp;&nbsp;&nbsp;&nbsp;Notifications</div><hr>
 
         <form action='{% url 'readall' %}' method='GET'  style="display: inline-block;">
           &nbsp;&nbsp;&nbsp;
@@ -70,12 +69,9 @@ th {
 
             {% endif %}
             
-
         </table>
 
-
-      </div> <!-- cardbody -->
-    </div> <!-- cardstyle -->
+    </div> <!-- mainboxstyle -->
 </div>
 
 

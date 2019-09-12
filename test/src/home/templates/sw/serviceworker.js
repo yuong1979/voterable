@@ -2,7 +2,7 @@ var staticCacheName='voterable-cache'
 var cached_pages = [
         '{% url "Home" %}'
         
-        // '{% url "poll_topics" %}',
+        // I removed pollllist url here - i cannot comment it out as it will cause an error
         // '{% url "TagAllView" %}',
         // '{% url "like" %}',
         // '{% url "PollRecoView" %}',

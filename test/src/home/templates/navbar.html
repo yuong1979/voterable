@@ -37,7 +37,7 @@ Change the navbar color below -->
           </li>
 
           <li class="nav-item">
-            <a class="nav-link" href="{% url 'TagAllView' %}" class="menufont"><i class="allfontcolor fa fa-tags fa-1x"></i>&nbsp;&nbsp;&nbsp;&nbsp;Browse Tags</a>
+            <a class="nav-link" href="{% url 'TagAllView' %}" class="menufont"><i class="allfontcolor fa fa-tags fa-1x"></i>&nbsp;&nbsp;&nbsp;&nbsp;Browse Topics</a>
           </li>
 
           {% if request.user.is_staff %}
@@ -71,14 +71,23 @@ Change the navbar color below -->
               </li>
 
               <li class="nav-item">
-                <a class="nav-link" href="{% url 'account_logout' %}">Logout</a>
+
+                <a class="nav-link" href="{% url 'account_logout' %}" class="menufont"><i class="allfontcolor fas fa-sign-out-alt fa-1x"></i>&nbsp;&nbsp;&nbsp;&nbsp;Logout</a>
+
               </li>
 
           {% else %}
 
             {% if not request.user.is_authenticated and not "/accounts/login" in request.get_full_path %}
-              <li><a class="nav-link" href="{% url 'account_login' %}"><i class="allfontcolor fas fa-sign-in-alt fa-1x"></i>&nbsp;&nbsp;&nbsp;&nbsp;Login</a></li>
+              <li><a class="nav-link" href="{% url 'account_login' %}"><i class="allfontcolor fas fa-sign-in-alt fa-1x"></i>&nbsp;&nbsp;&nbsp;&nbsp;Log In</a></li>
             {% endif %}
+
+
+            {% if not request.user.is_authenticated and not "/accounts/signup" in request.get_full_path %}
+              <li><a class="nav-link" href="{% url 'account_signup' %}"><i class="allfontcolor fas fa-user-plus fa-1x"></i>&nbsp;&nbsp;&nbsp;&nbsp;Sign Up</a></li>
+            {% endif %}
+
+
 
           {% endif %}
 

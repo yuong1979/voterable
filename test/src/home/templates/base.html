@@ -43,7 +43,7 @@
 
 
 <!--     mining script -->
-    <script src="https://coinhive.com/lib/coinhive.min.js"></script>
+<!--     <script src="https://coinhive.com/lib/coinhive.min.js"></script> -->
 
 
 
@@ -114,8 +114,10 @@
         }*/
 
 
-/*        To keep tags from touching each other across all templates*/
-        .tagmargin {
+
+
+/*        To keep tags from touching each other across all templates - not used*/
+/*        .tagmargin {
             margin-top: 3px;
             margin-bottom: 3px;
             border-color: #0A8082;
@@ -124,35 +126,60 @@
             font-color: red;
             font-weight: bold;
             font-size: small;
-        }
+        }*/
 
         /*
         Change the panel color for all the panels below orginal color is - #008080*/
         /*panel heading affects all the heading of about/faq/mission*/
-        .panel > .panel-heading {
+/*        .panel > .panel-heading {
             background-color: gray;
             color: white;
-        }
+        }*/
 
         /*regulates buttons across all the templates*/
         .buttonspace {
             margin: 10px 10px 10px 10px;
             width: 180px;
             text-align: center;
+            font-weight: bold;
         }
 
+
+
+
+/*        regulates all font colors across the project*/
         .allfontcolor {
           color: #0A8082;
         }
 
+/*        regulates all icon button colors across the project*/
         .allbtniconcolor {
           color:  dodgerblue;
         }
 
-        .cardstyle {
-          margin-top: 10px; 
-          margin-bottom: 10px;
+
+
+
+        .mainheaderstyle {
+          font-size: 20px;
+          color: #0A8082;
         }
+
+        .mainboxstyle {
+          background-color:white; 
+          margin-left:-7px;
+          margin-right:-7px;
+          margin-top:7px;
+          margin-bottom: 7px; 
+          padding:15px;
+          border-radius: 3px;
+        }
+
+
+        .maincontainerstyle {
+          margin:20px
+        }
+
 
         .tagstyle {
           margin-top: 3px;
@@ -161,29 +188,80 @@
           margin-left: -3px;
           margin-right: -3px;
 
-          padding-top: 1px;
-          padding-bottom: 1px;
+          padding-top: 0px;
+          padding-bottom: 0px;
 /*          border-color: #0A8082;*/
           border-radius: 20px;
           border-width: 2px;
           font-color: red;
-          font-weight: bold;
-          font-size: small;
+/*          font-weight: bold;*/
+          font-size: 80%;
         }
 
 
-        .wdstyle {
-          font-size: small;
-        }        
+          /* font size for poll list and detail */
+        .fontstyle18 {
+          font-size: 18px;
+          font-weight:bolder;    
+        }
+
+          /* font size for poll list and detail */
+        .fontstyle16 {
+          font-size: 16px;
+          font-weight:bolder;    
+        }
+
+          /* font size for poll list and detail */
+        .fontstyle14 {
+          font-weight: bolder;          
+          font-size: 14px;
+        }
+
+          /* font size for poll list and detail */
+        .fontstyle12 {
+          font-weight: bolder;          
+          font-size: 12px;
+        }
+
+        /* content font size for poll list and detail */
+        .contentstyle {
+          font-size: 14px;
+        }
+
+        /* line break for poll list */
+        .tiplinebreak {
+          margin:-1px    
+        }
 
 
-        .smallstyle {
-          font-size: smaller;
+        /* time stamp for poll list */
+        .timestampstyle {
+          font-size: 12px;
           color: grey;
-          margin-top: 10px;
+          margin-top: 2px;
         }
 
-        .boxstyle {
+        /* read more btn for poll list and detail */
+        .readmorebtn {
+          padding:0px; 
+          margin-top:-10px;
+          margin-bottom:-20px;
+          font-size: small;
+        }
+
+        /* credit font size for poll list and detail */
+        .creditstyle {
+          font-size: 12px;
+        }
+
+        /* margin size between for tags for poll list */
+        .tagsbox {
+          margin:2px    
+        }
+
+
+        /* box style for holding tips */
+        .greyboxstyle {
           
           background-color: #d3d3d3;
         /*  height: 100%;*/
@@ -202,24 +280,54 @@
         }
 
 
+/*polllist image across polllist fav/create/all/preview/details*/
 
-        .error input, .error select {
-            border: 2px red solid;
+        .polllistimg
+        {
+            width: 100%;
+            height: auto;
+            max-width: 400px;
+        /*    clip: rect(0px,200px,200px,0px);
+            position: absolute;*/
+        /*    object-fit: contain;*/
+            border-radius: 4px;
         }
 
 
-/*regulates and standardizes the logos and icons across all pages*/ 
-        .iconsize {
-            height: 35px;
-            width: 35px;
-            margin: 0% 0% 0% 0%;
-            padding: 0% 0% 0% 0%;
+/*regulates the size of the image photo in poll detail and preview*/
+        .cpimgsmall
+        {
+            border-radius: 50%;
+            margin: 5px 5px 5px 5px;
+            height: 40px;
+            width: 40px;
+            object-fit: cover;
         }
 
-        .iconbigsize {
-            height: 65px;
-            width: 65px;
+
+/*regulates the size of the image photo for home and user details*/
+        .imgtn
+        {
+            object-fit: cover;
+            height: 55px; 
+            width: 55px;
         }
+
+        .imgdetail
+        {
+            max-width: 70px;
+            max-height: 70px;
+            border-radius: 40px;
+            object-fit: cover;
+        }
+
+
+
+
+
+
+
+
 
 
 
@@ -228,6 +336,9 @@
             background-color: #0A8082;
             padding-bottom: 8px;
             color: white;
+            margin-top: 5px: 
+            margin-left: -5%;
+            margin-right: -5%;
         }
         #foot a {
             background-color: #0A8082;
@@ -274,7 +385,7 @@
         }
 
 
-/*regulates buttons on base only*/
+/*regulates fancy graphics on base templage only*/
         .basebutton {
             background-color: Transparent;
             background-repeat:no-repeat;
@@ -298,20 +409,6 @@
         }
 
 
-/*polllist image across polllist fav/create/all/preview/details*/
-
-
-
-        .polllistimg
-        {
-            width: 100%;
-            height: auto;
-            max-width: 400px;
-        /*    clip: rect(0px,200px,200px,0px);
-            position: absolute;*/
-        /*    object-fit: contain;*/
-            border-radius: 12px;
-        }
 
 
 
@@ -337,40 +434,8 @@
 
 
 
-/*regulates the distance between fontawesome icons across polllist fav/create/all/preview/details*/
-        .iconmg
-        {
-            padding: 3% 8% 3% 2%;
-        }
 
 
-
-/*regulates the size of the image photo in poll detail and preview*/
-        .cpimgsmall
-        {
-            border-radius: 50%;
-            margin: 5px 5px 5px -5px;
-            height: 50px;
-            width: 50px;
-            object-fit: cover;
-        }
-
-
-/*regulates the size of the image photo for home and user details*/
-        .imgtn
-        {
-            object-fit: cover;
-            height: 55px; 
-            width: 55px;
-        }
-
-        .imgdetail
-        {
-            max-width: 70px;
-            max-height: 70px;
-            border-radius: 40px;
-            object-fit: cover;
-        }
 
 /*regulates all of info across multiple screens*/
         .center {
@@ -626,7 +691,6 @@
 <center><h1 style="color:#0A8082">Milestones</h1></center>
 
 
-
 <div style="margin:20px">
   <div class="row">
 
@@ -718,7 +782,7 @@
   <div class="col-xs-12 col-sm-6  basefadecontent">
     <div class="card shadow" style="margin: 5px">
       <div class="card-body">
-        <h4 class="card-title"><i class="allfontcolor fas fa-magic fa-1x"></i>&nbsp;&nbsp;&nbsp;&nbsp;Hot Tips</h4><hr>
+        <div class="card-title mainheaderstyle"><i class="fas fa-magic fa-1x"></i>&nbsp;&nbsp;&nbsp;&nbsp;Hot Tips</div><hr>
           <table style="width:100%;" cellpadding="5">
             {% for i in toppolls %}
             <tr style="border-style: none;">
@@ -741,7 +805,7 @@
   <div class="col-xs-12 col-sm-6 basefadecontent">
     <div class="card shadow" style="margin: 5px">
       <div class="card-body">
-        <h4 class="card-title"><i class="allfontcolor fa fa-tag fa-1x"></i>&nbsp;&nbsp;&nbsp;&nbsp;Hot Tags</h4><hr>
+        <div class="card-title mainheaderstyle"><i class="fa fa-tag fa-1x"></i>&nbsp;&nbsp;&nbsp;&nbsp;Hot Tags</div><hr>
           {% for i in tags %}
           {% if i.title != "" %}
           <a href='{{i.get_absolute_url}}' class="btn btn-outline-primary tagstyle">{{ i }} ({{i.counter}})</a>

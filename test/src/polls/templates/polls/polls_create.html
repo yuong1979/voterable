@@ -16,18 +16,15 @@
 
 {% block content %}
 
+    <div class="maincontainerstyle">
+    <div class="mainboxstyle">
 
-    <div class="card cardstyle">
-      <div class="card-body">
-
-        <h4 class="card-title allfontcolor"><i class="allfontcolor fas fa-pen-square fa-1x"></i>&nbsp;&nbsp;&nbsp;&nbsp;Create New Tip Entry</h4>
+        <div class="mainheaderstyle"><i class="fas fa-pen-square fa-1x"></i>&nbsp;&nbsp;&nbsp;&nbsp;Create New Tip Entry</div>
         <hr>
 
         <h5>{{ title }}</h5>
 
         <hr><br>
-
-<!--       <div class="container"> -->
         <small>
 
       	{% if user.is_authenticated %}
@@ -53,14 +50,10 @@
 
       	{% endif %}
 
-
         </small>
-<!--       </div> -->
 
-
-      </div>
-    </div>
-
+    </div><!-- mainboxstyle -->
+    </div><!-- maincontainerstyle -->
 
 {% endblock %}
 

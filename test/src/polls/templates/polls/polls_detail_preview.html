@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load crispy_forms_tags %}
+{% load crispy_forms_tags poll_extras %}
 {% load static %}
 {% load blog_tags %}
 
@@ -31,22 +31,24 @@
 
 {% block content %}
 
+    <div class="maincontainerstyle">
+    <div class="mainboxstyle">
 
-    <div class="card cardstyle">
-      <div class="card-body">
 
-        <h4 class="card-title allfontcolor"><i class="allfontcolor fas fa-eye fa-1x"></i>&nbsp;&nbsp;&nbsp;&nbsp;Preview your post</h4><hr>
+        <div class="mainheaderstyle"><i class="fas fa-eye fa-1x"></i>&nbsp;&nbsp;&nbsp;&nbsp;Preview your post</div><hr>
 
-        <h5>
+          <div class="fontstyle18">
 
           {{ pt.title }}
 
-        </h5>
+          </div>
+
+
 
       <hr>
 
 
-        <h6>
+        <div class="container fontstyle14" style="text-align: left; ">
 
           {% if poll.user_submit.puser.image %}
           <img src="{{ poll.user_submit.puser.image.url }}" class='cpimgsmall' />
@@ -63,113 +65,61 @@
               {% endif %}
               </b></a>
 
-        </h6>
+          </div><!-- container fontstyle14 -->
 
       <hr>
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-              {% if poll.image or poll.imageurl %}
-
                 <div class="row row-tip">
 
-                  <div class="col-xs-11 col-sm-11" style="float:left">
-                    <h6>
-                    <b>{{ poll.title|safe }}</b><p class="smallstyle">{{ poll.date|timesince }} ago</p>
-                    </h6><hr style="margin:-1px">
+                  <div class="col-sm-12 fontstyle14" style="float:left; margin-left:12px">
+                      <b>
+                      {{ poll.title|safe }}</b><p class="timestampstyle">{{ poll.date|timesince }} ago</p>
+                    <hr class="tiplinebreak">
                   </div>
 
-                  <div class="col-xs-12 col-sm-4 test row-tip-thumb">
-
+                  {% if poll.image or poll.imageurl %}
+                  <div class="col-xs-12 col-sm-4 row-tip-thumb" style="margin-left:12px">
                       {% if poll.image %}
                         <img src="{{ poll.image.url }}" class="img-rounded polllistimg">
                       {% else %}
                         <img src="{{ poll.imageurl }}" class="img-rounded polllistimg">
                       {% endif %}
                       <br><br>
-
                   </div>
+                  {% endif %}
 
-                  <div class="row">
+<!--                   had a div class row removed here because it was causing scrolling issues -->
 
+                  <div class="col-xs-12 col-sm-12 contentstyle row-tip-body" style="float:left"> <!-- changed sm-7 to sm-12 to get the words to flush with all -->
 
-                  <div class="col-xs-12 col-sm-12 row-tip-body" style="float:left"> <!-- changed sm-7 to sm-12 to get the words to flush with all -->
+                    <div id="poll-space-{{ poll.id }}"></div><!-- I changed this from p to div if I face issues to change -->
 
-                      <small>
                       {% if poll.description %}
                       <div class="Mobilefont Compfont">
-                          <span class="tip-sliced">
-                          {{ poll.description|safe }}
-                          </span>
 
-                      </div>
+                            {{ poll.description|striptags_except:"iframe, a, p, ol, ul, li, br, i, img"|safe }}
+
+                            {% if poll.textatt %}<p class="creditstyle"> Credits: {{ poll.textatt }}</p>{% endif %}
+
+                      </div> <!-- mobilefont compfont -->
                       {% endif %} <!-- poll description -->
-                      </small>
 
-                  </div>
+                  </div><!-- contentstyle -->
+                  
 
-                  </div>
-
-                </div>
+                </div> <!-- row row tip -->
 
 
 
-              {% else %}
-
-                <div class="row row-tip">
-
-                  <div class="col-xs-11 col-sm-11" style="float:left;">
-                    <h6>
-                    <b>{{ poll.title|safe }}</b><p class="smallstyle">{{ poll.date|timesince }} ago</p>
-                    </h6><hr style="margin:-4px">
-                  </div>
-
-                  <div class="row">
-                    <div class="col-xs-12 col-sm-12">
-
-                      <small>
-                      {% if poll.description %}
-                        <div class="Mobilefont Compfont">
-                          <span class="tip-sliced">
-                            {{ poll.description|safe }}
-                          </span>
-                        </div>
-                      {% endif %}<!-- poll description -->
-                      </small>
-
-                    </div>
-                  </div>
-
-                </div>
-
-              {% endif %}
-
-
-
-
-      </div>
-    </div>
+    </div><!-- mainboxstyle -->
+    </div><!-- maincontainerstyle -->
 
 
 
 
 
 
-
-
-<div class="panel panel-default newpanelpad" style="background-color: lightgrey; border-color: lightgrey">
 
     <a href="/polls/{{Back}}/edit" class='btn buttonspace btn-sm btn-primary' ><b>Edit Post</b></a>
 
@@ -178,11 +128,10 @@
 
   <form action='' method='POST'  style="display: inline-block;">{% csrf_token %}
     <input type="hidden" name="pub_poll_id" value="{{poll.id}}">
-    <input type="submit" class='btn buttonspace btn-sm btn-success'  style="font-weight: bold" value="Confirm Post">
+    <input type="submit" class='btn buttonspace btn-sm btn-success'  style="font-weight: bold" value="Confirm Your Post">
   </form>
 
 
-</div>
 
 
 
@@ -197,8 +146,24 @@
 {% block jquery %}
 {#  <script>#}
 
+$(document).ready(function(){
+
+$(".poll-button").on('click', function (event) {
+  var $tipRow = $(event.target).closest('.row-tip');
+  $tipRow.find('.row-tip-thumb').addClass('d-none');
+  $tipRow.find('.row-tip-body').removeClass('col-sm-7');
+  $tipRow.find('.tip-sliced').addClass('d-none');
+  $tipRow.find('button').addClass('d-none');
+  $tipRow.find('span.poll-collapse').removeClass('d-none');
+});
+
+}
+
+
 $(".note-video-clip").attr("width", "100%");
 $(".note-video-clip").attr("height", "300");
 
 {#  </script>#}
 {% endblock %}
+
+

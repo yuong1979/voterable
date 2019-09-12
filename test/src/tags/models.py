@@ -11,11 +11,13 @@ from django.conf import settings
 
 def runtagcount():
 
+	#if you want to deactivate a tag, you need to remove all the polls it is attached to first
 	tagcounter = TagPoll.objects.all()
 
 	for i in tagcounter:
 		i.counter = i.polltype.filter(active=True).count()
 
+		# if the number of polls in the tag is zero then label for the tag is deactivated
 		if i.counter == 0:
 		    i.active = False
 		else:

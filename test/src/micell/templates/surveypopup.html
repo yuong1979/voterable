@@ -143,25 +143,71 @@ textarea:focus {
 //taking the model from the context from model and converting into minutes and microseconds
 var surveypoptime = {{ surveypop }} * 60 * 1000
 
+
+console.log((surveypoptime/60)/1000)
+
+//timer before the survey deploys
+var alerttime = 10000 //alert every 10 seconds
+var surveypopsec = (surveypoptime / alerttime * 10) - 10
+
+var surveytimer = () => {
+  var i = 0;
+  var intervalId = setInterval(() => {
+     if(i === surveypopsec){
+        clearInterval(intervalId);
+     }
+     i=i+10;
+     console.log(i + ' seconds to survey');
+  }, alerttime);
+}
+
+
+
+
 //determine when to show the popup. this shows popup 120 seconds into session
 window.onload= () => {
+  
+  //to time when the survey would show up - only used for troubleshooting
+  surveytimer()
+
   setTimeout(surveyPopup,surveypoptime)
 };
 
 
-console.log("survey loaded:" + sessionStorage.getItem('Surveyload'))
+// console.log("survey has been loaded:" + sessionStorage.getItem('Surveyload'))
 
-//new surveypopup that prompts user every time there is a new session (in sessionstorage) so not to overwhelm users
 
+
+
+if (sessionStorage.getItem('Surveyload') !== 'true')
+{
+  console.log("Survey has not appeared yet")
+} else {
+  console.log("Survey has already appeared") 
+}
+
+
+
+
+
+//surveypopup that prompts user every time there is a new session (in sessionstorage) so not to overwhelm users and also if the user is signed in, if not it will not prompt
 const surveyPopup = () =>
   {
-    var usertype = $("#authenticated_user").text()
 
+
+
+    var usertype = $("#authenticated_user").text()
+    // var usertype = document.getElementById("authenticated_user").innerText;
+
+      //only deploy survey if user is a paying member or non paying member(means user is authenticated)
       if (usertype == "Member" || usertype == "NotMember" ) 
       {
 
+        //only deploy survey if the user has not done or skipped the survey
         if (sessionStorage.getItem('Surveyload') !== 'true')
           {
+            //showing the survey and saving the survey loaded status to true
+
             $("#SurveyModal").modal('show');
             sessionStorage.setItem('Surveyload','true'); 
           }
