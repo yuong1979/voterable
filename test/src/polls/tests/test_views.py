@@ -71,12 +71,63 @@ class TestViews(TestCase):
 		res = self.client.get(path)
 		assert res.status_code == 200, 'Can be viewed by users logged in'
 
+
+
+
+		ptype_obj = Ptype.objects.get(pk=1)
+		ptype_obj.freepoll = True
+		pitem_obj = mixer.blend('polls.PollItem', polltype=ptype_obj, user_submit=self.user, allowed=True)
+		pitem_obj.save()
+
+		obj_puser = PUser.objects.get(pk=1)
+		obj_puser.memberp = False
+		obj_puser.save()
+
+		res = self.client.get(path)
+		assert res.status_code == 200, 'Freepoll can be called by all users'
+
+
+		# ptype_obj = Ptype.objects.get(pk=1)
+		# ptype_obj.freepoll = False
+		# pitem_obj = mixer.blend('polls.PollItem', polltype=ptype_obj, user_submit=self.user, allowed=True)
+		# pitem_obj.save()
+
+		# obj_puser = PUser.objects.get(pk=1)
+		# obj_puser.memberp = False
+		# obj_puser.save()
+
+		# res = self.client.get(path)
+		# assert res.status_code == 302, 'cannot be called by users who are not paid'
+
+
+		ptype_obj = Ptype.objects.get(pk=1)
+		ptype_obj.freepoll = False
+		pitem_obj = mixer.blend('polls.PollItem', polltype=ptype_obj, user_submit=self.user, allowed=True)
+		pitem_obj.save()
+
+		obj_puser = PUser.objects.get(pk=1)
+		obj_puser.memberp = True
+		obj_puser.save()
+
+		res = self.client.get(path)
+		assert res.status_code == 200, 'Non freepoll can be called by users who paid'
+
+
+
 		pitem_obj = PollItem.objects.get(pk=1)
 		pitem_obj.allowed = False
 		pitem_obj.save()
 
 		res = self.client.get(path)
 		assert res.status_code == 302, 'disallowed pollitem cannot be viewed'
+
+
+
+
+
+
+
+
 
 
 	def test_poll_detail_create_view(self):
@@ -154,6 +205,11 @@ class TestViews(TestCase):
 		res = self.client.get(path, data)
 		assert res.status_code == 200, 'Can be called by anyone'
 
+
+		#cannot be called by users who are not paid
+
+
+
 		ptype_obj.active = False
 		ptype_obj.save()
 
@@ -227,7 +283,7 @@ class TestViews(TestCase):
 
 
 	def test_poll_list_favorite_fav(self):
-		path = reverse('polls_favorite_list')
+		path = reverse('polls_list')
 		ptype_obj = Ptype.objects.get(pk=1)
 		data = {'favorite': ptype_obj.slug }
 
@@ -242,7 +298,7 @@ class TestViews(TestCase):
 
 
 	def test_poll_list_favorite_created(self):
-		path = reverse('polls_favorite_list')
+		path = reverse('polls_list')
 		ptype_obj = Ptype.objects.get(pk=1)
 		data = {'create': ptype_obj.slug }
 

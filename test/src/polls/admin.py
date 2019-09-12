@@ -3,6 +3,10 @@ from django import forms
 from polls.models import PollItem, PollFav, Ptype, SuggestedPoll, PollVoting
 
 
+
+
+
+
 class PollModelForm(forms.ModelForm):
     description = forms.CharField(widget=forms.Textarea)
 
@@ -20,7 +24,7 @@ class PtypeAdmin(admin.ModelAdmin):
         return obj.__str__()
 
 class PollAdmin(admin.ModelAdmin):
-    list_display = ('id','title','polltype', 'allowed', 'published', 'user_submit', 'score', 'modifieddate')
+    list_display = ('id','title','polltype', 'allowed', 'published', 'user_submit', 'score', 'pollmodifydate')
     search_fields = ['title']
     forms = PollModelForm
 

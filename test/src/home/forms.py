@@ -29,18 +29,21 @@ class ContactForm(forms.Form):
     # message = forms.CharField(widget=forms.Textarea)
 
     def __init__(self, *args, **kwargs):
+
+        #pop will remove the keyword that has been stored inside the kwargs after extracting it.
         loggedin = kwargs.pop('loggedin', None)
+
         super(ContactForm, self).__init__(*args, **kwargs)
 
         if loggedin:
             #kwargs has confirm that user has logged in therefore we dont need full name and email
-            self.fields["message"] = forms.CharField(widget=forms.Textarea, label="Ask us questions or send us your feedback here")
+            self.fields["message"] = forms.CharField(widget=forms.Textarea, label="Ask questions or send us your feedback here")
 
         else:
             # print ("not loggedin")
             self.fields["full_name"] = forms.CharField(required=True)
             self.fields["email"] = forms.EmailField()
-            self.fields["message"] = forms.CharField(widget=forms.Textarea, label="Ask us questions or send us your feedback here")
+            self.fields["message"] = forms.CharField(widget=forms.Textarea, label="Ask questions or send us your feedback here")
 
 
     # full_name = forms.CharField(
@@ -60,6 +63,10 @@ class AllauthSignupForm(forms.Form):
  
     def __init__(self, *args, **kwargs):
         super(AllauthSignupForm, self).__init__(*args, **kwargs)
+
+        # original signup form includes captcha, but the problem with captcha might be that it doesnt work on mobile
+        # captcha needs to be tested on mobile first
+        field_order = ['username', 'email', 'password1', 'password2', 'captcha']
  
         field_order = ['username', 'email', 'password1', 'password2', 'captcha']
         self.order_fields(field_order)

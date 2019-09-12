@@ -1,6 +1,6 @@
 from django.conf.urls import url
-from polls.views import (PollsListView, PollDetailView, api_votes, favorite_poll, PollTopicsView,
-    PollsListFavoriteView, PollDetailCreate, PollDetailUpdate, #PollDetailDelete,
+from polls.views import (PollsListView, PollDetailView, api_votes, favorite_poll, #PollTopicsView,
+    PollDetailCreate, PollDetailUpdate, #PollDetailDelete, PollsListFavoriteView,
     PollListCreate, PollListUpdate, PollSearchView, api_fav, api_like, api_report, api_sugglikes,
     PollSuggView, PollRecoView, PollDetailPreview, api_vcount
     )
@@ -10,11 +10,12 @@ from polls.views import (PollsListView, PollDetailView, api_votes, favorite_poll
 
 urlpatterns = [
     
-    url(r'^poll_topics/$', PollTopicsView.as_view(), name="poll_topics"),
+    # url(r'^poll_topics/$', PollTopicsView.as_view(), name="poll_topics"),
 
 
     #this should be poll list
     url(r'^polls/$', PollsListView.as_view(), name="polls_list"),
+
     url(r'^poll_list/add/$', PollListCreate.as_view(), name="poll_list_create"),
     url(r'^poll_list/(?P<pk>[0-9]+)/edit$', PollListUpdate.as_view(), name="poll_list_update"),
     url(r'^polls/(?P<pk>[0-9]+)/$', PollDetailView.as_view(), name="polls_detail"),
@@ -40,7 +41,8 @@ urlpatterns = [
     url(r'^polls/(?P<pk>[0-9]+)/messages/(?P<id>[0-9]+)/edit$', PollDetailView.as_view(), name="message_edit"),
 
     url(r'^polls/fav_poll/(?P<pk>[0-9]+)/$', favorite_poll, name="favorite_poll"),
-    url(r'^polls_favorite/$', PollsListFavoriteView.as_view(), name="polls_favorite_list"),
+    
+    # url(r'^polls_favorite/$', PollsListFavoriteView.as_view(), name="polls_favorite_list"),
 
     url(r'^polls/psearch/$', PollSearchView.as_view(), name='PollSearchView'),
 

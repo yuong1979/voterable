@@ -124,9 +124,10 @@ urlpatterns = [
     # the html for login7291 is inside test/lib/site-packages/django/contrib/auth/templates/registration
     url(r'^jumping7291/$', auth_views.login),
 
-    # url(r'^billing/cancel_subscription$', CancelSubscribe, name="CancelSubscribe"),
 
-    # url(r'^billing/confirm_cancel$', ConfirmCancel.as_view(), name="ConfirmCancel"),
+    # for confirming the cancellation of the users subscriptions
+    url(r'^billing/cancel_subscription$', CancelSubscribe, name="CancelSubscribe"),
+    url(r'^billing/confirm_cancel$', ConfirmCancel.as_view(), name="ConfirmCancel"),
 
 
 

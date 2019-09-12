@@ -6,9 +6,11 @@ from crispy_forms.bootstrap import TabHolder, Tab, InlineCheckboxes, AppendedTex
 import datetime
 
 class PUserAddForm(forms.ModelForm):
+	error_css_class = 'error'
+
 	class Meta:
 		model = PUser
-		error_css_class = 'error'
+
 
 		fields = [
 			# "name",
@@ -35,7 +37,8 @@ class PUserAddForm(forms.ModelForm):
 
 			HTML("""</div>"""),
 
-			Div(Field('referralcode'), css_class='col-xs-12 col-sm-4 col-md-3'),
+			## reimplement referralcode if needed
+			# Div(Field('referralcode'), css_class='col-xs-12 col-sm-4 col-md-3'),
 
 		)
 
@@ -76,6 +79,7 @@ class PUserAddForm(forms.ModelForm):
 				referring_obj = PUser.objects.get(referralid=referralcode)
 			except PUser.DoesNotExist:
 				# check if the referral code belongs to a puser
+
 				raise forms.ValidationError("Please use a valid referral code")
 		return referralcode
 

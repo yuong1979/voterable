@@ -17,11 +17,11 @@
 {% block content %}
 
 
-<div class="container">
+<div class="maincontainerstyle">
 
-    <div class="card cardstyle">
-      <div class="card-body">
-        <h4 class="card-title allfontcolor"><i class="allfontcolor fas fa-user-circle fa-1x"></i>&nbsp;&nbsp;&nbsp;&nbsp;User Details</h4><hr>
+    <div class="mainboxstyle">
+
+        <div class="mainheaderstyle"><i class="fas fa-user-circle fa-1x"></i>&nbsp;&nbsp;&nbsp;&nbsp;User Details</div><hr>
         <div class="container">
         <div class="row">
 
@@ -36,26 +36,21 @@
 
         <div class="col-xs-8 col-sm-9">
           
-            &nbsp;&nbsp;&nbsp;
-            <h4>
-              <b>
+            <div class="fontstyle16" style="margin:10px">
             {% if user.user.puser.name %}
             {{ user.user.puser.name }}
             {% else %}
             {{ user.user }}
             {% endif %}
-              </b>
-            </h4>
-            
+            </div>
 
-            &nbsp;&nbsp;&nbsp;
-            <h5 class=wdstyle style="color:grey">
+            <div class="fontstyle14" style="color:grey; margin:10px">
                 {% if user.description %}
                   {{ user.description }}
                 {% else %}
                   Description
                 {% endif %}
-            </h5>
+            </div>
 
         </div>
 
@@ -64,16 +59,14 @@
 
         <br>
 
-      </div>
-    </div>
+
+    </div><!-- mainboxstyle -->
 
 
 
-    <div class="card cardstyle">
-      <div class="card-body">
+    <div class="mainboxstyle">
 
-
-        <h4 class="card-title allfontcolor"><i class="allfontcolor fas fa-trophy fa-1x"></i>&nbsp;&nbsp;&nbsp;&nbsp;User Impact</h4>
+        <div class="card-title mainheaderstyle"><i class="fas fa-trophy fa-1x"></i>&nbsp;&nbsp;&nbsp;&nbsp;User Impact</div>
 
 
         <div class="row">
@@ -84,32 +77,32 @@
             <ul class="list-group">
 
               <li class="list-group-item">
-                <b class="wdstyle">Reputation Points:</b>
+                <b class="fontstyle14">Reputation Points:</b>
                 <span class="badge badge-pill badge-secondary" style="float:right"> {{points}} </span>
               </li>
 
               <li class="list-group-item">
-                <b class="wdstyle">Rank:</b>
+                <b class="fontstyle14">Rank:</b>
                 <span class="badge badge-pill badge-secondary" style="float:right"> {{rank}} </span>
               </li>
 
               <li class="list-group-item">
-                <b class="wdstyle">Tips created:</b>
+                <b class="fontstyle14">Tips created:</b>
                 <span class="badge badge-pill badge-secondary" style="float:right"> {{ pollsECreated }} </span>
               </li>
 
               <li class="list-group-item">
-                <b class="wdstyle">Times tips were viewed:</b>
+                <b class="fontstyle14">Times tips were viewed:</b>
                 <span class="badge badge-pill badge-secondary" style="float:right"> {{ votes_poll_entries_views }} </span>
               </li>
 
               <li class="list-group-item">
-                <b class="wdstyle">Tip Upvotes:</b>
+                <b class="fontstyle14">Tip Upvotes:</b>
                 <span class="badge badge-pill badge-secondary" style="float:right"> {{ upvotes }} </span>
               </li>
 
               <li class="list-group-item">
-                <b class="wdstyle">Comment Upvotes:</b>
+                <b class="fontstyle14">Comment Upvotes:</b>
                 <span class="badge badge-pill badge-secondary" style="float:right"> {{ comment_likes }} </span>
               </li>
 
@@ -118,27 +111,24 @@
           </div>
 
 
-
-
         </div>
 
-      </div>
-    </div>
+    </div><!-- mainboxstyle -->
 
 
 {% if pollcreatelist %}
-    <div class="card cardstyle">
-      <div class="card-body">
-        <h4 class="card-title allfontcolor"><i class="allfontcolor fas fa-edit fa-1x"></i>&nbsp;&nbsp;&nbsp;&nbsp;User Created Tips</h4><hr>
+    <div class="mainboxstyle">
+
+        <div class="mainheaderstyle"><i class="fas fa-edit fa-1x"></i>&nbsp;&nbsp;&nbsp;&nbsp;User Created Tips</div><hr>
 
         <ul class="nav nav-pills">
 
               {% for i in pollcreatelist %}
 
                 <div class="col-xs-12 col-sm-4">
-                <div class="boxstyle">
+                <div class="greyboxstyle">
 
-                    <b><a href="/polls_favorite/?create={{ i.slug }}">{{ i.title }}</a></b>
+                    <b><a href="/polls/?createduser={{ i.slug }}">{{ i.title }}</a></b>
 
                       {% if i.freepoll == True %}
                       &nbsp;&nbsp;<i class="allfontcolor fas fa-check-circle fa-1x"></i><b class="allfontcolor"></b>
@@ -151,12 +141,12 @@
 
           <br>
         </ul>
-      </div>
-    </div>
+
+    </div><!-- mainboxstyle -->
 {% endif %}
 
 
-</div> <!-- /container -->
+</div> <!-- maincontainerstyle -->
 
 
 

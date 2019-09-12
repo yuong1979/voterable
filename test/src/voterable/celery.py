@@ -39,18 +39,36 @@ def debug_task(self):
 
 app.conf.beat_schedule = {
 
-#    test send notification every 60secs.
-    'add-every-60-seconds': {
-        'task': 'send-notification-task',
-        'schedule': 60.0,
-    },
+# comment the below to test the celery tasks
 
 
-#    test send notification every 30mins.
-    # 'add-every-15-minutes': {
+#    test send notification every 60secs - disable before going into production if not it will run this task which is unnecessary
+# this should sends a notification to the users desktop
+
+    # 'add-every-60-seconds': {
     #     'task': 'send-notification-task',
-    #     'schedule': 900.0,
+    #     'schedule': 60.0,
     # },
+
+    # 'add-every-5-minutes': {
+    #     'task': 'send-notification-task',
+    #     'schedule': 300.0,
+    # },
+
+
+#  send notification every tuesday at 12 p.m. - change this and enable this before going live
+    # 'send_noti_tuesday': {
+    #     'task': 'send-notification-task',
+    #     'schedule': crontab(hour=17, minute=15, day_of_week=5),
+    # },
+
+
+
+   # # test send notification every 30mins.
+   #  'add-every-15-minutes': {
+   #      'task': 'send-notification-task',
+   #      'schedule': 900.0,
+   #  },
 
    # # send email every 20secs.
    #  'add-every-20-seconds': {
@@ -59,17 +77,50 @@ app.conf.beat_schedule = {
    #  },
 
 
-#  send notification every tuesday at 12 p.m.
-    # 'send_noti_tuesday': {
-    #     'task': 'send-notification-task',
-    #     'schedule': crontab(hour=12, minute=0, day_of_week=2),
-    # },
+# #  send notification every tuesday at 12 p.m.
+#     'send_noti_tuesday': {
+#         'task': 'send-notification-task',
+#         'schedule': crontab(hour=12, minute=0, day_of_week=2),
+#     },
+
+
+
+### this below should be working, just minimize chrome in the background
+### make sure that notification is on on your home page
+### make sure that in chrome - settings - site settings - notifications has the url
+#  send notification every day at 12:15 a.m.
+    'send_noti_everyday': {
+        'task': 'send-notification-task',
+        'schedule': crontab(hour=0, minute=15),
+    },
+
+
+
+
+
+# #  test - send testing task every day at 22:29 p.m.
+#     'send_test_everyday': {
+#         'task': 'send-test-task',
+#         'schedule': crontab(hour=22, minute=29),
+#     },
+
 
 }
 
 
+## to run celery start redis first and open up two cmd interfaces and run the two commands below
 # celery -A voterable beat -l info
 # celery -A voterable worker -l info -P eventlet
+
+
+# if the running of celery fails remember to delete all the celerybeat-schedule files inside voterable and try again
+
+
+
+# to activate subscription do a search for subscriptionactivate to find all the code relevant to activating subscription
+
+
+
 
 ## For testing notifications
 # http://localhost:8000/devicetoken/firebase/

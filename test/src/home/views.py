@@ -32,6 +32,7 @@ import string
 import random
 from django.contrib.sessions.backends.db import SessionStore
 from analytics.models import ControlTable, PromoAnalytic
+from notifications.models import Notification
 
 # from django.conf import settings
 # from django.contrib.auth.models import User
@@ -54,7 +55,7 @@ from analytics.models import ControlTable, PromoAnalytic
 ## For testing notifications
 # http://localhost:8000/devicetoken/firebase/
 
-
+# this is for email from contact form - dont touch it
 @task()
 def async_contact_mail(subject, contact_message, from_email, to_email):
     send_mail(
@@ -69,7 +70,8 @@ def async_contact_mail(subject, contact_message, from_email, to_email):
 
 
 
-# testing your periodic tasks
+
+# testing your periodic tasks - you need to enable send email every 20secs on celery.py
 @task(name='send-test-task')
 def send_email_task():
     testasyncemail()
@@ -120,9 +122,6 @@ def testasyncemail():
 
         print ("email failed!")
         pass
-
-
-
 
 
 
@@ -304,7 +303,6 @@ class HomeView(TemplateView):
 
         context = super(HomeView, self).get_context_data(*args, **kwargs)
 
-
         # http://localhost:8000/?ref=4B17MW
 
         #this is not working because the sessions is not working in tranferring the referralid after user login/logout
@@ -334,6 +332,7 @@ class HomeView(TemplateView):
 
 
         #update the number of tags count to only count the number of active tags
+        #runtagcount needs to be everywhere because I might deactivate some polls and it needs to do a recount
         runtagcount()
 
         # Firebase context variables
@@ -411,11 +410,11 @@ class HomeView(TemplateView):
             pitem_obj = PollItem.objects.filter(pollfav__fav_user=self.request.user)
             if pitem_obj:
                 #retrieving polltypes list for fav
-                ptype_obj = Ptype.objects.filter(pollitem__in=pitem_obj).distinct()
+                ptype_obj = Ptype.objects.filter(pollitem__in=pitem_obj, active=True).distinct()
                 context["fav_poll_types"] = ptype_obj
 
             #retrieving fav tags
-            fav_tags = TagPoll.objects.filter(tagfav=self.request.user)
+            fav_tags = TagPoll.objects.filter(tagfav=self.request.user, active=True)
             if fav_tags:
                 context["taglist"] = fav_tags
 
@@ -532,16 +531,16 @@ class HomeView(TemplateView):
             nowdate = pytz.utc.localize(d)
             membership_obj = PUser.objects.get(user=self.request.user)
 
-            # for normal member - although I remove normal member this code remains because it is try method and I need to remove anyone who is still subscribed under normal member
-            try:
-                dendate = PUser.objects.get(user=self.request.user).subenddate
-                if nowdate > dendate:
-                    membership_obj.member = False
-                    membership_obj.substartdate = None
-                    membership_obj.subenddate = None
-                    membership_obj.save() 
-            except:
-                pass
+            # for normal member - no longer used
+            # try:
+            #     dendate = PUser.objects.get(user=self.request.user).subenddate
+            #     if nowdate > dendate:
+            #         membership_obj.member = False
+            #         membership_obj.substartdate = None
+            #         membership_obj.subenddate = None
+            #         membership_obj.save() 
+            # except:
+            #     pass
 
             # for premium member
             try:
@@ -741,7 +740,9 @@ class ContactView(FormView):
         contact_message = "<p>Message: %s.</p><br><p>From: %s</p><p>Email: %s</p>" % (
         form_message, form_full_name, form_email)
 
-
+        # include a delay behind the function that is running to run it asynchronously
+        # in this case the async_contact_mail is sending a list of parameters to the sendmail function so it
+        # so that asynchronously run the async_contact_mail
         try:
             async_contact_mail.delay(
                 subject=subject,
@@ -750,7 +751,7 @@ class ContactView(FormView):
                 to_email=to_email
                 )
 
-            messages.info(self.request, "Thank you for your message, we will reply to you soon")
+            messages.info(self.request, "Thank you for your message, we will reply you as soon as we can.")
 
         except:
             messages.warning(self.request, "Error in email delivery, please send your email to hello@voterable.com")

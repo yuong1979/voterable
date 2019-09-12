@@ -10,31 +10,25 @@
 </style>
 
 
-
-
-
 {% block content %}
 
 
+<div class="maincontainerstyle">
 
-
-
-<div style="margin:20px">
-
-
-
-    <div class="card cardstyle">
-      <div class="card-body">
-
-
-        <h4 class="card-title allfontcolor"><i class="allfontcolor fa fa-tags fa-1x"></i>&nbsp;&nbsp;&nbsp;&nbsp;Tag Lists</h4>
+    <div class="mainboxstyle">
+      
+        <div class="mainheaderstyle"><i class="fa fa-tags fa-1x"></i>&nbsp;&nbsp;&nbsp;&nbsp;Topics</div>
 
         <hr>
 
             <div class="col-xs-12 col-sm-6 col-md-4">
+
               <form method='GET' action='/tags/'>
+
                 {% crispy form %}
+
               </form>
+
             </div>
 
 
@@ -42,7 +36,7 @@
 
               {% for i in taglist %}
 
-                 <a href='{{i.get_absolute_url}}' class="btn btn-outline-primary tagstyle"><b>{{ i }} ({{i.counter}})</b></a>&nbsp;&nbsp;
+                 <a href='{{i.get_absolute_url}}' class="btn btn-primary tagstyle"><b>{{ i }} ({{i.counter}})</b></a>&nbsp;&nbsp;
 
               {% endfor %}
 
@@ -53,13 +47,9 @@
             <br>
             {% endif %}
 
-      </div>
-    </div>
+    </div><!-- mainboxstyle -->
 
-
-
-
-</div> <!-- /container -->
+</div> <!-- maincontainerstyle -->
 
 
 

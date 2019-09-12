@@ -39,23 +39,6 @@ import time
 from celery import shared_task, task, app
 from analytics.models import ControlTable
 
-# class PollVoteTopicsView(ListView, FormView):
-#     model = Ptype
-#     template_name = "polls/polls_types.html"
-#     form_class = SearchForm
-
-
-# class PollPopTopicsView(ListView, FormView):
-#     model = Ptype
-#     template_name = "polls/polls_types.html"
-#     form_class = SearchForm
-
-
-# class PollLateTopicsView(ListView, FormView):
-#     model = Ptype
-#     template_name = "polls/polls_types.html"
-#     form_class = SearchForm
-
 
 
 
@@ -698,6 +681,7 @@ class PollListUpdate(LoginRequiredMixin,UpdateView): #if user is request user or
 
     def get_initial(self):
         initial = super(PollListUpdate, self).get_initial()
+        #sending parameters to the form so they can be used
         tags = self.get_object().tagpoll_set.all()
         initial["tags"] = ", ".join([x.title for x in tags])
         return initial
@@ -750,10 +734,7 @@ class PollsListView(ListView, PollTypeMixin):
         dispatch = super(PollsListView, self).dispatch(*args, **kwargs)
         # print (self.request.session.items())
 
-        #exit if no poll_id
-        if self.request.session.get("type_slug") == None:
-            return redirect('Home')
-
+        # to exit if this poll does not exist anymore
         if Ptype.objects.get(slug=self.request.session.get("type_slug")).active == False:
             messages.info(self.request, "This poll does not exist anymore")
             return redirect('Home')
@@ -763,124 +744,230 @@ class PollsListView(ListView, PollTypeMixin):
 
     def get_queryset(self):
         sort = self.request.GET.get('sort', None)
+
+
+
         poll_type = self.get_pobject().id
+
+        ##original scripts
+        # poll_type = self.get_pobject().id
         current_page = int(self.request.GET.get('page', 1))
 
+        # to default the order of poll list by score for favorites and create
+        self.order = self.request.GET.get('order_by', '-score')
+
+
+
+
+
+
         if self.request.user.is_authenticated:
+
+            #check what type of request /favorite list/created list or general list
+            if self.request.GET.get('favorite', None):
+                pt_query = PollItem.objects.filter(
+                                                    pollfav__fav_user=self.request.user,
+                                                    polltype=poll_type
+                                                    ).order_by(self.order)
+
+            
+            elif self.request.GET.get('create', None):
+                pt_query = PollItem.objects.filter(
+                                                    user_submit=self.request.user,
+                                                    polltype=poll_type
+                                                    ).order_by(self.order)
+
+
+            elif self.request.GET.get('createduser', None):
+
+                try:
+                    #extracting the user id to query for the list of polls user created
+                    user_id = self.request.session.get("user_id")
+                    c_user = User.objects.get(id=user_id)
+                except:
+                    #exit back to home if the user is does not exist
+                    return redirect("Home")
+
+                pt_query = PollItem.objects.filter(
+                                                    user_submit=c_user,
+                                                    polltype=poll_type
+                                                    ).order_by(self.order)
+
+
+            else:    
+                pt_query = PollItem.objects.filter()
+
+
+            
+            #filtering the neccessary data required by the user
             username = self.request.user.username
             # If authenticated user open first page, we get PollItems from DB and caching it
             if current_page == 1:
                 if sort == "Score":
-                    new_context = PollItem.objects.filter(allowed=True, polltype=poll_type).order_by('-score')
-                    cache.set('pollitems_score'+username, new_context)
+                    pt_query = pt_query.filter(allowed=True, polltype=poll_type).order_by('-score')
+                    cache.set('pollitems_score'+username, pt_query)
                 else:
-                    new_context = PollItem.objects.filter(allowed=True, polltype=poll_type).order_by('-modifieddate')
-                    cache.set('pollitems_date'+username, new_context)
+                    pt_query = pt_query.filter(allowed=True, polltype=poll_type).order_by('-pollmodifydate')
+                    cache.set('pollitems_date'+username, pt_query)
 
             # If authenticated user open non first page, we try get PollItems from cache
             else:
                 try:
                     if sort == "Score": 
-                        new_context = cache.get('pollitems_score'+username)
+                        pt_query = cache.get('pollitems_score'+username)
                     else: 
-                        new_context = cache.get('pollitems_date'+username)
+                        pt_query = cache.get('pollitems_date'+username)
                 except: # If user open non-first page directly, we get PollItems from DB and caching it
                     if sort == "Score":
-                        new_context = PollItem.objects.filter(allowed=True, polltype=poll_type).order_by('-score')
-                        cache.set('pollitems_score'+username, new_context)
+                        pt_query = pt_query.filter(allowed=True, polltype=poll_type).order_by('-score')
+                        cache.set('pollitems_score'+username, pt_query)
                     else:
-                        new_context = PollItem.objects.filter(allowed=True, polltype=poll_type).order_by('-modifieddate')
-                        cache.set('pollitems_date'+username, new_context)
-        # if users are not signed up then only restrict them to 5 entries
+                        pt_query = pt_query.filter(allowed=True, polltype=poll_type).order_by('-pollmodifydate')
+                        cache.set('pollitems_date'+username, pt_query)
+            # if users are not signed up then only restrict them to 5 entries
+
         else:
+
+            #this query is for users who are not authenticated
+            pt_query = PollItem.objects.filter()
+
             if sort == "Score":
-                new_context = PollItem.objects.filter(allowed=True, polltype=poll_type).order_by('-score')[:8]
+                pt_query = pt_query.filter(allowed=True, polltype=poll_type).order_by('-score')[:8]
             else:
-                new_context = PollItem.objects.filter(allowed=True, polltype=poll_type).order_by('-modifieddate')[:8]
-        return new_context
+                pt_query = pt_query.filter(allowed=True, polltype=poll_type).order_by('-pollmodifydate')[:8]
+
+
+        return pt_query
 
 
 
-    # #old before andrey correction
-    # def get_queryset(self):
-
-    #     sort = self.request.GET.get('sort', None)
-    #     poll_type = self.get_pobject().id
-
-    #     # FIX duplicate polls in scroll ajax request
-    #     # current_page = int(self.request.GET.get('page', 1))
-    #     # if current_page > 1:
-    #     #     excluded_ids = self.request.session['already_vote_polls_ids']
-    #     # else:
-    #     #     excluded_ids = []
-
-    #     if self.request.user.is_authenticated:
-
-    #         if sort == "Date":
-    #             new_context = PollItem.objects.filter(allowed=True, polltype=poll_type).order_by('-date')
-    #             # #FIX
-    #             # new_context = PollItem.objects.filter(allowed=True, polltype=poll_type).exclude(id__in=excluded_ids).order_by('-date')
-    #         else:
-    #             new_context = PollItem.objects.filter(allowed=True, polltype=poll_type).order_by('-score')
-    #             # #FIX
-    #             # new_context = PollItem.objects.filter(allowed=True, polltype=poll_type).exclude(id__in=excluded_ids).order_by('-score')
-
-    #     # if users are not signed up then only restrict them to 5 entries
-    #     else:
-
-    #         if sort == "Date":
-    #             new_context = PollItem.objects.filter(allowed=True, polltype=poll_type).order_by('-date')[:5]
-    #             # #FIX
-    #             # new_context = PollItem.objects.filter(allowed=True, polltype=poll_type).exclude(id__in=excluded_ids).order_by('-date')[:5]
-    #         else:
-    #             new_context = PollItem.objects.filter(allowed=True, polltype=poll_type).order_by('-score')[:5]
-    #             # #FIX
-    #             # new_context = PollItem.objects.filter(allowed=True, polltype=poll_type).exclude(id__in=excluded_ids).order_by('-score')[:5]
-
-
-    #     # FIX duplicate polls in scroll ajax request
-    #     # if current_page == 1:
-    #     #     self.request.session['already_vote_polls_ids'] = []
-
-    #     return new_context
 
 
     def get_context_data(self, **kwargs):
         context = super(PollsListView, self).get_context_data(**kwargs)
 
-        type_slug = self.get_pobject().slug
+
+        #check what type of request /favorite list/created list or general list
+        if self.request.GET.get('favorite', None):
+            context['listtitle'] = "Favorite"
+            context['title'] = "Favorite List"
+
+        elif self.request.GET.get('create', None):
+            context['listtitle'] = "Created"
+            context['title'] = "Created List"
+
+        elif self.request.GET.get('createduser', None):
+            context['listtitle'] = "Createduser"
+            context['title'] = "User Created List"
+
+        else:    
+            context['listtitle'] = "All"
+            context['title'] = "List"
+
+
         type_id = self.get_pobject().id
 
-        context['Type_Slug'] = type_slug
-        context['listtitle'] = "All"
+        # for loading polltype name and description into metatag
+        context['PollType_obj'] = self.get_pobject()
 
-        surveypoptime = ControlTable.objects.get(id=1).delaypopsurvey
-        context['surveypop'] = surveypoptime
+        # get request session for creation or update of a new slug
+        # self.request.session["type_slug"] = self.request.GET.get("type")
+        self.request.session["type_slug"] = self.get_pobject().slug
 
-        # context['order_by'] = self.request.GET.get('orderby', '-score')
-        # favorite = self.request.GET.get('favorite', None)
-        # if favorite:
-        #     context['Ptype'] = Ptype.objects.filter(id=int(favorite))
-        # else:
-        #     context['Ptype'] = Ptype.objects.all()
+        # getting the list of relevant tags/topics for the pollist
+        polltype_obj = Ptype.objects.filter(id = type_id)
+        tags = TagPoll.objects.filter(polltype=polltype_obj)
+        context['Tags'] = tags
 
-        context['Ptype'] = Ptype.objects.all()
-
-        # Check if users can update the ptype
-        if self.request.user == Ptype.objects.get(id=type_id).c_user:
-            if Ptype.objects.get(id=type_id).locked == False:
-                context['user_authorised'] = True
-
-        # Check if this ptype is free
+        # Check if this poll list is free for any user to access
         if Ptype.objects.get(id=type_id).freepoll == True:
             context['free'] = True
 
-        if self.request.user.is_authenticated:
-            ptype_obj = Ptype.objects.get(id=type_id)
 
-            #retrieve the entries or whether or not the users voted
+        context['BackPtype'] = self.get_pobject().slug
+
+        
+
+        # retrieve the time that the survey should pop up from the controltable to activate the survey at the alloted time
+        surveypoptime = ControlTable.objects.get(id=1).delaypopsurvey
+        context['surveypop'] = surveypoptime
+
+
+
+
+
+        #only for general lists - to exclude methods for favourite and created
+        if context['title'] == "List":
+    
+            # update the number of tips in the a polltype has inside analytics - for general poll list
+            polltype = Ptype.objects.get(id=type_id)
+            pollentryc = PollItem.objects.filter(allowed=True, polltype=polltype).count()
+            saveentryc = ViewPollTypeUnique.objects.get_or_create(p_type_id=polltype.id)[0]
+            saveentryc.ecount = pollentryc
+            saveentryc.save()
+
+            #default adding post should have time limit - If user is staff there is no time limit - for general poll list
+            if self.request.user.is_staff == True:
+                context["Addpost"] = True
+            else:
+                context["Addpost"] = False
+
+            # check if user can post based on "cpostdelay" minutes after the user posted - for general poll list
+            ctable = ControlTable.objects.get(id=1)
+            cpostdelay = ctable.postadddelay
             user = self.request.user
 
+            try:
+                # search for the last time the user posted
+                lpostdate = PollItem.objects.filter(user_submit=user).last().date
+
+                d = datetime.utcnow()
+                nowdate = pytz.utc.localize(d)
+                okdate = lpostdate + timedelta(minutes=cpostdelay)
+
+                if nowdate >= okdate:
+                    context["Addpost"] = True
+                else:
+                    timeleft = okdate - nowdate
+                    days, hours, minutes = timeleft.days, timeleft.seconds // 3600, timeleft.seconds // 60 % 60
+
+                    context["Hours"] = hours
+                    context["Minutes"] = minutes
+            except:
+                # if the user has not posted anything before
+                context["Addpost"] = True
+
+        else:
+
+            #Create a shortcut to go to general poll list that is created/favorited (not required for general list)
+            context['Go'] = self.get_pobject().slug
+
+
+
+
+
+        if self.request.user.is_authenticated:
+
+            # to check if user should have access to the polls
+            context['userauthenticated'] = True
+
+            #allow premium view of each poll only if user is subscribed
+            if self.request.user.puser.memberp == True:
+                context["Subscribedp"] = True                
+
+            # Check if users can update the ptype - if the user is the person who created and if the polllist is not locked then authorise
+            if self.request.user == Ptype.objects.get(id=type_id).c_user or self.request.user.is_staff:
+                if Ptype.objects.get(id=type_id).locked == False:
+                        context['user_authorised'] = True
+
+
+            # retrieve the slug to redirect user to creating a new post on the slug
+            context['type_slug'] = self.get_pobject().slug
+
+
+            #retrieve the entries for this polltype that the users have voted for
+            ptype_obj = Ptype.objects.get(id=type_id)
+            user = self.request.user
             # start = time.time()
             voteposi = PollVoting.objects.filter(vote_user=user, vote=1).values_list("poll_id",flat=True)
             pollposi = PollItem.objects.filter(id__in=voteposi, polltype=ptype_obj)
@@ -888,9 +975,14 @@ class PollsListView(ListView, PollTypeMixin):
             pollnega = PollItem.objects.filter(id__in=votenega, polltype=ptype_obj)
             # end = time.time()
             # print(end - start)
-
             context['pollposi'] = pollposi
             context['pollnega'] = pollnega
+
+            #not required to run for create and favourite
+            #retrieve the entries that the user have favorited
+            pollfav = PollFav.objects.filter(fav_user=user).values_list("poll",flat=True)
+            pollfavitem = PollItem.objects.filter(id__in=pollfav, polltype=ptype_obj)
+            context['PollFav'] = pollfavitem
 
 
             # #exclude entries that have been voted down more then 10 votes
@@ -916,12 +1008,8 @@ class PollsListView(ListView, PollTypeMixin):
             #         i.save()
 
 
-            #retrieve the entries that the users have favorited
-            pollfav = PollFav.objects.filter(fav_user=user).values_list("poll",flat=True)
-            pollfavitem = PollItem.objects.filter(id__in=pollfav, polltype=ptype_obj)
-            context['PollFav'] = pollfavitem
-
-            # record total number of views
+            # record total number of views for the polltype on analytics table
+            # only recording for users who view who is not the person who created
             if Ptype.objects.get(id=type_id).c_user != self.request.user:
                 view_obj = ViewPollTypeUnique.objects.get_or_create(p_type=ptype_obj)[0]
                 view_obj.userview.add(self.request.user)
@@ -935,97 +1023,6 @@ class PollsListView(ListView, PollTypeMixin):
                 # saveentryc.ecount = pollentryc
                 # saveentryc.save()
 
-
-            # #allow users to view the details of each poll only of user is subscribed
-            # if self.request.user.puser.memberp == True or self.request.user.puser.member == True:
-            #     context["Subscribed"] = True
-
-
-            #allow basic view of each poll only of user is subscribed
-            # if self.request.user.puser.member == True:
-            #     context["Subscribed"] = True
-
-            #allow premium view of each poll only of user is subscribed
-            if self.request.user.puser.memberp == True:
-                context["Subscribedp"] = True                
-
-
-        #default adding post should have time limit
-        context["Addpost"] = False
-
-        #If user is staff there is no time limit
-        if self.request.user.is_staff == True:
-            context["Addpost"] = True
-
-
-        # check if user can post based on "cpostdelay" minutes after the user posted
-
-        ctable = ControlTable.objects.get(id=1)
-        cpostdelay = ctable.postadddelay
-
-        user = self.request.user
-        # if the user has not posted anything before
-
-        try:
-        # last time the user posted
-            lpostdate = PollItem.objects.filter(user_submit=user).last().date
-
-            d = datetime.utcnow()
-            nowdate = pytz.utc.localize(d)
-            okdate = lpostdate + timedelta(minutes=cpostdelay)
-
-            if nowdate >= okdate:
-                context["Addpost"] = True
-            else:
-                timeleft = okdate - nowdate
-                days, hours, minutes = timeleft.days, timeleft.seconds // 3600, timeleft.seconds // 60 % 60
-
-                context["Hours"] = hours
-                context["Minutes"] = minutes
-
-        except:
-            context["Addpost"] = True
-
-        # get the user who created the poll
-        # context['Userdetail'] = PUser.objects.get(user=Ptype.objects.get(id=type_id).c_user).get_absolute_url()
-
-        # # get image polltype has no image for now
-        # try:
-        #     context['Image'] = Ptype.objects.get(id=type_id).image.url
-        # except:
-        #     pass
-
-        # # getting the number of views
-        # ptype_obj = Ptype.objects.get(id=type_id)
-        # try:
-        #     view_obj = ViewPollTypeUnique.objects.get(p_type=ptype_obj)
-        #     context['Views'] = view_obj.vcount
-        # except:
-        #     pass
-
-        #get request session for creation or update of a new slug
-        type_slug = self.request.GET.get("type")
-        self.request.session["type_slug"] = type_slug
-
-
-        # getting the relevant tags
-        test = Ptype.objects.filter(id = type_id)
-        tags = TagPoll.objects.filter(polltype=test)
-
-        context['Tags'] = tags
-        context['Type'] = type_slug
-        context['PT'] = Ptype.objects.get(id=type_id)
-
-        # hello = Ptype.objects.get(id=type_id)
-
-
-        #update the number of tips in the a polltype has inside analytics
-        polltype = Ptype.objects.get(id=type_id)
-        # ptypeobj = test.polltype
-        pollentryc = PollItem.objects.filter(allowed=True, polltype=polltype).count()
-        saveentryc = ViewPollTypeUnique.objects.get_or_create(p_type_id=polltype.id)[0]
-        saveentryc.ecount = pollentryc
-        saveentryc.save()
 
         return context
 
@@ -1151,6 +1148,12 @@ class PollDetailUpdate(LoginRequiredMixin, UpdateView): #if user is request user
         return context
 
     def form_valid(self, form):
+
+        my_date = datetime.now(pytz.timezone('Singapore'))
+        poll_obj = self.object
+        poll_obj.pollmodifydate = my_date
+        poll_obj.save()
+
         # user = self.request.user
         # form.instance.user = user
 
@@ -1342,13 +1345,12 @@ class PollDetailView(LoginRequiredMixin, DetailView, FormView):
             return redirect('Home')
 
         # send the user to premium subscribe if the user wants to access details unless he is member or he created this entry
-        # removed this because we want users to leave comments
-        # try:
-        #     if (self.object.user_submit != self.request.user) and (self.request.user.puser.memberp == False):
-        #         messages.info(self.request, "Please subscribe to the premium package plan to access details")
-        #         return redirect('SelectPlan')
-        # except:
-        #     pass
+        try:
+            if (self.object.user_submit != self.request.user) and (self.request.user.puser.memberp == False):
+                messages.info(self.request, "Please subscribe to the premium package plan to access details")
+                return redirect('SelectPlan')
+        except:
+            pass
 
         return dispatch
 
@@ -1445,9 +1447,6 @@ class PollDetailView(LoginRequiredMixin, DetailView, FormView):
 
         # get user details
         context['Userdetail'] = PUser.objects.get(user=self.object.user_submit).get_absolute_url()
-        #to move backward into the polltype
-        context["Back"] = self.get_object().polltype.slug
-        # context["Backname"] = self.get_object().polltype
 
         # getting the poll messages related to this pollitem
 
@@ -1584,78 +1583,6 @@ class PollDetailView(LoginRequiredMixin, DetailView, FormView):
 
 
 
-###################################
-######### Poll favorites ##########
-###################################
-
-
-
-class PollsListFavoriteView(ListView):
-    model = PollItem
-    template_name = "polls/polls_list_favorite.html"
-    # paginate_by = 10
-
-
-    def dispatch(self, request, *args, **kwargs):
-
-        if self.request.GET.get('favorite', None):
-            self.required = "Favorite"
-            self.favorite = self.request.GET.get('favorite', None)
-            self.requiredslug = Ptype.objects.filter(slug=self.favorite).first()
-            self.chosen_ptype = Ptype.objects.get(slug = self.favorite)
-            self.poll_type = self.chosen_ptype.id
-
-        if self.request.GET.get('create', None):
-            self.required = "Created"
-            self.created = self.request.GET.get('create', None)
-            self.requiredslug = Ptype.objects.filter(slug=self.created).first()
-            self.chosen_ptype = Ptype.objects.get(slug = self.created)
-            self.poll_type = self.chosen_ptype.id
-
-        self.order = self.request.GET.get('order_by', '-score')
-
-        return super(PollsListFavoriteView, self).dispatch(request, *args, **kwargs)
-
-
-
-    def get_queryset(self):
-        #showing the list of favorites - using dispatch to pull polltype
-        if self.required == "Favorite":
-            new_context = PollItem.objects.filter(
-                                                pollfav__fav_user=self.request.user,
-                                                polltype=self.poll_type
-                                                ).order_by(self.order)
-        #showing the list of created - using dispatch to pull polltype
-        if self.required == "Created":
-            new_context = PollItem.objects.filter(
-                                                user_submit=self.request.user,
-                                                polltype=self.poll_type
-                                                ).order_by(self.order)
-        return new_context
-
-
-    def get_context_data(self, **kwargs):
-        context = super(PollsListFavoriteView, self).get_context_data(**kwargs)
-
-        context['listtitle'] = self.required
-        context['order_by'] = self.order
-
-        #allow basic view of each poll only of user is subscribed
-        # if self.request.user.puser.member == True:
-        #     context["Subscribed"] = True
-
-        #allow premium view of each poll only of user is subscribed
-        if self.request.user.puser.memberp == True:
-            context["Subscribedp"] = True
-
-        context['Ptype'] = self.chosen_ptype
-        context['BackPtype'] = self.requiredslug.slug
-            
-        # Check if this ptype is free
-        if self.requiredslug.freepoll == True:
-            context['free'] = True
-
-        return context
 
 
 
@@ -1699,6 +1626,7 @@ class reportForm(forms.Form):
 
 
 
+# reporting a poll does not remove the poll - it emails the admin and admin will decide to remove the poll
 def api_report(request):
 
     if request.POST:
@@ -1722,13 +1650,14 @@ def api_report(request):
 
                 result = pollid
 
+
+                # gathering email form data for emailing to myself
                 subject = "Voterable Report Form"
 
                 if settings.TYPE == "base":
                     from_email = settings.EMAIL_HOST_USER
                 else:
                     from_email = settings.DEFAULT_FROM_EMAIL
-
 
                 try:
                     form_email = request.user.email
@@ -1737,11 +1666,10 @@ def api_report(request):
                     form_email = None
                     to_email = [from_email]  # [from_email, 'jumper23sierra@yahoo.com']
 
-
                 contact_message = "Poll item " + str(pollid) + " has been reported for " + issueid + " by user " + str(request.user.id)
 
 
-
+                #updating the report database with the issue the request has
                 try:
                     if (request.user.puser.alt_email is not None) and (request.user.puser.alt_email != ""):
                         useremail = request.user.puser.alt_email
@@ -1762,9 +1690,8 @@ def api_report(request):
                 else:
                     pass
 
-                # if the user has reported already then just get and replace the issue
+                # if the user has reported already then just get and replace the latest issue in the database
                 # We save the issuemsg model field only if we don't get 'true' from our frontend
-
                 preport = PostReport.objects.get_or_create(p_item=pollobj, Puser=request.user)[0]
                 if issuemsg != 'true':
                     preport.postissuemsg = issuemsg
@@ -1783,7 +1710,7 @@ def api_report(request):
                 #     fail_silently=False
                 # )
 
-
+                # emailing the report to myself so I can make a decision to hide/disallow the poll as admin
                 async_report_mail.delay(
                     subject=subject,
                     contact_message=contact_message,
@@ -1958,8 +1885,8 @@ def api_votes(request):
             else:
                 pass
 
+            #updating the vote count for the poll
             vote_obj = PollVoting.objects.get_or_create(vote_user=request.user, poll=poll)[0]
-
 
             if request.POST.get('posi') == "true":
                 if vote_obj.vote == 1:
@@ -1973,18 +1900,19 @@ def api_votes(request):
                 else:
                     vote_obj.vote = -1
 
-                    #exclude entries that have been voted down more the number of votes stipulated in the database
+                    #exclude poll entries that have been voted down more the number of votes stipulated in the database
                     print (poll.score)
 
+                    #check the number of downvotes a poll should get before removal
                     ctable = ControlTable.objects.get(id=1)
                     rmvotesno = ctable.removepostdvotes
 
+                    #poll disallowed or removed
                     if poll.score <= -rmvotesno:
-                        print ("remove poll")
                         poll.allowed=False
                         poll.save()
 
-                        #remove the notifications when the post is downvoted
+                        #remove the notifications (if any) for the poll after it had been removed
                         rmvnoti = Notification.objects.filter(pollitem=poll)
                         if rmvnoti:
                             for k in rmvnoti:
@@ -1995,6 +1923,7 @@ def api_votes(request):
 
             vote_obj.save()
 
+            #refresh the score of the poll in the database
             poll.calc_score()
 
             #include the below if you need to vote numbers back to the user

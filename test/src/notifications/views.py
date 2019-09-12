@@ -70,6 +70,7 @@ def get_notifications_ajax(request):
 			"count": count,
 		}
 		json_data = json.dumps(data)
+		#returning a httpresponse, it could be return httpresponse("<h1>dude!</h1>")
 		return HttpResponse(json_data, content_type="application/json")
 	else:
 		raise Http404

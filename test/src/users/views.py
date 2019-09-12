@@ -37,6 +37,10 @@ class PUserDetail(DetailView):
         puser = PUser.objects.get(user=user)
 
 
+        #saving the session to extract the polls created by this user
+        self.request.session["user_id"] = user.id
+
+
         # Count the number polls that the user has created
         context["pollsECreated"] = PollItem.objects.filter(user_submit=user).count()
 
@@ -155,6 +159,9 @@ class PUserCreate(CreateView, LoginRequiredMixin):
             pass
 
         return dispatch
+
+
+
 
 
     def form_valid(self, form):

@@ -33,8 +33,32 @@ class UserChangeManagerMixin(object):
 
 class PollTypeMixin(object):
 	def get_pobject(self, *args, **kwargs):
-		type_slug = self.request.GET.get("type")
-		poll_type = Ptype.objects.get(slug = type_slug)
+
+
+		#checking which type of list user is user
+		try:
+			type_slug = self.request.GET.get("type")
+			poll_type = Ptype.objects.get(slug = type_slug)
+		except:
+			try:
+				type_slug = self.request.GET.get("favorite")
+				poll_type = Ptype.objects.get(slug = type_slug)			
+			except:
+				try:
+					type_slug = self.request.GET.get("create")
+					poll_type = Ptype.objects.get(slug = type_slug)
+				except:
+					try:
+						type_slug = self.request.GET.get("createduser")
+						poll_type = Ptype.objects.get(slug = type_slug)
+
+					except:
+
+						return redirect('Home')
+
+
+
+
 		return poll_type
 
 

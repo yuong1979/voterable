@@ -5,7 +5,7 @@ from users.models import PUser
 
 
 class PUserAdmin(admin.ModelAdmin):
-	list_display = ['__str__','name','rank','score','banned','trial','subnewsletter','freedays','usermaxscore','referralid','member','memberp','alt_email','email','invoiceno','plan']
+	list_display = ['id','__str__','name','rank','score','banned','trial','subnewsletter','freedays','usermaxscore','referralid','member','memberp','alt_email','email','invoiceno','plan']
 
 	# list_display = ['__str__','name','rank','score','banned','trial','member']
 

@@ -6,6 +6,10 @@ from mixins.mixins import LoginRequiredMixin
 from users.models import PUser
 from django.views.generic import TemplateView, View, FormView
 from django.shortcuts import render, get_object_or_404, HttpResponseRedirect, redirect
+from django.http import HttpResponse
+# from django.core.mail import send_mail
+from home.views import async_contact_mail
+
 import datetime
 import pytz
 # Create your views here.
@@ -15,6 +19,9 @@ import stripe
 from django.template.context_processors import csrf
 from polls.models import PollItem
 
+from celery.task import periodic_task
+from celery import shared_task, task, app
+
 import random
 import string
 
@@ -22,6 +29,20 @@ import string
         # allowed_chars = ''.join((string.ascii_letters, string.digits))
         # unique_id = ''.join(random.choice(allowed_chars) for _ in range(32))
         # print (unique_id)
+
+
+
+# @task()
+# def async_contact_mail(subject, contact_message, from_email, to_email):
+#     send_mail(
+#         subject=subject,
+#         message="",
+#         html_message=contact_message,
+#         from_email=from_email,
+#         recipient_list=to_email,
+#         fail_silently=False
+#     )
+
 
 
 
@@ -85,6 +106,37 @@ stripe.api_key = settings.STRIPE_SECRET
 
 class SelectPlan(LoginRequiredMixin, TemplateView):
 	template_name = "select_sub_plan.html"
+
+	def dispatch(self, *args, **kwargs):
+		dispatch = super(SelectPlan, self).dispatch(*args, **kwargs)
+
+
+		# freedays = PUser.objects.get(user=self.request.user).freedays
+
+		# print (freedays)
+
+		# messages.info(self.request, "You have" + freedays + " days of free access available, activate the to access premium content")
+
+		try:
+
+			# if user has already paid - need to exit from http://localhost:8000/billing/selectplan so user doesnt double pay
+			if PUser.objects.get(user=self.request.user).memberp == True:
+				return redirect('Home')
+
+			# if user has freedays available need to exit from http://localhost:8000/billing/selectplan so user doesnt double pay
+			if PUser.objects.get(user=self.request.user).freedays > 0:
+
+				freedays = PUser.objects.get(user=self.request.user).freedays
+
+				messages.info(self.request, "You have " + str(freedays) + " days of free access available, activate them to access premium content")
+
+				return redirect('Home')
+
+		except:
+			pass
+
+		return dispatch
+
 
 	def get_context_data(self, *args, **kwargs):
 		context = super(SelectPlan, self).get_context_data(*args, **kwargs)
@@ -241,31 +293,15 @@ class StripeCheckOut(LoginRequiredMixin, TemplateView):
 			messages.info(self.request, "This card has been declined.")
 			return redirect('StripeCheckOut')
 
-
-		plantype = subtypeobj.label
-
-		print (plantype[:5])
-
-		#leaving this code although I removed basic (normal subscriber) because all the members will fall under else (premium)
-
-		if plantype[:5] == "Basic":
-			#membersubscription
-			userobj.member = True
-			userobj.substartdate = startdate
-			userobj.subenddate = enddate
-			userobj.memberp = False
-			userobj.substartdatep = None
-			userobj.subenddatep = None
-		else:
-			#pmembersubscription
-			userobj.member = False
-			userobj.substartdate = None
-			userobj.subenddate = None
-			userobj.memberp = True
-			userobj.substartdatep = startdate
-			userobj.subenddatep = enddate
+		userobj.member = False
+		userobj.substartdate = None
+		userobj.subenddate = None
+		userobj.memberp = True
+		userobj.substartdatep = startdate
+		userobj.subenddatep = enddate
 
 		userobj.email = customer.source.name
+		userobj.alt_email = customer.source.name
 		userobj.invoiceno = customer.id #Both are the same - for subscription I am using customer.invoice_prefix
 		userobj.stripe_id = customer.id
 		userobj.plan = adddays
@@ -290,7 +326,43 @@ class StripeCheckOut(LoginRequiredMixin, TemplateView):
 		print (trans_obj.id)
 		self.request.session["transaction_pk"] = trans_obj.id
 
-		messages.success(self.request, "Thank you for you subscription.")
+
+		try:
+
+			form_email = self.request.user.puser.alt_email
+
+			form_message = "<p>Name:" +  customer.source.name + "</p>" + "<p>Reference No: " + customer.id + "</p>"  + "<p>Subscription Start:" + str(startdate) + "</p>" + "<p>Subscription End:" + str(enddate) + "</p>"
+
+			form_full_name = self.request.user
+
+			subject = "Purchase Subscription Confirmation"
+
+			if settings.TYPE == "base":
+				from_email = settings.EMAIL_HOST_USER
+			else:
+				from_email = settings.DEFAULT_FROM_EMAIL
+
+			to_email = [from_email, form_email]  # [from_email, 'jumper23sierra@yahoo.com']
+			contact_message = "<p>Message: %s.</p><br><p>From: %s</p><p>Email: %s</p>" % (
+			form_message, form_full_name, form_email)
+
+
+			# remember that this operation requires redis to be working
+			async_contact_mail.delay(
+				subject=subject,
+				contact_message=contact_message,
+				from_email=from_email,
+				to_email=to_email
+				)
+
+			messages.info(self.request, "Thank you for your subscription, please check your email for your invoice.")
+
+		except:
+			messages.warning(self.request, "Error in email delivery, please print your invoice.")
+
+  #       #insert and option to return back to home when cancelling subscription and send email when cancelled and add google subscription
+
+
 		
 		return redirect("SuccessSub")
 
@@ -619,8 +691,8 @@ class ConfirmCancel(LoginRequiredMixin, TemplateView):
 	def dispatch(self, *args, **kwargs):
 		dispatch = super(ConfirmCancel, self).dispatch(*args, **kwargs)
 
-		# if the user is not subscribed
-		if not self.request.user.puser.plan:
+		# if the user is not subscribed and not a member
+		if not self.request.user.puser.memberp:
 			return redirect('Home')
 		return dispatch
 
@@ -630,24 +702,35 @@ class ConfirmCancel(LoginRequiredMixin, TemplateView):
 
 def CancelSubscribe(request):
 
-	customer = stripe.Customer.retrieve(request.user.puser.stripe_id)
-
 	try:
-		customer = stripe.Customer.retrieve(request.user.puser.stripe_id)
-		customer.cancel_subscription(at_period_end=True)
-
 		planid_cancel_obj = PUser.objects.get(user=request.user)
-		planid_cancel_obj.plan = None
-		planid_cancel_obj.stripe_id = None
+		planid_cancel_obj.memberp = False
+		planid_cancel_obj.substartdatep = None
+		planid_cancel_obj.subenddatep = None
 		planid_cancel_obj.save()
-
-		messages.success(request, "You subscription has been cancelled")
-
-	# except Exception, e:
-	# 	messages.error(request, e)
+		messages.info(request, "Your cancellation is successful but we are sad to see you go.")
 
 	except:
 		messages.info(request, "Cancellation issue. Please contact the admin")
+
+
+	# # old method - to delete
+	# try:
+	# 	customer = stripe.Customer.retrieve(request.user.puser.stripe_id)
+	# 	customer.cancel_subscription(at_period_end=True)
+
+	# 	planid_cancel_obj = PUser.objects.get(user=request.user)
+	# 	planid_cancel_obj.plan = None
+	# 	planid_cancel_obj.stripe_id = None
+	# 	planid_cancel_obj.save()
+
+	# 	messages.success(request, "You subscription has been cancelled")
+
+	# # except Exception, e:
+	# # 	messages.error(request, e)
+
+	# except:
+	# 	messages.info(request, "Cancellation issue. Please contact the admin")
 
 
 	return redirect("Home")

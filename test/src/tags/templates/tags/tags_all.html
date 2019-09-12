@@ -45,94 +45,89 @@ width: 55px;
 
 
 
-
-<div style="margin:20px">
-
+<div class="maincontainerstyle">
 
 
-    <div class="card cardstyle">
-      <div class="card-body">
+    <div class="mainboxstyle">
 
 
-        <h4 class="card-title allfontcolor"><i class="allfontcolor fas fa-magic fa-1x"></i>&nbsp;&nbsp;&nbsp;&nbsp;Tip Lists for {{ tag }}</h4>
+        <div class="mainheaderstyle"><i class="fas fa-magic fa-1x"></i>&nbsp;&nbsp;&nbsp;&nbsp;{{ tag }}</div>
 
-        <hr>
+        <hr><br>
 
-            {% if request.user.is_authenticated %}
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
-              {% if fav == True %}
-              <a href="#" class="favorite iconmg" tag_id="{{ tag.id }}">
-                <b style="color:gold;" id='fav-type-{{ tag.id }}' class="fa fa-star fa-lg"> </b>
-              </a>
 
-              {% else %}
 
-              <a href="#" class="favorite iconmg" tag_id="{{ tag.id }}">
-                <b id='fav-type-{{ tag.id }}' class="allbtniconcolor fa fa-star fa-lg"></b>
-              </a>
+<div class="row">
 
-              {% endif %}
+  <div class="col-6" style="text-align: center;">
 
-            {% else %}
-            <a href="/accounts/login/"><i class="allbtniconcolor fa fa-star fa-lg iconmg"></i></a>
-            {% endif %}
+      {% if request.user.is_authenticated %}
+        {% if fav == True %}
+        <a href="#" class="favorite" tag_id="{{ tag.id }}">
+          <b style="color:gold;" id='fav-type-{{ tag.id }}' class="fa fa-star fa-lg"> </b>
+        </a>
 
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            <i class="allbtniconcolor fa fa-share-alt fa-lg iconmg" aria-hidden="true" data-toggle="modal" data-target="#ShareModal"></i>
+        {% else %}
 
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            <a href="{% url 'TagAllView' %}"><i class="allbtniconcolor fas fa-backward fa-lg iconmg"></i></a>
+        <a href="#" class="favorite" tag_id="{{ tag.id }}">
+          <i id='fav-type-{{ tag.id }}' class="allbtniconcolor fa fa-star fa-lg"></i>
+        </a>
+        {% endif %}
 
-        <hr>
+      {% else %}
+      <a href="/accounts/login/"><i class="allbtniconcolor fa fa-star fa-lg"></i></a>
+      {% endif %}
 
-            <small  style="position: absolute;right: 20px;">
-            <i class="allfontcolor fas fa-check-circle fa-1x"></i><b class="allfontcolor">&nbsp;&nbsp;Free Access</b>
-            </small>
+  </div>
+
+  <div class="col-6" style="text-align: center;">
+      <i class="allbtniconcolor fa fa-share-alt fa-lg" aria-hidden="true" data-toggle="modal" data-target="#ShareModal"></i>
+  </div>
+
+</div> <!-- row -->
+
+
+<div class="row">
+
+  <div class="col-6 fontstyle14" style="text-align: center;">
+  Favorite
+  </div>
+
+  <div class="col-6 fontstyle14" style="text-align: center;">
+  Share
+  </div>
+
+</div> <!-- row -->
+
+        <div style="background-color:lightgrey; margin:5% -10%; padding:5px;"></div>
+
+<!-- remove free access function-->
+<!--             <small  style="position: absolute; right: 40px;">
+            <i class="allfontcolor fas fa-check-circle fa-1x"></i><b class="allfontcolor">&nbsp;Free Access</b>
+            </small> -->
             <br>
 
         <ul class="nav nav-pills">
 
             {% if bydatelist %}
 
-
                   {% for i in bydatelist %}
 
                       <div class="col-xs-12 col-sm-4">
-                      <div class="boxstyle">                        
-  <!--                       <div class="thumbnail tnadjust shadow">
-                        <div class="caption"> -->
-
-  <!--                         {% if i.image %}
-                          <div class="ppic">
-                          <img src="{{ i.image.url }}" class="img-rounded imgtn">
-                          </div>
-
-                          {% else %}
-
-                          <div class="ppic">
-                          <img src="{% static 'img/NoImage.jpg' %}" class="img-rounded imgtn">
-                          </div>            
-                          {% endif %} -->
-
+                      <div class="greyboxstyle">
 
                       <b><a href="/polls/?type={{ i.slug }}">{{ i.title }}&nbsp;&nbsp;&nbsp;&nbsp;({{ i.viewpolltypeunique.ecount }} Tips)</a></b>
 
-                      {% if i.freepoll == True %}
+<!-- remove free access function -->
+<!--                       {% if i.freepoll == True %}
                       &nbsp;&nbsp;<i class="allfontcolor fas fa-check-circle fa-1x"></i><b class="allfontcolor"></b>
-                      {% endif %}
+                      {% endif %} -->
 
                       </div>
-
-<!--                       </div>
-                      </div> -->
-
-
-
                       </div>
 
                   {% endfor %}
-
 
             {% else %}
             <br>
@@ -145,17 +140,13 @@ width: 55px;
 
 
 
-      </div>
-
-
-
-    </div>
+    </div><!-- mainboxstyle -->
 
 
 
 
 
-</div> <!-- /container -->
+</div> <!-- /maincontainerstyle -->
 
 
 

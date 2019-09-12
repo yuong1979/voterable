@@ -31,13 +31,14 @@
       firebase.initializeApp(config);
       const messaging = firebase.messaging();
 
-
+    //go to application in browser control to clear storage or site data to clear all storage if you want to restart
     if('serviceWorker' in navigator){
-      // registering the service worker
+      // registering the service worker here - service worker stores part of your web app on the browser so the whole app does not need to refresh and this improves user experience also enables push notification
         navigator.serviceWorker.register('/serviceworker.js',{
             scope: '.'
         }).then(function(registration){
             messaging.useServiceWorker(registration);
+            //successfully registration loads some of the web app into the browser storage
             console.log('Registration successful with scope ',registration.scope);
         },function(err){
             console.log('service worker not registered ',err);
@@ -83,17 +84,32 @@
 
 
 
-//checking if the the user has been prompted the notification already during current session
-console.log("Notification loaded:" + sessionStorage.getItem('Notification'))
+
+if (sessionStorage.getItem('Notification') !== 'true')
+{
+  console.log("Request for Notification has not yet been displayed")
+} else {
+  console.log("Request for Notification has already been displayed") 
+}
 
 
-// session storage ensures popup only shows once per session for each user
+
+
+
+// //printing the user has already been prompted for request for permission for notification updates
+// console.log("Notification loaded:" + sessionStorage.getItem('Notification'))
+
+
+
+
+
+
+// request for permission to do notifications - only request when notification is not inside sessionstorage - ensures popup only shows once per session for each user
+
   if (sessionStorage.getItem('Notification') !== 'true')
     {
 
-
-
-    //if user is signed in
+    //if user is signed in then register_token is true else it is false
     {% if register_token %}
 
             function getCookieValue(a) {
@@ -102,9 +118,11 @@ console.log("Notification loaded:" + sessionStorage.getItem('Notification'))
                 }
 
             messaging
+                    // requesting for permission to do notifications
                     .requestPermission()
                     .then(function () {
                         // user has allowed notification
+                        sessionStorage.setItem('Notification','true');
                         console.log("Notification permission granted.");
                         // get the token in the form of promise
                         return messaging.getToken()
@@ -113,7 +131,8 @@ console.log("Notification loaded:" + sessionStorage.getItem('Notification'))
                         // adding the token to our database
                         // console.log(token);
                         var $crf_token = getCookieValue("csrftoken");
-                        // attributing the token to the designated user for notification sending
+                        // creating a token for the agreed user for notification sending
+                        // by going to DeviceTokenCreateView firebasenotification:view to create a new token in database
                         $.ajax({
                                 type: "POST",
                                 url: "/devicetoken/add/",
@@ -132,7 +151,6 @@ console.log("Notification loaded:" + sessionStorage.getItem('Notification'))
                                     console.log("Error: " + err.responseText)
                                 }
                             });
-
                     })
                     .catch(function (err) {
                       //if users refuse or block popup requesting notification
@@ -147,7 +165,6 @@ console.log("Notification loaded:" + sessionStorage.getItem('Notification'))
                 });
     {% endif %}
 
- 
     }
 
 
@@ -169,17 +186,16 @@ console.log("Notification loaded:" + sessionStorage.getItem('Notification'))
 
 
 
+
+
 <div class="row">
 
 
   <div class="col-sm-12 col-md-6">
 
+    <div class="mainboxstyle">
 
-    <div class="card cardstyle">
-      <div class="card-body">
-        <h4 class="card-title allfontcolor"><i class="allfontcolor fas fa-user-circle fa-1x"></i>&nbsp;&nbsp;&nbsp;&nbsp;Your Profile</h4><hr>
-        <div class="container">
-        <div class="row">
+        <div class="mainheaderstyle"><i class="fas fa-user-circle fa-1x"></i>&nbsp;&nbsp;&nbsp;&nbsp;Profile</div><hr>
 
         <div class="col-xs-4 col-sm-3" style="float:right;"><br>
           {% if user.image %}
@@ -187,56 +203,45 @@ console.log("Notification loaded:" + sessionStorage.getItem('Notification'))
           {% else %}
             <img class ="imgdetail" src="{% static 'img/anonymous.jpg' %}" class="img-rounded imgtn">
           {% endif %}
-          <br>
+          <br><br>
         </div>
 
         <div class="col-xs-8 col-sm-9">
           
-            &nbsp;&nbsp;&nbsp;
-            <h4>
-              <b>
+            <div class="fontstyle16" style="margin:10px">
             {% if user.user.puser.name %}
             {{ user.user.puser.name }}
             {% else %}
             {{ user.user }}
             {% endif %}
-              </b>
-            </h4>
+            </div>
             
-
-            &nbsp;&nbsp;&nbsp;
-            <h5 class=wdstyle style="color:grey">
+            <div class="fontstyle14" style="color:grey; margin:10px">
                 {% if user.description %}
                   {{ user.description }}
                 {% else %}
                   Description
                 {% endif %}
-            </h5>
+            </div>
 
         </div>
 
 
 
-        </div><!-- row -->
-        </div><!-- container -->
-
         <br>
-
 
         <a href='{{ user.get_update }}' class='btn buttonspace btn-sm btn-primary' data-action='show-spinner'><b>Update</b></a>
 
-
-      </div>
-    </div>
+    </div><!-- mainboxstyle -->
 
 
 
 
 
 
-    <div class="card cardstyle">
-      <div class="card-body">
-        <h4 class="card-title allfontcolor"><i class="allfontcolor fas fa-sliders fa-1x"></i>&nbsp;&nbsp;&nbsp;&nbsp;Settings</h4><hr>
+    <div class="mainboxstyle">
+
+        <div class="mainheaderstyle"><i class="fas fa-sliders fa-1x"></i>&nbsp;&nbsp;&nbsp;&nbsp;Settings</div><hr>
 
 
 <!-- unhide the below if you want to give user ability to control their notifications -->
@@ -244,9 +249,9 @@ console.log("Notification loaded:" + sessionStorage.getItem('Notification'))
 
 
             <li class="list-group-item">
-              <b class="wdstyle">Enable Notifications:</b>
+              <b class="fontstyle14">Enable Notifications:</b>
 
-              <a href="#" title="Notifications" data-toggle="popover" data-trigger="focus" data-content="Get notified on latest updates to your favorite tags and polls by turning on notifications"><i class="fas fa-question-circle"></i></a>
+              <a href="#" title="Notifications" data-toggle="popover" data-trigger="focus" data-content="Get notified on latest updates to your favorite topics by turning on notifications"><i class="fas fa-question-circle"></i></a>
 
             <br><br>
               <input id="toggle-event" style="font-weight:bold" urequest_id="{{ request.user.id }}" type="checkbox" data-toggle="toggle" data-size="small" data-width="80" {{usernewsletter}}>
@@ -254,52 +259,42 @@ console.log("Notification loaded:" + sessionStorage.getItem('Notification'))
             </li>
 
 
-            <li class="list-group-item">
-              <b class="wdstyle">Your referral code:</b>
+
+
+            <!-- subscriptionactivate -->
+
+
+<!--             <li class="list-group-item">
+              <b class="fontstyle14">Your referral code:</b>
 
               <a href="#" title="Referral code" data-toggle="popover" data-trigger="focus" data-content="Share your referral code with your friends to get {{ refdays }} additional days of premium access for both yourself and your friends"><i class="fas fa-question-circle"></i></a>
 
               <br><br>
 
               <h5><span class="badge badge-secondary">{{ refurl }}</span></h5>
-            </li>
+            </li> -->
 
 
 
+            <!-- subscriptionactivate -->
 
-
-            <li class="list-group-item">
-
-<!--             replace the below with the top after you are done -->
-<!--             {{ request.user.puser.member }} -->
-
+<!--             <li class="list-group-item">
 
             {% if request.user.puser.member == True or request.user.puser.memberp == True %}
-
-<!--             Insert ConfirmCancel url link into the below when needed -->
-<!--             <a href='' class='buttonspace btn-sm btn-danger' data-action='show-spinner' ><b>Cancel Subscription</b></a> -->
-
               
-<!--                 {% if user.member == True %}
-                <b>Your Subscription</b><br><br>
-                <b class="wdstyle">Type:</b>
-                <span class="badge badge-pill badge-secondary" style="float:right"> Basic </span>
-
-                <br><br>
-
-                <b class="wdstyle">End date:</b>
-                <span class="badge badge-pill badge-secondary" style="float:right"> {{ user.subenddate|timeuntil }} </span>
-                {% endif %} -->
-
                 <br>
                 <b>Your Subscription</b><br><br>
                 {% if user.memberp == True %}
-                <b class="wdstyle">Type:</b>
+                <b class="fontstyle14">Type:</b>
                 <span class="badge badge-pill badge-secondary" style="float:right"> Premium </span>
                 <br><br>
-                <b class="wdstyle">End date:</b>
+                <b class="fontstyle14">End date:</b>
                 <span class="badge badge-pill badge-secondary" style="float:right"> {{ user.subenddatep|timeuntil }} </span>
                 {% endif %}
+
+                <br><br>
+
+                  <a href='{% url 'ConfirmCancel' %}' class='btn buttonspace btn-sm btn-danger' data-action='show-spinner' ><b>Cancel Subscription</b></a>
 
                 <br>
 
@@ -307,17 +302,21 @@ console.log("Notification loaded:" + sessionStorage.getItem('Notification'))
 
                 {% if freedays %}
 
-              <b class="wdstyle">Available premium days</b>
+              <b class="fontstyle14">Your available premium days</b>
 
-              <a href="#" title="Free Premium Days" data-toggle="popover" data-trigger="focus" data-content="Click to activate the number of days of free access"><i class="fas fa-question-circle"></i></a><br>
+              <a href="#" title="Free Premium Days" data-toggle="popover" data-trigger="focus" data-content="Click to activate the {{ freedays }} days of free access to premium subscription"><i class="fas fa-question-circle"></i></a><br>
 
+              <br>
                 <form action='' method='POST'  style="display: inline-block;">{% csrf_token %}
                   <input type="hidden" name="freeday_count_id" value="{{ freedays }}">
-                  &nbsp;&nbsp;&nbsp;
-                  <input type="submit" class='btn btn-sm btn-primary'  style="font-weight: bold; white-space: normal;" value="Activate to get access to {{ freedays }} days free premium access">
+                  &nbsp;
+                  <input type="submit" class='btn btn-sm btn-primary'  style="font-weight: bold; white-space: normal;" value="Activate {{ freedays }} days of free access">
                 </form><br>
 
                 {% else %}
+
+              <b class="fontstyle14">Your Subscription:</b>
+              <br>
 
                     <a href='{% url 'SelectPlan' %}' class='btn buttonspace btn-sm btn-primary' data-action='show-spinner' ><b>Start subscription</b></a>
 
@@ -325,7 +324,11 @@ console.log("Notification loaded:" + sessionStorage.getItem('Notification'))
 
             {% endif %}
 
-            </li>
+            </li> -->
+
+
+
+
 
           </ul>
 
@@ -346,16 +349,10 @@ console.log("Notification loaded:" + sessionStorage.getItem('Notification'))
               </form>
 
               {% endif %} -->
-
-
-
-
             
             <br>
 
-
-      </div>
-    </div>
+    </div><!-- mainboxstyle -->
   </div>
 
 
@@ -377,38 +374,38 @@ console.log("Notification loaded:" + sessionStorage.getItem('Notification'))
 
 
   <div class="col-sm-12 col-md-6">
-    <div class="card cardstyle">
-      <div class="card-body">
-        <h4 class="card-title allfontcolor"><i class="allfontcolor fas fa-trophy fa-1x"></i>&nbsp;&nbsp;&nbsp;&nbsp;Your Records</h4><hr>
+    <div class="mainboxstyle">
+
+        <div class="mainheaderstyle"><i class="fas fa-trophy fa-1x"></i>&nbsp;&nbsp;&nbsp;&nbsp;Records</div><hr>
           
           <ul class="list-group">
             <li class="list-group-item">
-              <b class="wdstyle">Your Reputation Points:</b>
+              <b class="fontstyle14">Your Reputation Points:</b>
               <span class="badge badge-pill badge-secondary" style="float:right" tabindex="0" role="button" data-toggle="popover" data-trigger="focus" data-content="Points are awarded based on the votes to your contributed tips and comments."> {{points}} </span>
             </li>
 
             <li class="list-group-item">
-              <b class="wdstyle">Your Rank:</b>
+              <b class="fontstyle14">Your Rank:</b>
               <span class="badge badge-pill badge-secondary" style="float:right" tabindex="0" role="button" data-toggle="popover" data-trigger="focus" data-content="Earn {{nextpts}} points to get to {{nextrank}} rank."> {{rank}} </span>
             </li>
 
             <li class="list-group-item">
-              <b class="wdstyle">Tips created:</b>
+              <b class="fontstyle14">Tips created:</b>
               <span class="badge badge-pill badge-secondary" style="float:right"> {{ pollsECreated }} </span>
             </li>
 
             <li class="list-group-item">
-              <b class="wdstyle">Tips viewed:</b>
+              <b class="fontstyle14">Tips viewed:</b>
               <span class="badge badge-pill badge-secondary" style="float:right" tabindex="0" role="button" data-toggle="popover" data-trigger="focus" data-content="The number of times your tips were viewed by others"> {{ votes_poll_entries_views }} </span>
             </li>
 
             <li class="list-group-item">
-              <b class="wdstyle">Your Tip Upvotes:</b>
+              <b class="fontstyle14">Your Tip Upvotes:</b>
               <span class="badge badge-pill badge-secondary" style="float:right" tabindex="0" role="button" data-toggle="popover" data-trigger="focus" data-content="Get 1 point every time you get an upvote for your tip."> {{ upvotes }} </span>
             </li>
 
             <li class="list-group-item">
-              <b class="wdstyle">Your Comment Upvotes:</b>
+              <b class="fontstyle14">Your Comment Upvotes:</b>
               <span class="badge badge-pill badge-secondary" style="float:right" tabindex="0" role="button" data-toggle="popover" data-trigger="focus" data-content="Get 1 point every time you get an upvote for your comment."> {{ comment_likes }} </span>
             </li>
 
@@ -418,23 +415,24 @@ console.log("Notification loaded:" + sessionStorage.getItem('Notification'))
             </li> -->
 
             <li class="list-group-item">
-              <b class="wdstyle">Times you Voted:</b>
+              <b class="fontstyle14">Times you Voted:</b>
               <span class="badge badge-pill badge-secondary" style="float:right"> {{ votedtimes }} </span>
             </li>
-            <li class="list-group-item">
-              <b class="wdstyle">Free subscription days:</b>
+
+
+            <!-- subscriptionactivate -->
+
+<!--             <li class="list-group-item">
+              <b class="fontstyle14">Free subscription days:</b>
               <span class="badge badge-pill badge-secondary" style="float:right" tabindex="0" role="button" data-toggle="popover" data-trigger="focus" data-content="Earn {{nextpts}} points to get an additional {{nextfrdays}} free premium subscription days.""> {{ freedays }} </span>
-            </li>
-        <!--     <li class="list-group-item">
-              <span class="badge"> {{ freedays }} </span>Days of Free Subscription:
-              <i class="fas fa-question-circle fa-md" tabindex="0" role="button" data-toggle="popover" data-trigger="focus" data-content="Earn FREE subscription content by earning points by adding tips and/or voting"></i>
             </li> -->
+
 
           </ul>
           
 
-      </div>
-    </div>
+
+    </div><!-- mainboxstyle -->
   </div>
 
 
@@ -460,16 +458,16 @@ console.log("Notification loaded:" + sessionStorage.getItem('Notification'))
 
 {% if fav_poll_types %}
   <div class="col-sm-12">
-    <div class="card cardstyle">
-      <div class="card-body">
-        <h4 class="card-title allfontcolor"><i class="allfontcolor fas fa-magic fa-1x"></i>&nbsp;&nbsp;&nbsp;&nbsp;Favorite Tips</h4><hr>
+    <div class="mainboxstyle">
+
+        <div class="mainheaderstyle"><i class="fas fa-magic fa-1x"></i>&nbsp;&nbsp;&nbsp;&nbsp;Your Favorite Tips</div><hr>
 
         <ul class="nav nav-pills">
 
               {% for poll_type in fav_poll_types %}
 
                 <div class="col-xs-12 col-sm-4">
-                <div class="boxstyle">
+                <div class="greyboxstyle">
 
       <!--                   {% if poll_type.image %}
                   <div class="ppic">
@@ -481,10 +479,10 @@ console.log("Notification loaded:" + sessionStorage.getItem('Notification'))
                   </div>            
                   {% endif %} -->
 
-                    <b><a href="/polls_favorite/?favorite={{ poll_type.slug }}">{{ poll_type.title }}</a></b>
+                    <b><a href="/polls/?favorite={{ poll_type.slug }}">{{ poll_type.title }}</a></b>
 
                       {% if poll_type.freepoll == True %}
-                      &nbsp;&nbsp;<i class="allfontcolor fas fa-check-circle fa-1x"></i><b class="allfontcolor"></b>
+                      &nbsp;&nbsp;<i class="allfontcolor fas fa-check-circle fa-1x"></i>
                       {% endif %}
 
 <!--                     adding free poll here if need be -->
@@ -500,23 +498,23 @@ console.log("Notification loaded:" + sessionStorage.getItem('Notification'))
 
           <br>
         </ul>
-      </div>
-    </div>
+
+    </div><!-- mainboxstyle -->
   </div>
 {% endif %}
 
 
 {% if taglist %}
   <div class="col-sm-12">
-    <div class="card cardstyle">
-      <div class="card-body">
-        <h4 class="card-title allfontcolor"><i class="allfontcolor fa fa-tag fa-1x"></i>&nbsp;&nbsp;&nbsp;&nbsp;Favorite Tags</h4><hr>
+    <div class="mainboxstyle">
+
+        <div class="mainheaderstyle"><i class="fa fa-tag fa-1x"></i>&nbsp;&nbsp;&nbsp;&nbsp;Your Favorite Topics</div><hr>
             {% for i in taglist %}
-               <a href='{{i.get_absolute_url}}' class="btn btn-outline-primary tagstyle"><b>{{ i }} ({{i.counter}})</b></a>&nbsp;&nbsp;
+               <a href='{{i.get_absolute_url}}' class="btn btn-primary tagstyle"><b>{{ i }} ({{i.counter}})</b></a>&nbsp;&nbsp;
             {% endfor %}
       <br><br>
-      </div>
-    </div>
+
+    </div><!-- mainboxstyle -->
   </div>
 {% endif %}
 
@@ -524,21 +522,23 @@ console.log("Notification loaded:" + sessionStorage.getItem('Notification'))
 
 {% if pollcreatelist %}
   <div class="col-sm-12">
-    <div class="card cardstyle">
-      <div class="card-body">
-        <h4 class="card-title allfontcolor"><i class="allfontcolor fas fa-edit fa-1x"></i>&nbsp;&nbsp;&nbsp;&nbsp;Created Tips</h4><hr>
+    <div class="mainboxstyle">
+
+        <div class="mainheaderstyle"><i class="fas fa-edit fa-1x"></i>&nbsp;&nbsp;&nbsp;&nbsp;Your Created Tips</div><hr>
 
         <ul class="nav nav-pills">
 
               {% for i in pollcreatelist %}
 
                 <div class="col-xs-12 col-sm-4">
-                <div class="boxstyle">
+                <div class="greyboxstyle">
 
-                    <b><a href="/polls_favorite/?create={{ i.slug }}">{{ i.title }}</a></b>
+                    <b><a href="/polls/?create={{ i.slug }}">{{ i.title }}</a></b>
+
+                    
 
                       {% if i.freepoll == True %}
-                      &nbsp;&nbsp;<i class="allfontcolor fas fa-check-circle fa-1x"></i><b class="allfontcolor"></b>
+                      &nbsp;&nbsp;<i class="allfontcolor fas fa-check-circle fa-1x"></i>
                       {% endif %}
 
                 </div>
@@ -548,8 +548,8 @@ console.log("Notification loaded:" + sessionStorage.getItem('Notification'))
 
           <br>
         </ul>
-      </div>
-    </div>
+
+    </div><!-- mainboxstyle -->
   </div>
 {% endif %}
 
@@ -558,19 +558,17 @@ console.log("Notification loaded:" + sessionStorage.getItem('Notification'))
 
 
 
-
-
-
-
-
-
-
-
-
-
 </div> 
 
-<br><br>
+<br>
+
+
+
+
+
+
+
+
 
 {% include 'footer.html' %}
 

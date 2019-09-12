@@ -36,7 +36,7 @@
 
 <!-- <div class='col-sm-6 col-sm-offset-3'> -->
 
-<!-- google disabled -->
+<!-- google -->
 <!-- 	{% if socialaccount_providers.0.id == "openid" %}
 		{% for brand in provider.get_brands %}
 			<li>
@@ -46,13 +46,13 @@
 			     >{{brand.name}}</a>
 			</li>
 		{% endfor %}
-	{% endif %}
+	{% endif %} -->
 
-	  <a title="{{socialaccount_providers.0.name}}" class="socialaccount_provider {{socialaccount_providers.0.id}} class='buttonspace btn btn-block goog" 
-	     href="{% provider_login_url socialaccount_providers.0.id process=process scope=scope auth_params=auth_params %}"><b>Sign in with {{socialaccount_providers.0.name}}</b></a><br> -->
+	  <a title="{{socialaccount_providers.0.name}}" class="socialaccount_provider {{socialaccount_providers.0.id}} class='buttonspace btn btn-block goog" id="okbtn"
+	     href="{% provider_login_url socialaccount_providers.0.id process=process scope=scope auth_params=auth_params %}"><b>Sign in with {{socialaccount_providers.0.name}}</b></a><br>
 
 <!-- facebook -->
-	{% if socialaccount_providers.1.id == "openid" %}
+<!-- 	{% if socialaccount_providers.1.id == "openid" %}
 		{% for brand in provider.get_brands %}
 			<li>
 			  <a title="{{brand.name}}" 
@@ -61,9 +61,9 @@
 			     >{{brand.name}}</a>
 			</li>
 		{% endfor %}
-	{% endif %}
+	{% endif %} -->
 
-	  <a title="{{socialaccount_providers.1.name}}" class="socialaccount_provider {{socialaccount_providers.1.id}} class='buttonspace btn btn-block face" 
+	  <a title="{{socialaccount_providers.1.name}}" class="socialaccount_provider {{socialaccount_providers.1.id}} class='buttonspace btn btn-block face" id="okbtn"
 	     href="{% provider_login_url socialaccount_providers.1.id process=process scope=scope auth_params=auth_params %}"><b>Sign in with {{socialaccount_providers.1.name}}</b></a><br>
 
 <!-- instagram -->
@@ -84,3 +84,6 @@
 
 
 <!-- </div> -->
+
+
+

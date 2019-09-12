@@ -20,7 +20,6 @@
 {% block style %}
 
 
-
 {% endblock %}
 </style>
 
@@ -35,16 +34,14 @@
 
 
 
-    <div class="card cardstyle">
-      <div class="card-body">
+    <div class="mainboxstyle">
 
-          <div class="" style="margin-left:7px; float:right;">
-            <a style="font-size: 12px" href='/polls/?type={{Back}}' class='btn-link' ><b><i class="fas fa-list-ol fa-1x" aria-hidden="true"></i>&nbsp;View List</b></a>
-          </div>
 
-        <h4 class="card-title allfontcolor"><i class="allfontcolor fas fa-info-circle fa-1x"></i>&nbsp;&nbsp;&nbsp;&nbsp;Details</h4><hr>
+        <div class="mainheaderstyle"><i class="fas fa-info-circle fa-1x"></i>&nbsp;&nbsp;&nbsp;&nbsp;Details</div>
 
-        <h6>
+        <hr>
+
+        <div class="container fontstyle14" style="text-align: left; ">
 
           {% if poll.user_submit.puser.image %}
           <img src="{{ poll.user_submit.puser.image.url }}" class='cpimgsmall' />
@@ -61,268 +58,105 @@
               {% endif %}
               </b></a>
 
-        </h6>
+          </div><!-- container fontstyle14 -->
 
-        <hr>
-
-
+    </div>
 
 
 
-
-
-
-
-
-
-              {% if poll.image or poll.imageurl %}
+    <div class="mainboxstyle">
 
                 <div class="row row-tip">
 
-                  <div class="col-xs-11 col-sm-11" style="float:left">
-                    <h6>
-                    <b>{{ poll.title|safe }}</b><p class="smallstyle">{{ poll.date|timesince }} ago</p>
-                    </h6><hr style="margin:-1px">
+                  <div class="col-sm-12 fontstyle14" style="float:left; margin-left:12px">
+                      <b>
+                      {{ poll.title|safe }}</b><p class="timestampstyle">{{ poll.date|timesince }} ago</p>
+                    <hr class="tiplinebreak">
                   </div>
 
-                  <div class="col-xs-12 col-sm-4 test row-tip-thumb">
-
+                  {% if poll.image or poll.imageurl %}
+                  <div class="col-xs-12 col-sm-4 row-tip-thumb" style="margin-left:12px">
                       {% if poll.image %}
                         <img src="{{ poll.image.url }}" class="img-rounded polllistimg">
                       {% else %}
                         <img src="{{ poll.imageurl }}" class="img-rounded polllistimg">
                       {% endif %}
                       <br><br>
-
                   </div>
+                  {% endif %}
 
-                  <div class="row">
+<!--                   had a div class row removed here because it was causing scrolling issues -->
 
+                  <div class="col-xs-12 col-sm-12 contentstyle row-tip-body" style="float:left"> <!-- changed sm-7 to sm-12 to get the words to flush with all -->
 
-                  <div class="col-xs-12 col-sm-12 row-tip-body" style="float:left"> <!-- changed sm-7 to sm-12 to get the words to flush with all -->
+                    <div id="poll-space-{{ poll.id }}"></div><!-- I changed this from p to div if I face issues to change -->
 
-                      <small>
                       {% if poll.description %}
                       <div class="Mobilefont Compfont">
-                          <span class="tip-sliced">
-                          {{ poll.description|striptags_except:"a, p, ol, ul, li, br, i"|safe|truncatechars_html:"150" }}
-                          </span>
 
-                          {% if poll.description|striptags_except:"a, p, ol, ul, li, br, i"|safe|length < 150 %}
+                            {{ poll.description|striptags_except:"iframe, a, p, ol, ul, li, br, i, img"|safe }}
 
-                            {% if poll.textatt %}
-                            <small> -- Credits: {{ poll.textatt }}</small>
-                            {% endif %}
+                            {% if poll.textatt %}<p class="creditstyle"> Credits: {{ poll.textatt }}</p>{% endif %}
 
-                          {% else %}
-
-                            {% if request.user.is_authenticated %}
-
-                              {% if Subscribedp == True or poll.user_submit == request.user or free == True %}
-
-                                <button class="btn btn-link poll-button" style="padding:0px; margin-top:-5px">
-                                  <small>Read More</small>
-                                </button>
-
-                                <span class="poll-collapse d-none">
-                                {{ poll.description|striptags_except:"iframe, a, p, ol, ul, li, br, i, img"|safe }}
-
-                                  {% if poll.textatt %}
-                                  <small> -- Credits: {{ poll.textatt }}</small>
-                                  {% endif %}
-                                </span>
-
-                              {% elif Subscribed == True %}
-
-                                <button class="btn btn-link poll-button" style="padding:0px; margin-top:-5px">
-                                  <small>Read More</small>
-                                </button>
-
-                                <span class="poll-collapse d-none">
-                                {{ poll.description|striptags_except:"a, p, ol, ul, li, br, i"|safe }}
-
-                                  {% if poll.textatt %}
-                                  <small> -- Credits: {{ poll.textatt }}</small>
-                                  {% endif %}
-                                </span>
-
-                              {% else %}
-                                <a href="{% url 'SelectPlan' %}" style="padding:0px; margin:0px">
-                                  <small>Read More</small>
-                                </a>
-                              {% endif %}
-
-
-                            {% else %}
-                            <a href="/accounts/login/" style="padding:0px; margin:0px">
-                              <small>Read More</small>
-                            </a>
-                            {% endif %}
-
-                          {% endif %}
-
-                      </div>
+                      </div> <!-- mobilefont compfont -->
                       {% endif %} <!-- poll description -->
-                      </small>
 
-                  </div>
+                  </div><!-- contentstyle -->
+                  
 
-                  </div>
-
-                </div>
+                </div> <!-- row row tip -->
 
 
-              {% else %}
-
-                <div class="row row-tip">
-
-                  <div class="col-xs-11 col-sm-11" style="float:left;">
-                    <h6>
-                    <b>{{ poll.title|safe }}</b><p class="smallstyle">{{ poll.date|timesince }} ago</p>
-                    </h6><hr style="margin:-4px">
-                  </div>
-
-                  <div class="row">
-                    <div class="col-xs-12 col-sm-12">
-
-                      <small>
-                      {% if poll.description %}
-                        <div class="Mobilefont Compfont">
-                          <span class="tip-sliced">
-                            {{ poll.description|striptags_except:"a, p, ol, ul, li, i"|safe|truncatechars_html:"150" }}
-                          </span>
-                          {% if poll.description|striptags_except:"a, p, ol, ul, li, i"|safe|length < 150 %}
-
-                            {% if poll.textatt %}
-                              <small> -- Credits: {{ poll.textatt }}</small>
-                            {% endif %}
-
-                          {% else %}
-
-                            {% if request.user.is_authenticated %}
-
-                              {% if Subscribedp == True or poll.user_submit == request.user or free == True %}
-
-                                <button class="btn btn-link poll-button" style="padding:0px; margin-top:-5px">
-                                  <small>Read More</small>
-                                </button>
-
-                                <span class="poll-collapse d-none">
-                                {{ poll.description|striptags_except:"iframe, a, p, ol, ul, li, br, i, img"|safe }}
-
-                                  {% if poll.textatt %}
-                                  <small> -- Credits: {{ poll.textatt }}</small>
-                                  {% endif %}
-                                </span>
-
-                              {% elif Subscribed == True %}
-
-                                <button class="btn btn-link poll-button" style="padding:0px; margin-top:-5px">
-                                  <small>Read More</small>
-                                </button>
-
-                                <span class="poll-collapse d-none">
-                                {{ poll.description|striptags_except:"a, p, ol, ul, li, br, i"|safe }}
-
-                                  {% if poll.textatt %}
-                                  <small> -- Credits: {{ poll.textatt }}</small>
-                                  {% endif %}
-                                </span>
-
-                              {% else %}
-                                <a href="{% url 'SelectPlan' %}" style="padding:0px; margin:0px">
-                                  Read More
-                                </a>
-                              {% endif %}
-
-                            {% else %}
-                              <a href="/accounts/login/" style="padding:0px; margin:0px">
-                                  <small>Read More</small>
-                              </a>
-                            {% endif %}
-
-                          {% endif %}
-
-                          
-                        </div>
-                      {% endif %}<!-- poll description -->
-                    </small>
-
-                    </div>
-                  </div>
-
-                </div>
-
-              {% endif %}
+    </div>
 
 
-        <hr>
+
 
 
 <!-- only display analytics if the user is premium or the person who created the poll -->
+    <div class="mainboxstyle">
+
         {% if request.user.puser.memberp or poll.user_submit == request.user %}
-        <div class="col-xs-12" style="padding:8px; margin:5px;  ">
 
-              <h6>
-                <b style="line-height: 200%;">Upvotes 
-                  <span class="badge badge-pill badge-secondary">
-                    {% if poll.posi %}
-                    {{poll.posi}}
-                    {% else %}
-                    0
-                    {% endif %}
+              <div class="fontstyle14" style="padding:4px; margin:4px;">
+
+                  <span style="margin:18px">
+                Upvotes &nbsp;
+                  <div class="badge badge-pill badge-secondary">
+                    {% if poll.posi %} {{poll.posi}} {% else %} 0 {% endif %}
+                  </div>
                   </span>
-                </b>
                 
-
-<!--                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -->
 <!--                 <b style="line-height: 200%;">DownVotes - 
-                  {% if poll.nega %}
-                  {{poll.nega}}
-                  {% else %}
-                  0
-                  {% endif %}
+                  {% if poll.nega %} {{poll.nega}} {% else %} 0 {% endif %}
                 </b> -->
 
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-<!--                 <i class="fas fa-eye fa-lg iconmg"></i> -->
-                <b style="line-height: 200%;">Views
-                  <span class="badge badge-pill badge-secondary">
-                    {% if Views %}
-                    {{Views}} 
-                    {% else %}
-                    0
-                    {% endif %}
+                  <span style="margin:18px">
+                Views &nbsp;
+                  <div class="badge badge-pill badge-secondary">
+                    {% if Views %} {{Views}} {% else %} 0 {% endif %}
+                  </div>  
                   </span>
-                </b>
-
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                <b style="line-height: 200%;">Favorited
-                  <span class="badge badge-pill badge-secondary">
-                    {% if Favorited %}
-                    {{Favorited}} 
-                    {% else %}
-                    0
-                    {% endif %}
+                
+                  <span style="margin:18px">
+                Favorited &nbsp;
+                  <div class="badge badge-pill badge-secondary">
+                    {% if Favorited %} {{Favorited}} {% else %} 0 {% endif %}
+                  </div>
                   </span>
-                </b>
-
-              </h6>
-
-        </div>
-
-      <hr style="margin-bottom: 40px">
+                
+              </div>
 
         {% endif %}
 
+    </div><!-- mainboxstyle -->
 
 
-
+        <div class="mainboxstyle">
         {% include 'poll_features.html' %}
+        </div><!-- mainboxstyle -->    
 
 
-      </div> <!-- cardbody -->
-    </div> <!-- cardstyle -->
 
 
 
@@ -362,113 +196,117 @@
 
       {% if msg %}
 
-      <div class="container">
-      <b class="label label-default" style="font-size:100%;">&nbsp;Reviews</b>&nbsp;&nbsp;
+      <div class="container fontstyle14">
+      &nbsp;Reviews&nbsp;&nbsp;
 
         {% if request.GET.sort == 'Date' %}
 
-        <a href="#" class="btn btn-link btn-sm" sorttype="/polls/{{ poll.id }}/?sort=Score" style="display:inline-block;"><b>Popular</b></a>|
+        <a href="#" class="btn btn-link btn-sm fontstyle12" sorttype="/polls/{{ poll.id }}/?sort=Score" style="display:inline-block;">Popular</a>|
 
-        <a href="#" class="btn btn-link btn-sm disabled" sorttype="/polls/{{ poll.id }}/?sort=Date" style="display:inline-block;"><b>Latest</b></a>
+        <a href="#" class="btn btn-link btn-sm fontstyle12 disabled" sorttype="/polls/{{ poll.id }}/?sort=Date" style="display:inline-block;">Latest</a>
 
         {% else %}
 
-        <a href="#" class="btn btn-link btn-sm disabled" sorttype="/polls/{{ poll.id }}/?sort=Score" style="display:inline-block;"><b>Popular</b></a>|
+        <a href="#" class="btn btn-link btn-sm fontstyle12 disabled" sorttype="/polls/{{ poll.id }}/?sort=Score" style="display:inline-block;">Popular</a>|
 
-        <a href="#" class="btn btn-link btn-sm" sorttype="/polls/{{ poll.id }}/?sort=Date" style="display:inline-block;"><b>Latest</b></a>
+        <a href="#" class="btn btn-link btn-sm fontstyle12" sorttype="/polls/{{ poll.id }}/?sort=Date" style="display:inline-block;">Latest</a>
 
         {% endif %}
 
-      </div>
+      </div><!-- container fontstyle14-->
 
 
 
 
-
+<div class="mainboxstyle">
 
 
         <div class="infinite-container">
-            <div class="infinite-item card cardstyle" style="margin:10px 0px 10px 0px">
-              <div class="card-body">
+            <div class="infinite-item" style="margin:10px 0px 10px 0px">
 
           {% for i in msg %}
 
 
-
                 <div class="row" style="margin-top:10px">
 
-                  <div class="col-3 col-sm-2" style="float:left;">
-
-                  <br>
-                  <center>
+                  <div class="col-1"></div>
+<!--                   user image -->
+                  <div class="col-2" style="text-align:left;">
                   {% if i.senduser.puser.image %}
-                  <img src="{{ i.senduser.puser.image.url }}" class='cpimgsmall' />
+                  <a href='{{ i.senduser.puser.get_absolute_url }}'><img src="{{ i.senduser.puser.image.url }}" class='cpimgsmall' /></a>
                   {% else %}
-                  <img src="{% static 'img/anonymous.jpg' %}" class='cpimgsmall' />
+                  <a href='{{ i.senduser.puser.get_absolute_url }}'><img src="{% static 'img/anonymous.jpg' %}" class='cpimgsmall' /></a>
                   {% endif %}
-                  </center>
                   </div>
 
-                  <div class="col-9 col-sm-10" style="float:left; background-color: lightgrey; border-radius: 10px; padding-top:10px;">
 
-                    <p>
-                    <a href='{{ i.senduser.puser.get_absolute_url }}' class='btn-link' >
-                      <small><b>
-                        
+                  <div class="col-9" style="text-align:left; margin-left: -20px">
+                    <a class='btn-link fontstyle14' style="float:left;" >
                       {% if i.senduser.puser.name %}
-                      {{ i.senduser.puser.name|truncatechars:12 }}:
+                      {{ i.senduser.puser.name|truncatechars:12 }}
                       {% else %}
-                      {{ i.senduser|truncatechars:12 }}:
+                      {{ i.senduser|truncatechars:12 }}
                       {% endif %}
-
-                      </small></b>
                     </a>
 
-                    &nbsp;&nbsp;
-                    <small>{{ i.content }}</small>
-                    </p>
+                    <br>
+                    <font class="timestampstyle">{{ i.updated|timesince }} ago</font>
 
-                      <div class="" style="float:right">
-                      &nbsp;&nbsp;
-                      <i class="fa fa-thumbs-up fa-1x" aria-hidden="true"></i>
-                      &nbsp;&nbsp;
-                      <b><p style="display:inline-block; " id='msg-score-{{ i.id }}'>{{ i.likes }} </p></b>
+                  </div>
+
+                      
+
+<!--                   contentbox -->
+                  <div class="col-1"></div>
+
+                  <div class="col-10" style="float:left; background-color: #F0F0F0 ; border-radius: 6px; padding:8px;">
+
+                    <div class="contentstyle">{{ i.content }}</div>
+                    
+                      <hr style="margin:8px; visibility:hidden;">
+
+                      <div class="row">
+
+                        <div class="col-6 fontstyle12">
+                        {% if i in msglike %}
+                          <a href="#" class="likes" msg_id="{{ i.id }}" style="display:inline-block;"><span id='msg-type-{{ i.id }}'>Remove Upvote</span></a>
+                        {% else %}
+                          <a href="#" class="likes" msg_id="{{ i.id }}" style="display:inline-block;"><span id='msg-type-{{ i.id }}'>Upvote</span></a>
+                        {% endif %}
+                        </div>
+
+                        <div class="col-6 fontstyle12">
+                        <div style="text-align:right;">
+                        <div style="display:inline-block; text-align:right" id='msg-score-{{ i.id }}'>{{ i.likes }} </div>
+                        Upvotes
+                        </div>
+                        </div>
+
                       </div>
 
                   </div>
+                  <div class="col-1"></div>
 
 
-                  <div class="col-3 col-sm-2" style="float:left;"><br></div>
 
-                  <div class="col-9 col-sm-10" style="float:left; background-color: white;">
 
-                      <small><b>
-                      {% if i in msglike %}
-                        <a href="#" class="likes" msg_id="{{ i.id }}" style="display:inline-block;"><span id='msg-type-{{ i.id }}'>Unlike</span></a>
-                      {% else %}
-                        <a href="#" class="likes" msg_id="{{ i.id }}" style="display:inline-block;"><span id='msg-type-{{ i.id }}'>Like</span></a>
-                      {% endif %}
-                      </small></b>
-
-                    &nbsp;&nbsp;&nbsp;&nbsp;<font class="smallstyle">{{ i.updated|timesince }} ago</font>
-
-                  </div>
-
-                </div>
+                </div><!-- row -->
 
               <div class="clearfix" style="height: 5px"></div>
 
 
 
+
+
           {% endfor %}
-              </div> <!-- cardbody -->
-            </div> <!-- cardstyle -->
-        </div>
+
+            </div><!-- infinite-item -->
+        </div><!-- infinite-container -->
 
 
         <div class="loading" style="display: none;">
           Loading...
-        </div>
+        </div><!-- loading -->
 
         {% if page_obj.has_next %}
           <a class="infinite-more-link" href="?page={{ page_obj.next_page_number }}{% if request.GET.type %}&type={{ request.GET.type }}&sort={{ request.GET.sort }}{% endif %}">More</a>
@@ -479,13 +317,13 @@
 
       {% else %}
 
-      <div class="container">
-      <br><b><p>There are no reviews/comments yet</p><b><br>
+      <div class="container fontstyle14">
+      <br>There are no reviews/comments yet<br><br>
       </div>
 
       {% endif %}
 
-
+</div><!-- mainboxstyle -->
 
 
 
@@ -652,6 +490,17 @@
 $(document).ready(function(){
 
 
+$(".poll-button").on('click', function (event) {
+  var $tipRow = $(event.target).closest('.row-tip');
+  $tipRow.find('.row-tip-thumb').addClass('d-none');
+  $tipRow.find('.row-tip-body').removeClass('col-sm-7');
+  $tipRow.find('.tip-sliced').addClass('d-none');
+  $tipRow.find('button').addClass('d-none');
+  $tipRow.find('span.poll-collapse').removeClass('d-none');
+});
+
+
+
   $( "#chars_limit" ).insertAfter( "#CommentModel .textarea" );
   var maxlength = parseInt($("#CommentModel .textarea").attr("maxlength"), 10);
   var chars_left = maxlength - $('#CommentModel .textarea').val().length;
@@ -687,14 +536,14 @@ $(".likes").click(function(e){
 
       if (jsondata.result=="unliked"){
         var message = "Unliked Comment"
-        var txt = "Like"
+        var txt = "Upvote"
         // var color = "dodgerblue"
       }else{
         var message = "Liked Comment"
-        var txt = "Unlike"
+        var txt = "Remove Upvote"
         // var color = "gold"
       }
-      showFlashMessage(message)
+      // showFlashMessage(message)
 
       var msg_id = "#msg-type-" + msgid;
       var like_id = "#msg-score-" + msgid;
@@ -750,14 +599,6 @@ $(".favorite").click(function(e){
 
 
 
-$(".poll-button").on('click', function (event) {
-  var $tipRow = $(event.target).closest('.row-tip');
-  $tipRow.find('.row-tip-thumb').addClass('d-none');
-  $tipRow.find('.row-tip-body').removeClass('col-sm-7');
-  $tipRow.find('.tip-sliced').addClass('d-none');
-  $tipRow.find('button').addClass('d-none');
-  $tipRow.find('span.poll-collapse').removeClass('d-none');
-});
 
 
 
