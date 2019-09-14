@@ -16,13 +16,13 @@ class TagSearchForm(forms.Form):
         super(TagSearchForm, self).__init__(*args, **kwargs)
         self.helper = FormHelper()
         self.helper.form_method = 'get'
-        self.helper.layout = Layout(
-
-            Fieldset(
-                '',
-                FieldWithButtons('search', Submit('submit', value='Search', css_class='btn-primary', style='font-weight: bold;'))
-            ),
-        )
+        # self.helper.layout = Layout(
+        # 
+        #     Fieldset(
+        #         '',
+        #         FieldWithButtons('search', Submit('submit', value='Search', css_class='btn-primary', style='font-weight: bold;'))
+        #     ),
+        # )
     
     search = forms.CharField(
         required=True,

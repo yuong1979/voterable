@@ -1,6 +1,9 @@
+import json
+
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse, JsonResponse, HttpResponseRedirect, Http404
 # Create your views here.
+from rest_framework.decorators import action
 from tags.models import TagPoll, runtagcount
 from django.views.generic import TemplateView, ListView, DetailView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView, FormView
@@ -10,6 +13,41 @@ from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.models import User
 from users.models import PUser
 from tags.models import TagPoll, runtagcount
+
+
+@action(detail=True, methods=["GET"],url_name="search",url_path="/search/")
+def Tagsearch(request):
+
+	search = request.GET.get('search')
+
+	# update the number of tags count to only count the number of active tags
+	context = {}
+
+	# exclude inactive polls
+	exin = Ptype.objects.filter(active=True)
+	taglist = TagPoll.objects.filter(active=True, polltype__in=exin).distinct()
+
+	# ptype = Ptype.objects.filter(active=True)
+	taglist = taglist.exclude(title="").order_by('title')
+
+	if search:
+		taglist = taglist.filter(title__icontains=search)
+	return_data = []
+	i=0
+	for tag in taglist:
+		# print(type(tag.get_absolute_url()))
+		return_data.append({
+			'title': taglist.values()[i]['title'],
+			'counter': taglist.values()[i]['counter'],
+			'url': tag.get_absolute_url()
+		})
+		i+=1
+
+	# print(return_data)
+	context["taglist"] = list(return_data)
+
+
+	return HttpResponse(json.dumps(context), content_type="application/json")
 
 
 
@@ -33,6 +71,7 @@ class TagAllView(ListView, FormView):
 
 	def get_context_data(self, **kwargs):
 		context = super(TagAllView, self).get_context_data(**kwargs)
+		# context ={}
 		search = self.request.GET.get('search')
 
 		#update the number of tags count to only count the number of active tags
@@ -51,6 +90,8 @@ class TagAllView(ListView, FormView):
 		context["taglist"] = taglist
 
 		return context
+
+
 
 
 class TagView(DetailView):
