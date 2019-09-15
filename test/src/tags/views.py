@@ -32,8 +32,12 @@ def Tagsearch(request):
 
 	if search:
 		taglist = taglist.filter(title__icontains=search)
+		# taglist = taglist.filter(title__istartswith=search)
+
 	return_data = []
+
 	i=0
+
 	for tag in taglist:
 		# print(type(tag.get_absolute_url()))
 		return_data.append({
@@ -43,9 +47,7 @@ def Tagsearch(request):
 		})
 		i+=1
 
-	# print(return_data)
 	context["taglist"] = list(return_data)
-
 
 	return HttpResponse(json.dumps(context), content_type="application/json")
 
