@@ -26,7 +26,7 @@ from home.views import (HomeView, AboutUsView, PromotionView, ContactView, Terms
 
 
 from users.views import PUserCreate, PUserUpdate, PUserDetail, PUserSecretList
-from tags.views import TagView, TagAllView, api_fav,Tagsearch
+from tags.views import TagView, TagAllView, api_fav, Tagsearch, TagPollsearch
 # from polls.views import FavPollSub
 # from polls.views import PollSearchView
 
@@ -93,7 +93,8 @@ urlpatterns = [
     # url(r'^puser/runtrialacc/$', PUserSecretList.as_view(), name='PUserSecret'),
 
     url(r'^tags/(?P<pk>[0-9]+)/$',  TagView.as_view(), name='TagView'),
-    url(r'^tags/search/', Tagsearch, name='TagSearch'),
+    url(r'^tags/tsearch/', Tagsearch, name='TagSearch'),
+    url(r'^tags/psearch/', TagPollsearch, name='TagPollSearch'),
 
     url(r'^tags/$', TagAllView.as_view(), name='TagAllView'),
     url(r'^tags/fav/$', api_fav, name="fav"),

@@ -78,7 +78,7 @@ var settime;
 $('#id_search').on('keyup submit',function(e){
     e.preventDefault();
     clearTimeout(settime);
-    settime = setTimeout(FilterTag, 1000);
+    settime = setTimeout(FilterTag, 500);
 });
 
 
@@ -89,7 +89,7 @@ function FilterTag() {
 
         $.ajax({
         method:'GET',
-        url:"/tags/search/",
+        url:"/tags/tsearch/",
         dataType: "json",
         data:{
             search :$('#id_search').val(),

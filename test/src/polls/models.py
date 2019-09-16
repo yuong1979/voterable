@@ -64,7 +64,7 @@ class Ptype(models.Model):
     def get_update(self):
         return reverse('poll_list_update', kwargs={'pk': self.pk})
 
-    #this does not work because of the slug
+    #this does not work because of the slug - instead use the one below
     # def get_absolute_url(self):
     #     return reverse("polls_list", kwargs={"pk":self.pk})
 
@@ -76,9 +76,6 @@ class Ptype(models.Model):
         # count = self.vote_count
         # print (count)
         # return count
-
-
-
 
 
 def pitem_image_upload_to(instance, filename):

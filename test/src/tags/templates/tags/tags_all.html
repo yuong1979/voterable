@@ -51,16 +51,38 @@ width: 55px;
     <div class="mainboxstyle">
 
 
-        <div class="mainheaderstyle"><i class="fas fa-magic fa-1x"></i>&nbsp;&nbsp;&nbsp;&nbsp;{{ tag }}</div>
+        <div class="mainheaderstyle"><i class="fas fa-magic fa-1x"></i>&nbsp;&nbsp;&nbsp;&nbsp;{{ tag }}
 
-        <hr><br>
+
+<div class="pull-right">
+      {% if request.user.is_authenticated %}
+        {% if fav == True %}
+        <a href="#" class="favorite" tag_id="{{ tag.id }}">
+          <b style="color:gold;" id='fav-type-{{ tag.id }}' class="fa fa-star fa-lg"> </b>
+        </a>
+
+        {% else %}
+
+        <a href="#" class="favorite" tag_id="{{ tag.id }}">
+          <i id='fav-type-{{ tag.id }}' class="allbtniconcolor fa fa-star fa-lg"></i>
+        </a>
+        {% endif %}
+
+      {% else %}
+      <a href="/accounts/login/"><i class="allbtniconcolor fa fa-star fa-lg"></i></a>
+      {% endif %}
+</div>
+
+</div>
+
+        <hr>
 
 
 
 
 <div class="row">
 
-  <div class="col-6" style="text-align: center;">
+<!--   <div class="col-6" style="text-align: center;">
 
       {% if request.user.is_authenticated %}
         {% if fav == True %}
@@ -79,45 +101,53 @@ width: 55px;
       <a href="/accounts/login/"><i class="allbtniconcolor fa fa-star fa-lg"></i></a>
       {% endif %}
 
-  </div>
+  </div> -->
 
-  <div class="col-6" style="text-align: center;">
+<!--   <div class="col-6" style="text-align: center;">
       <i class="allbtniconcolor fa fa-share-alt fa-lg" aria-hidden="true" data-toggle="modal" data-target="#ShareModal"></i>
-  </div>
+  </div> -->
 
 </div> <!-- row -->
 
 
 <div class="row">
 
-  <div class="col-6 fontstyle14" style="text-align: center;">
-  Favorite
-  </div>
+<!--   <div class="col-6 fontstyle14" style="text-align: center;">
+  Favorite topic
+  </div> -->
 
-  <div class="col-6 fontstyle14" style="text-align: center;">
+<!--   <div class="col-6 fontstyle14" style="text-align: center;">
   Share
-  </div>
+  </div> -->
 
 </div> <!-- row -->
 
-        <div style="background-color:lightgrey; margin:5% -10%; padding:5px;"></div>
 
 <!-- remove free access function-->
 <!--             <small  style="position: absolute; right: 40px;">
             <i class="allfontcolor fas fa-check-circle fa-1x"></i><b class="allfontcolor">&nbsp;Free Access</b>
             </small> -->
-            <br>
 
+
+            <div class="col-xs-12 col-sm-6 col-md-4">
+              <form method='GET' action='/tags/'>
+              {% crispy form %}
+              </form>
+            </div>
+
+<br>
+
+      <div class="allpolllist">
         <ul class="nav nav-pills">
 
-            {% if bydatelist %}
+            {% if tagpolllist %}
 
-                  {% for i in bydatelist %}
+                  {% for i in tagpolllist %}
 
                       <div class="col-xs-12 col-sm-4">
                       <div class="greyboxstyle">
 
-                      <b><a href="/polls/?type={{ i.slug }}">{{ i.title }}&nbsp;&nbsp;&nbsp;&nbsp;({{ i.viewpolltypeunique.ecount }} Tips)</a></b>
+                      <b><a href="/polls/?type={{ i.slug }}">{{ i.title }}&nbsp;&nbsp;&nbsp;({{ i.viewpolltypeunique.ecount }} Tips)</a></b>
 
 <!-- remove free access function -->
 <!--                       {% if i.freepoll == True %}
@@ -131,42 +161,30 @@ width: 55px;
 
             {% else %}
             <br>
-              There are no tags yet.
+              There are no polls yet.
             <br>
             {% endif %}
 
           <br>
         </ul>
+      </div>
+
+
+      <div class="polllist"></div>
+
+      <div class="polllist_error"></div>
 
 
 
     </div><!-- mainboxstyle -->
 
-
-
-
-
 </div> <!-- /maincontainerstyle -->
-
-
-
-
-
-
-
+<!-- for sending tag id using ajax to the backend -->
+<p class="tag" tag_id="{{ tag.id }}"></p>
 
 {% include 'sharemodal.html' %}
 
-
-
-
-
-
 {% endblock %}
-
-
-
-
 
 
 
@@ -182,12 +200,91 @@ width: 55px;
 
 
 
-
-
-
 <!-- doing a blockquote on a script function enables the script to be viewed in color but blocks the script code from taking effect -->
 
 {#  <script>#}
+
+
+
+
+var settime;
+
+$('#id_search').on('keyup submit',function(e){
+    e.preventDefault();
+    clearTimeout(settime);
+    settime = setTimeout(FilterTag, 500);
+});
+
+
+
+function FilterTag() {
+
+    if($('#id_search').val()){
+
+        $.ajax({
+        method:'GET',
+        url:"/tags/psearch/",
+        dataType: "json",
+        data:{
+            search :$('#id_search').val(),
+            tag :$('.tag').attr("tag_id"),
+        },
+        beforeSend: function(){
+            $(".polllist_error").show();
+            $(".polllist_error p").html("");
+            $(".polllist_error").append("<p>Loading data...</p>");
+        },
+        success : function(result){
+            $(".polllist_error").hide();
+
+            $(".polllist").show();
+            $(".allpolllist").hide();
+            $(".polllist").html("");
+
+            putTagListData(result);
+        },
+        error: function(response){
+            $(".polllist_error").show();
+            $(".polllist_error p").html("");
+
+            $(".polllist_error").append("<p>Something went wrong...</p>");
+        }
+    });
+
+    }else{
+
+        $(".polllist_error").hide();
+        $(".polllist").hide();
+        $(".allpolllist").show();
+
+    }
+
+}
+
+
+    function putTagListData(result){
+        let row;
+
+        if (result["polllist"].length>0){
+            $.each(result['polllist'], function(a,b) {
+
+                row = "<div class='col-xs-12 col-sm-4'><div class='greyboxstyle' style='margin-bottom:11px'><a href='"+b['url']+"' class='greyboxstyle'><b>"+b["title"]+"&nbsp;&nbsp;&nbsp; ("+b['counter']+" Tips)</b></a></div></div>";
+
+                $(".polllist").append(row);
+            });
+        }else{
+
+            $(".polllist_error p").html("");
+            $(".polllist_error").append("<p>No results found</p>");
+            $(".polllist").hide();
+            $(".polllist_error").show();
+        }
+    }
+
+
+
+
+
 
 
 function set_fav() {
