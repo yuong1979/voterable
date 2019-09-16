@@ -7,7 +7,7 @@ from crispy_forms.bootstrap import TabHolder, Tab, InlineCheckboxes, AppendedTex
 
 
 
-#this works
+
 class TagSearchForm(forms.Form):
     search = forms.CharField(required=True)
 
@@ -16,15 +16,40 @@ class TagSearchForm(forms.Form):
         super(TagSearchForm, self).__init__(*args, **kwargs)
         self.helper = FormHelper()
         self.helper.form_method = 'get'
-        self.helper.layout = Layout(
-
-            Fieldset(
-                '',
-                FieldWithButtons('search', Submit('submit', value='Search', css_class='btn-primary', style='font-weight: bold;'))
-            ),
-        )
+        # self.helper.layout = Layout(
+        # 
+        #     Fieldset(
+        #         '',
+        #         FieldWithButtons('search', Submit('submit', value='Search', css_class='btn-primary', style='font-weight: bold;'))
+        #     ),
+        # )
     
     search = forms.CharField(
         required=True,
-        label=""
+        label="",
+        widget=forms.TextInput(attrs={'placeholder': 'Search Topics'})
+    )
+
+
+
+class TagPollSearchForm(forms.Form):
+    search = forms.CharField(required=True)
+
+    def __init__(self, *args, **kwargs):
+
+        super(TagPollSearchForm, self).__init__(*args, **kwargs)
+        self.helper = FormHelper()
+        self.helper.form_method = 'get'
+        # self.helper.layout = Layout(
+        # 
+        #     Fieldset(
+        #         '',
+        #         FieldWithButtons('search', Submit('submit', value='Search', css_class='btn-primary', style='font-weight: bold;'))
+        #     ),
+        # )
+    
+    search = forms.CharField(
+        required=True,
+        label="",
+        widget=forms.TextInput(attrs={'placeholder': 'Search Tips'})
     )

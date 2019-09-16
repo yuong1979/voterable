@@ -1,15 +1,56 @@
+import json
+
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse, JsonResponse, HttpResponseRedirect, Http404
 # Create your views here.
+from rest_framework.decorators import action
 from tags.models import TagPoll, runtagcount
 from django.views.generic import TemplateView, ListView, DetailView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView, FormView
 from polls.models import Ptype
-from tags.forms import TagSearchForm
+from tags.forms import TagSearchForm, TagPollSearchForm
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.models import User
 from users.models import PUser
 from tags.models import TagPoll, runtagcount
+from django.urls import resolve
+
+
+@action(detail=True, methods=["GET"],url_name="search",url_path="/search/")
+def Tagsearch(request):
+
+	search = request.GET.get('search')
+
+	# update the number of tags count to only count the number of active tags
+	context = {}
+
+	# exclude inactive polls
+	exin = Ptype.objects.filter(active=True)
+	taglist = TagPoll.objects.filter(active=True, polltype__in=exin).distinct()
+
+	# ptype = Ptype.objects.filter(active=True)
+	taglist = taglist.exclude(title="").order_by('title')
+
+	if search:
+		taglist = taglist.filter(title__icontains=search)
+		# taglist = taglist.filter(title__istartswith=search)
+
+	return_data = []
+
+	i=0
+
+	for tag in taglist:
+		# print(type(tag.get_absolute_url()))
+		return_data.append({
+			'title': taglist.values()[i]['title'],
+			'counter': taglist.values()[i]['counter'],
+			'url': tag.get_absolute_url()
+		})
+		i+=1
+
+	context["taglist"] = list(return_data)
+
+	return HttpResponse(json.dumps(context), content_type="application/json")
 
 
 
@@ -33,7 +74,11 @@ class TagAllView(ListView, FormView):
 
 	def get_context_data(self, **kwargs):
 		context = super(TagAllView, self).get_context_data(**kwargs)
+		# context ={}
 		search = self.request.GET.get('search')
+
+
+
 
 		#update the number of tags count to only count the number of active tags
 		runtagcount()
@@ -53,9 +98,58 @@ class TagAllView(ListView, FormView):
 		return context
 
 
-class TagView(DetailView):
+
+
+
+@action(detail=True, methods=["GET"],url_name="psearch",url_path="/psearch/")
+def TagPollsearch(request):
+
+	search = request.GET.get('search')
+	tag_id = request.GET.get('tag')
+
+	# update the number of tags count to only count the number of active tags
+	context = {}
+
+	# exclude inactive tags and select relevant tag		
+	taglist = TagPoll.objects.filter(active=True,id=tag_id).distinct()
+	# exclude inactive polls
+	polllist = Ptype.objects.filter(active=True, tagpoll__in=taglist)
+
+	polllist = polllist.exclude(title="").order_by('title')
+
+	if search:
+		polllist = polllist.filter(title__icontains=search)
+
+	return_data = []
+
+	i=0
+	for poll in polllist:
+		return_data.append({
+			'title': polllist.values()[i]['title'],
+			'counter': poll.viewpolltypeunique.ecount,
+			'url': poll.get_url()
+		})
+		i+=1
+
+
+
+	context["polllist"] = list(return_data)
+
+	return HttpResponse(json.dumps(context), content_type="application/json")
+
+
+
+
+
+
+
+
+
+# implement search here
+class TagView(DetailView, FormView):
 	model = TagPoll
 	template_name = 'tags/tags_all.html'
+	form_class = TagPollSearchForm
 
 	def dispatch(self, *args, **kwargs):
 		dispatch = super(TagView, self).dispatch(*args, **kwargs)
@@ -73,11 +167,18 @@ class TagView(DetailView):
 	# 	return obj
 
 
+	# def get_absolute_url(self):
+	# 	return reverse('blog.views.showcategory',args=[str(self.slug)])
+
+
 	def get_context_data(self, **kwargs):
 		context = super(TagView, self).get_context_data(**kwargs)
 
 		tag = self.object
 		context["tag"] = tag
+
+
+
 
 		if self.request.user.is_authenticated:
 			#see of the tag has been favorited by the user
@@ -93,12 +194,17 @@ class TagView(DetailView):
 		tag_lst = TagPoll.objects.filter(title=tag)
 		p_lst = tag_lst.values_list("polltype",flat=True)
 
-		bydatelist = Ptype.objects.filter(active=True, id__in=p_lst).order_by('-date')
+		tagpolllist = Ptype.objects.filter(active=True, id__in=p_lst).order_by('-date')
 
 		context["tag"] = tag
-		context["bydatelist"] = bydatelist
+		context["tagpolllist"] = tagpolllist
 
 		return context
+
+
+
+
+
 
 
 

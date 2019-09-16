@@ -134,17 +134,12 @@ textarea:focus {
 <script>
 
 
-// if user is a member or non member (and authenticated ) when browsing and the localstorage indicates that the user has
-// been prompted with the survey (surveyload = false) then it will show the survey and set survey loaded to true
-// so that it will not show up again and overwhelm the user
+
 
 
 
 //taking the model from the context from model and converting into minutes and microseconds
 var surveypoptime = {{ surveypop }} * 60 * 1000
-
-
-console.log((surveypoptime/60)/1000)
 
 //timer before the survey deploys
 var alerttime = 10000 //alert every 10 seconds
@@ -162,19 +157,45 @@ var surveytimer = () => {
 }
 
 
+// if user is a member or non member (and authenticated ) when browsing and the localstorage indicates that the user has
+// been prompted with the survey (surveyload = false) then it will show the survey and set survey loaded to true
+// so that it will not show up again and overwhelm the user
 
 
 //determine when to show the popup. this shows popup 120 seconds into session
 window.onload= () => {
-  
-  //to time when the survey would show up - only used for troubleshooting
-  surveytimer()
 
-  setTimeout(surveyPopup,surveypoptime)
+  if (surveypoptime === 0) {
+    console.log("Survey is disabled")
+  } else {
+
+    var usertype = $("#authenticated_user").text()
+    // var usertype = document.getElementById("authenticated_user").innerText;
+
+      //only deploy survey if user is a paying member or non paying member(means user is authenticated)
+      if (usertype == "Member" || usertype == "NotMember" ) 
+      {
+        //only deploy survey if the user has not done or skipped the survey
+        if (sessionStorage.getItem('Surveyload') !== 'true')
+          {
+
+            //to time when the survey would show up - only used for troubleshooting
+            // surveytimer()
+            setTimeout(function(){ 
+              $("#SurveyModal").modal('show');
+            //showing the survey and saving the survey loaded status to true
+              sessionStorage.setItem('Surveyload','true'); 
+
+             },surveypoptime)
+
+          }
+      }
+
+
+  }
+
 };
 
-
-// console.log("survey has been loaded:" + sessionStorage.getItem('Surveyload'))
 
 
 
@@ -190,30 +211,6 @@ if (sessionStorage.getItem('Surveyload') !== 'true')
 
 
 
-//surveypopup that prompts user every time there is a new session (in sessionstorage) so not to overwhelm users and also if the user is signed in, if not it will not prompt
-const surveyPopup = () =>
-  {
-
-
-
-    var usertype = $("#authenticated_user").text()
-    // var usertype = document.getElementById("authenticated_user").innerText;
-
-      //only deploy survey if user is a paying member or non paying member(means user is authenticated)
-      if (usertype == "Member" || usertype == "NotMember" ) 
-      {
-
-        //only deploy survey if the user has not done or skipped the survey
-        if (sessionStorage.getItem('Surveyload') !== 'true')
-          {
-            //showing the survey and saving the survey loaded status to true
-
-            $("#SurveyModal").modal('show');
-            sessionStorage.setItem('Surveyload','true'); 
-          }
-
-      }
-}
 
 
 

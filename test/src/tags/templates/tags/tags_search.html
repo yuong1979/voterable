@@ -31,22 +31,28 @@
 
             </div>
 
+            <div class="alltaglist">
 
-            {% if taglist %}
+                {% if taglist %}
 
-              {% for i in taglist %}
+                  {% for i in taglist %}
 
-                 <a href='{{i.get_absolute_url}}' class="btn btn-primary tagstyle"><b>{{ i }} ({{i.counter}})</b></a>&nbsp;&nbsp;
+                     <a href='{{i.get_absolute_url}}' class="btn btn-primary tagstyle"><b>{{ i }} ({{i.counter}})</b></a>&nbsp;&nbsp;
 
-              {% endfor %}
+                  {% endfor %}
 
+                {% else %}
+                <br>
+                  <small><b>There are no entries yet.</b></small>
+                <br>
+                {% endif %}
 
-            {% else %}
-            <br>
-              <small><b>There are no entries yet.</b></small>
-            <br>
-            {% endif %}
+            </div>
 
+            <div class="taglist">
+
+            </div>
+        <div class="taglist_error"></div>
     </div><!-- mainboxstyle -->
 
 </div> <!-- maincontainerstyle -->
@@ -62,6 +68,87 @@
 
 
 
+<script>
 
+
+
+
+var settime;
+
+$('#id_search').on('keyup submit',function(e){
+    e.preventDefault();
+    clearTimeout(settime);
+    settime = setTimeout(FilterTag, 500);
+});
+
+
+
+function FilterTag() {
+
+    if($('#id_search').val()){
+
+        $.ajax({
+        method:'GET',
+        url:"/tags/tsearch/",
+        dataType: "json",
+        data:{
+            search :$('#id_search').val(),
+        },
+        beforeSend: function(){
+            $(".taglist_error").show();
+            $(".taglist_error p").html("");
+            $(".taglist_error").append("<p>Loading data...</p>");
+        },
+        success : function(result){
+            $(".taglist_error").hide();
+
+            $(".taglist").show();
+            $(".alltaglist").hide();
+            $(".taglist").html("");
+
+            putTagListData(result);
+        },
+        error: function(response){
+            $(".taglist_error").show();
+            $(".taglist_error p").html("");
+
+            $(".taglist_error").append("<p>Something went wrong...</p>");
+        }
+    });
+
+    }else{
+
+        $(".taglist_error").hide();
+        $(".taglist").hide();
+        $(".alltaglist").show();
+
+    }
+
+}
+
+
+
+
+
+
+    function putTagListData(result){
+        let row;
+
+        if (result["taglist"].length>0){
+            $.each(result['taglist'], function(a,b) {
+
+                row = "<a href='"+b['url']+"' class='btn btn-primary tagstyle' style='margin:3px'><b>"+b["title"]+" ("+b['counter']+")</b></a>";
+
+                $(".taglist").append(row);
+            });
+        }else{
+
+            $(".taglist_error p").html("");
+            $(".taglist_error").append("<p>No results found</p>");
+            $(".taglist").hide();
+            $(".taglist_error").show();
+        }
+    }
+</script>
 
 {% endblock %}
