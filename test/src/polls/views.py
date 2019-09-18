@@ -611,6 +611,7 @@ class PollListCreate(LoginRequiredMixin, CreateView):
         i = form.save(commit=False)
         i.c_user = self.request.user
         i.active = True
+        i.freepoll = True        
         i.save()
 
         tag_names = form.cleaned_data['tags'].split(",")
@@ -691,7 +692,9 @@ class PollListUpdate(LoginRequiredMixin,UpdateView): #if user is request user or
         i = form.save(commit=False)
         i.c_user = self.request.user
         i.active = True
+        i.freepoll = True
         i.save()
+
 
         tag_names = form.cleaned_data['tags'].split(",")
         obj = self.get_object()
@@ -739,13 +742,12 @@ class PollsListView(ListView, PollTypeMixin):
             messages.info(self.request, "This poll does not exist anymore")
             return redirect('Home')
 
+
         return dispatch
 
 
     def get_queryset(self):
         sort = self.request.GET.get('sort', None)
-
-
 
         poll_type = self.get_pobject().id
 
@@ -755,10 +757,6 @@ class PollsListView(ListView, PollTypeMixin):
 
         # to default the order of poll list by score for favorites and create
         self.order = self.request.GET.get('order_by', '-score')
-
-
-
-
 
 
         if self.request.user.is_authenticated:
@@ -908,9 +906,9 @@ class PollsListView(ListView, PollTypeMixin):
 
             #default adding post should have time limit - If user is staff there is no time limit - for general poll list
             if self.request.user.is_staff == True:
-                context["Addpost"] = True
+                context["FullControl"] = True
             else:
-                context["Addpost"] = False
+                context["FullControl"] = False
 
             # check if user can post based on "cpostdelay" minutes after the user posted - for general poll list
             ctable = ControlTable.objects.get(id=1)
@@ -936,6 +934,7 @@ class PollsListView(ListView, PollTypeMixin):
             except:
                 # if the user has not posted anything before
                 context["Addpost"] = True
+
 
         else:
 
@@ -1346,7 +1345,7 @@ class PollDetailView(LoginRequiredMixin, DetailView, FormView):
 
         # send the user to premium subscribe if the user wants to access details unless he is member or he created this entry
         try:
-            if (self.object.user_submit != self.request.user) and (self.request.user.puser.memberp == False):
+            if (self.object.user_submit != self.request.user) and (self.request.user.puser.memberp == False) and (self.object.polltype.freepoll != True):
                 messages.info(self.request, "Please subscribe to the premium package plan to access details")
                 return redirect('SelectPlan')
         except:
@@ -1360,7 +1359,9 @@ class PollDetailView(LoginRequiredMixin, DetailView, FormView):
         context = super(PollDetailView, self).get_context_data(**kwargs)
         context['listtitle'] = "Detail"
 
+
         if self.request.user.is_authenticated:
+
 
             obj = self.get_object()
             msgobj = Message.objects.filter(senduser=self.request.user, pollitem=obj).first()
@@ -1368,6 +1369,9 @@ class PollDetailView(LoginRequiredMixin, DetailView, FormView):
             # Check if this ptype is free
             if obj.polltype.freepoll == True:
                 context['free'] = True
+
+            # backward to the polltype from the poll tip
+            context['BackPtype'] = obj.polltype.slug
 
             # if msgobj:
             #     INITIAL_DATA = {'content': msgobj.content}
@@ -1392,8 +1396,6 @@ class PollDetailView(LoginRequiredMixin, DetailView, FormView):
                 view_obj.userview.add(self.request.user)
                 view_obj.vcount = view_obj.userview.count()
                 view_obj.save()
-
-
 
 
         # getting the number of views
@@ -1467,7 +1469,7 @@ class PollDetailView(LoginRequiredMixin, DetailView, FormView):
         if self.request.user.is_authenticated:
 
             #check if the user is the creator of the poll if so offer the option to update
-            if self.request.user == self.get_object().user_submit:
+            if (self.request.user == self.get_object().user_submit) or (self.request.user.is_staff):
                 context['user_authorised'] = True
 
             if self.request.user.is_staff == True:

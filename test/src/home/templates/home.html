@@ -208,7 +208,7 @@ if (sessionStorage.getItem('Notification') !== 'true')
 
         <div class="col-xs-8 col-sm-9">
           
-            <div class="fontstyle16" style="margin:10px">
+            <div class="fontstyle110" style="margin:10px">
             {% if user.user.puser.name %}
             {{ user.user.puser.name }}
             {% else %}
@@ -216,7 +216,7 @@ if (sessionStorage.getItem('Notification') !== 'true')
             {% endif %}
             </div>
             
-            <div class="fontstyle14" style="color:grey; margin:10px">
+            <div class="fontstyle90" style="color:grey; margin:10px">
                 {% if user.description %}
                   {{ user.description }}
                 {% else %}
@@ -249,7 +249,7 @@ if (sessionStorage.getItem('Notification') !== 'true')
 
 
             <li class="list-group-item">
-              <b class="fontstyle14">Enable Notifications:</b>
+              <b class="fontstyle100">Enable Notifications:</b>
 
               <a href="#" title="Notifications" data-toggle="popover" data-trigger="focus" data-content="Get notified on latest updates to your favorite topics by turning on notifications"><i class="fas fa-question-circle"></i></a>
 
@@ -265,7 +265,7 @@ if (sessionStorage.getItem('Notification') !== 'true')
 
 
 <!--             <li class="list-group-item">
-              <b class="fontstyle14">Your referral code:</b>
+              <b class="fontstyle90">Your referral code:</b>
 
               <a href="#" title="Referral code" data-toggle="popover" data-trigger="focus" data-content="Share your referral code with your friends to get {{ refdays }} additional days of premium access for both yourself and your friends"><i class="fas fa-question-circle"></i></a>
 
@@ -285,10 +285,10 @@ if (sessionStorage.getItem('Notification') !== 'true')
                 <br>
                 <b>Your Subscription</b><br><br>
                 {% if user.memberp == True %}
-                <b class="fontstyle14">Type:</b>
+                <b class="fontstyle90">Type:</b>
                 <span class="badge badge-pill badge-secondary" style="float:right"> Premium </span>
                 <br><br>
-                <b class="fontstyle14">End date:</b>
+                <b class="fontstyle90">End date:</b>
                 <span class="badge badge-pill badge-secondary" style="float:right"> {{ user.subenddatep|timeuntil }} </span>
                 {% endif %}
 
@@ -302,7 +302,7 @@ if (sessionStorage.getItem('Notification') !== 'true')
 
                 {% if freedays %}
 
-              <b class="fontstyle14">Your available premium days</b>
+              <b class="fontstyle90">Your available premium days</b>
 
               <a href="#" title="Free Premium Days" data-toggle="popover" data-trigger="focus" data-content="Click to activate the {{ freedays }} days of free access to premium subscription"><i class="fas fa-question-circle"></i></a><br>
 
@@ -315,7 +315,7 @@ if (sessionStorage.getItem('Notification') !== 'true')
 
                 {% else %}
 
-              <b class="fontstyle14">Your Subscription:</b>
+              <b class="fontstyle90">Your Subscription:</b>
               <br>
 
                     <a href='{% url 'SelectPlan' %}' class='btn buttonspace btn-sm btn-primary' data-action='show-spinner' ><b>Start subscription</b></a>
@@ -380,33 +380,33 @@ if (sessionStorage.getItem('Notification') !== 'true')
           
           <ul class="list-group">
             <li class="list-group-item">
-              <b class="fontstyle14">Your Reputation Points:</b>
-              <span class="badge badge-pill badge-secondary" style="float:right" tabindex="0" role="button" data-toggle="popover" data-trigger="focus" data-content="Points are awarded based on the votes to your contributed tips and comments."> {{points}} </span>
+              <b class="fontstyle90">Your Reputation Points:</b>
+              <span class="badge badge-pill badgestyle badge-secondary" style="float:right" tabindex="0" role="button" data-toggle="popover" data-trigger="focus" data-content="Points are awarded based on the votes to your contributed tips and comments."> {{points}} </span>
             </li>
 
             <li class="list-group-item">
-              <b class="fontstyle14">Your Rank:</b>
-              <span class="badge badge-pill badge-secondary" style="float:right" tabindex="0" role="button" data-toggle="popover" data-trigger="focus" data-content="Earn {{nextpts}} points to get to {{nextrank}} rank."> {{rank}} </span>
+              <b class="fontstyle90">Your Rank:</b>
+              <span class="badge badge-pill badgestyle badge-secondary" style="float:right" tabindex="0" role="button" data-toggle="popover" data-trigger="focus" data-content="Earn {{nextpts}} points to get to {{nextrank}} rank."> {{rank}} </span>
             </li>
 
             <li class="list-group-item">
-              <b class="fontstyle14">Tips created:</b>
-              <span class="badge badge-pill badge-secondary" style="float:right"> {{ pollsECreated }} </span>
+              <b class="fontstyle90">Tips created:</b>
+              <span class="badge badge-pill badgestyle badge-secondary" style="float:right"> {{ pollsECreated }} </span>
             </li>
 
             <li class="list-group-item">
-              <b class="fontstyle14">Tips viewed:</b>
-              <span class="badge badge-pill badge-secondary" style="float:right" tabindex="0" role="button" data-toggle="popover" data-trigger="focus" data-content="The number of times your tips were viewed by others"> {{ votes_poll_entries_views }} </span>
+              <b class="fontstyle90">Tips viewed:</b>
+              <span class="badge badge-pill badgestyle badge-secondary" style="float:right" tabindex="0" role="button" data-toggle="popover" data-trigger="focus" data-content="The number of times your tips were viewed by others"> {{ votes_poll_entries_views }} </span>
             </li>
 
             <li class="list-group-item">
-              <b class="fontstyle14">Your Tip Upvotes:</b>
-              <span class="badge badge-pill badge-secondary" style="float:right" tabindex="0" role="button" data-toggle="popover" data-trigger="focus" data-content="Get 1 point every time you get an upvote for your tip."> {{ upvotes }} </span>
+              <b class="fontstyle90">Your Tip Upvotes:</b>
+              <span class="badge badge-pill badgestyle badge-secondary" style="float:right" tabindex="0" role="button" data-toggle="popover" data-trigger="focus" data-content="Get 1 point every time you get an upvote for your tip."> {{ upvotes }} </span>
             </li>
 
             <li class="list-group-item">
-              <b class="fontstyle14">Your Comment Upvotes:</b>
-              <span class="badge badge-pill badge-secondary" style="float:right" tabindex="0" role="button" data-toggle="popover" data-trigger="focus" data-content="Get 1 point every time you get an upvote for your comment."> {{ comment_likes }} </span>
+              <b class="fontstyle90">Your Comment Upvotes:</b>
+              <span class="badge badge-pill badgestyle badge-secondary" style="float:right" tabindex="0" role="button" data-toggle="popover" data-trigger="focus" data-content="Get 1 point every time you get an upvote for your comment."> {{ comment_likes }} </span>
             </li>
 
         <!--     <li class="list-group-item">
@@ -415,15 +415,15 @@ if (sessionStorage.getItem('Notification') !== 'true')
             </li> -->
 
             <li class="list-group-item">
-              <b class="fontstyle14">Times you Voted:</b>
-              <span class="badge badge-pill badge-secondary" style="float:right"> {{ votedtimes }} </span>
+              <b class="fontstyle90">Times you Voted:</b>
+              <span class="badge badge-pill badgestyle badge-secondary" style="float:right"> {{ votedtimes }} </span>
             </li>
 
 
             <!-- subscriptionactivate -->
 
 <!--             <li class="list-group-item">
-              <b class="fontstyle14">Free subscription days:</b>
+              <b class="fontstyle90">Free subscription days:</b>
               <span class="badge badge-pill badge-secondary" style="float:right" tabindex="0" role="button" data-toggle="popover" data-trigger="focus" data-content="Earn {{nextpts}} points to get an additional {{nextfrdays}} free premium subscription days.""> {{ freedays }} </span>
             </li> -->
 
@@ -457,17 +457,34 @@ if (sessionStorage.getItem('Notification') !== 'true')
 
 
 {% if fav_poll_types %}
-  <div class="col-sm-12">
+  <div class="col-sm-12" >
     <div class="mainboxstyle">
 
         <div class="mainheaderstyle"><i class="fas fa-magic fa-1x"></i>&nbsp;&nbsp;&nbsp;&nbsp;Your Favorite Tips</div><hr>
 
-        <ul class="nav nav-pills">
+        <div class=" tipcardbodystyle">
+          {% for poll_type in fav_poll_types %}
+            <div class="greyboxstyle col-12 col-lg-6">
+            <div class="row">
 
-              {% for poll_type in fav_poll_types %}
+              <div class="col-10 col-lg-10">
+                <a href="/polls/?favorite={{ poll_type.slug }}"><b style="line-height: 200%;">{{ poll_type.title }}</b></a>
+              </div>
 
-                <div class="col-xs-12 col-sm-4">
-                <div class="greyboxstyle">
+<!--               <div class="col-2 col-lg-2">
+                <span class="badge badge-pill badge-secondary" style="font-size:12px; margin-left:-12px"> test tips </span>
+              </div> -->
+
+            </div>
+            </div>
+          {% endfor %}
+        </div>
+
+
+
+
+
+
 
       <!--                   {% if poll_type.image %}
                   <div class="ppic">
@@ -479,25 +496,18 @@ if (sessionStorage.getItem('Notification') !== 'true')
                   </div>            
                   {% endif %} -->
 
-                    <b><a href="/polls/?favorite={{ poll_type.slug }}">{{ poll_type.title }}</a></b>
+<!--                     <b><a href="/polls/?favorite={{ poll_type.slug }}">{{ poll_type.title }}</a></b> -->
 
-                      {% if poll_type.freepoll == True %}
+<!--                       {% if poll_type.freepoll == True %}
                       &nbsp;&nbsp;<i class="allfontcolor fas fa-check-circle fa-1x"></i>
-                      {% endif %}
+                      {% endif %} -->
 
 <!--                     adding free poll here if need be -->
 <!--                       {% if poll_type.freepoll == True %}
                       &nbsp;&nbsp;<i class="allfontcolor fas fa-check-circle fa-1x"></i><b class="allfontcolor"></b>
                       {% endif %} -->
 
-                </div>
-                </div>
 
-              {% endfor %}
-
-
-          <br>
-        </ul>
 
     </div><!-- mainboxstyle -->
   </div>
@@ -526,32 +536,41 @@ if (sessionStorage.getItem('Notification') !== 'true')
 
         <div class="mainheaderstyle"><i class="fas fa-edit fa-1x"></i>&nbsp;&nbsp;&nbsp;&nbsp;Your Created Tips</div><hr>
 
-        <ul class="nav nav-pills">
 
-              {% for i in pollcreatelist %}
 
-                <div class="col-xs-12 col-sm-4">
-                <div class="greyboxstyle">
+        <div class=" tipcardbodystyle">
+          {% for i in pollcreatelist %}
+            <div class="greyboxstyle col-12 col-lg-6">
+            <div class="row">
 
-                    <b><a href="/polls/?create={{ i.slug }}">{{ i.title }}</a></b>
+              <div class="col-10 col-lg-10">
+                <a href="/polls/?create={{ i.slug }}"><b style="line-height: 200%;">{{ i.title }}</b></a>
+              </div>
 
-                    
+<!--               <div class="col-2 col-lg-2">
+                <span class="badge badge-pill badge-secondary" style="font-size:12px; margin-left:-12px"> test tips </span>  -->
 
-                      {% if i.freepoll == True %}
-                      &nbsp;&nbsp;<i class="allfontcolor fas fa-check-circle fa-1x"></i>
-                      {% endif %}
+              </div>
 
-                </div>
-                </div>
+            </div>
+            </div>
+          {% endfor %}
+        </div>
 
-              {% endfor %}
 
-          <br>
-        </ul>
+
+
+
+
 
     </div><!-- mainboxstyle -->
   </div>
 {% endif %}
+
+
+
+
+
 
 
 

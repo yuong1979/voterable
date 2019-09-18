@@ -161,7 +161,7 @@
 
 
         .mainheaderstyle {
-          font-size: 20px;
+          font-size: 130%;
           color: #0A8082;
         }
 
@@ -195,37 +195,47 @@
           border-width: 2px;
           font-color: red;
 /*          font-weight: bold;*/
-          font-size: 80%;
+          font-size: 90%;
+          font-weight: bold;
         }
 
 
           /* font size for poll list and detail */
-        .fontstyle18 {
+/*        .fontstyle18 {
           font-size: 18px;
           font-weight:bolder;    
+        }*/
+
+
+          /* font size for poll list and detail */
+        .fontstyle110 {
+          font-weight:bolder;
+          font-size: 110%;
+          margin-left: 10px;
+        }
+
+
+          /* font size for poll list and detail */
+        .fontstyle100 {
+          font-weight:bolder;
+          font-size: 100%;
         }
 
           /* font size for poll list and detail */
-        .fontstyle16 {
-          font-size: 16px;
-          font-weight:bolder;    
+        .fontstyle90 {
+          font-weight: bolder;
+          font-size: 90%;
         }
 
           /* font size for poll list and detail */
-        .fontstyle14 {
-          font-weight: bolder;          
-          font-size: 14px;
-        }
-
-          /* font size for poll list and detail */
-        .fontstyle12 {
-          font-weight: bolder;          
-          font-size: 12px;
+        .fontstyle85 {
+          font-weight: bolder;
+          font-size: 85%;
         }
 
         /* content font size for poll list and detail */
         .contentstyle {
-          font-size: 14px;
+          font-size: 90%;
         }
 
         /* line break for poll list */
@@ -236,9 +246,9 @@
 
         /* time stamp for poll list */
         .timestampstyle {
-          font-size: 12px;
+          font-size: 85%;
           color: grey;
-          margin-top: 2px;
+          margin-top: 3px;
         }
 
         /* read more btn for poll list and detail */
@@ -251,7 +261,7 @@
 
         /* credit font size for poll list and detail */
         .creditstyle {
-          font-size: 12px;
+          font-size: 85%;
         }
 
         /* margin size between for tags for poll list */
@@ -264,10 +274,10 @@
         .greyboxstyle {
           
 
-          background-color: #d3d3d3;
+          background-color: #E9E9E9;  /*original color #d3d3d3*/
         /*  height: 100%;*/
 /*          min-height: 30px;*/
-          font-size: small;
+          font-size: 95%;
           padding: 4px 10px 4px 10px;
           margin: 5px -7px 5px -7px;
           border-bottom: 1px;
@@ -279,6 +289,20 @@
           top: 50%;
 */
         }
+
+        .badgestyle {
+          font-size: 85%;
+        }
+
+        .tipcardbodystyle {
+          margin-right: -15px
+        }
+
+
+        #id_search {
+          margin-left: -20px
+        }
+
 
 
 /*polllist image across polllist fav/create/all/preview/details*/
@@ -782,23 +806,38 @@
 
   <div class="col-xs-12 col-sm-6  basefadecontent">
     <div class="card shadow" style="margin: 5px">
-      <div class="card-body">
+      <div class="card-body tipcardbodystyle">
         <div class="card-title mainheaderstyle"><i class="fas fa-magic fa-1x"></i>&nbsp;&nbsp;&nbsp;&nbsp;Hot Tips</div><hr>
-          <table style="width:100%;" cellpadding="5">
-            {% for i in toppolls %}
-            <tr style="border-style: none;">
-              <td><small><a href="{{ i.get_url }}"><b style="line-height: 140%;">{{ i|truncatechars:80 }}</b></a></small></td>
-              <td><span class="badge badge-pill badge-secondary"> {{ i.ecount }} tips </span> </td>
-              <td>
 
-                {% if i.freepoll == True %}
+
+
+
+     
+          {% for i in toppolls %}
+            <div class="greyboxstyle col-12 col-lg-6">
+            <div class="row">
+
+              <div class="col-10 col-lg-10">
+                <a href="{{ i.get_url }}"><b style="line-height: 200%;">{{ i }}</b></a>
+              </div>
+
+              <div class="col-2 col-lg-2">
+                <span class="badge badge-pill badgestyle badge-secondary" style="margin-left:-12px"> {{ i.ecount }} tips </span> 
+
+<!--                 {% if i.freepoll == True %}
                 &nbsp;&nbsp;<i class="allfontcolor fas fa-check-circle fa-1x"></i><b class="allfontcolor"></b>
-                {% endif %}
-          
-              </td>
-            </tr>
-            {% endfor %}
-          </table>
+                {% endif %} -->
+              </div>
+
+            </div>
+            </div>
+          {% endfor %}
+
+
+
+
+
+
       </div>
     </div>
   </div>
@@ -806,10 +845,10 @@
   <div class="col-xs-12 col-sm-6 basefadecontent">
     <div class="card shadow" style="margin: 5px">
       <div class="card-body">
-        <div class="card-title mainheaderstyle"><i class="fa fa-tag fa-1x"></i>&nbsp;&nbsp;&nbsp;&nbsp;Hot Tags</div><hr>
+        <div class="card-title mainheaderstyle"><i class="fa fa-tag fa-1x"></i>&nbsp;&nbsp;&nbsp;&nbsp;Hot Topics</div><hr>
           {% for i in tags %}
           {% if i.title != "" %}
-          <a href='{{i.get_absolute_url}}' class="btn btn-outline-primary tagstyle">{{ i }} ({{i.counter}})</a>
+          <a href='{{i.get_absolute_url}}' class="btn btn-primary tagstyle">{{ i }} ({{i.counter}})</a>
           {% endif %}
           &nbsp;&nbsp;
           {% endfor %}

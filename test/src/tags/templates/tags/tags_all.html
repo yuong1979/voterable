@@ -43,37 +43,40 @@ width: 55px;
 {% block content %}
 
 
-
-
 <div class="maincontainerstyle">
 
 
     <div class="mainboxstyle">
 
+      <div class="row col-lg-6">
+        <div class="mainheaderstyle col-10"><i class="fas fa-magic fa-1x"></i>&nbsp;&nbsp;&nbsp;{{ tag }}
 
-        <div class="mainheaderstyle"><i class="fas fa-magic fa-1x"></i>&nbsp;&nbsp;&nbsp;&nbsp;{{ tag }}
+        </div>
+
+        <div class="col-2" style="margin-top:6px;">
+              {% if request.user.is_authenticated %}
+
+                {% if fav == True %}
+
+                <a style="font-size: 16px; margin-right:10px;" href='#' class='favorite' tag_id="{{ tag.id }}"><b><i id='fav-type-{{ tag.id }}' aria-hidden="true" class="fa fa-star fa-lg" style="color:gold;"></i></b></a>
 
 
-<div class="pull-right">
-      {% if request.user.is_authenticated %}
-        {% if fav == True %}
-        <a href="#" class="favorite" tag_id="{{ tag.id }}">
-          <b style="color:gold;" id='fav-type-{{ tag.id }}' class="fa fa-star fa-lg"> </b>
-        </a>
+                {% else %}
 
-        {% else %}
+                <a style="font-size: 16px; margin-right:10px;" href='#' class='favorite' tag_id="{{ tag.id }}"><b><i id='fav-type-{{ tag.id }}' aria-hidden="true" class="fa fa-star fa-lg allbtniconcolor"></i></b></a>
 
-        <a href="#" class="favorite" tag_id="{{ tag.id }}">
-          <i id='fav-type-{{ tag.id }}' class="allbtniconcolor fa fa-star fa-lg"></i>
-        </a>
-        {% endif %}
+                {% endif %}
 
-      {% else %}
-      <a href="/accounts/login/"><i class="allbtniconcolor fa fa-star fa-lg"></i></a>
-      {% endif %}
-</div>
+              {% else %}
+              <a href="/accounts/login/"><i class="allbtniconcolor fa fa-star fa-lg"></i></a>
+              {% endif %}
+        </div>
+      </div>
 
-</div>
+
+
+
+
 
         <hr>
 
@@ -112,11 +115,11 @@ width: 55px;
 
 <div class="row">
 
-<!--   <div class="col-6 fontstyle14" style="text-align: center;">
+<!--   <div class="col-6 fontstyle90" style="text-align: center;">
   Favorite topic
   </div> -->
 
-<!--   <div class="col-6 fontstyle14" style="text-align: center;">
+<!--   <div class="col-6 fontstyle90" style="text-align: center;">
   Share
   </div> -->
 
@@ -137,38 +140,37 @@ width: 55px;
 
 <br>
 
-      <div class="allpolllist">
-        <ul class="nav nav-pills">
 
-            {% if tagpolllist %}
+      <div class="allpolllist tipcardbodystyle">
 
-                  {% for i in tagpolllist %}
+        {% if tagpolllist %}        
+          {% for i in tagpolllist %}
+            <div class="greyboxstyle col-12 col-lg-6">
+            <div class="row">
 
-                      <div class="col-xs-12 col-sm-4">
-                      <div class="greyboxstyle">
+              <div class="col-10 col-lg-10">
+                <a href="/polls/?type={{ i.slug }}"><b style="line-height: 200%;">{{ i.title }}</b></a>
+              </div>
 
-                      <b><a href="/polls/?type={{ i.slug }}">{{ i.title }}&nbsp;&nbsp;&nbsp;({{ i.viewpolltypeunique.ecount }} Tips)</a></b>
+              <div class="col-2 col-lg-2">
+                <span class="badge badge-pill badgestyle badge-secondary" style="margin-left:-12px"> {{ i.viewpolltypeunique.ecount }} tips </span> 
 
-<!-- remove free access function -->
-<!--                       {% if i.freepoll == True %}
-                      &nbsp;&nbsp;<i class="allfontcolor fas fa-check-circle fa-1x"></i><b class="allfontcolor"></b>
-                      {% endif %} -->
+<!--                 {% if i.freepoll == True %}
+                &nbsp;&nbsp;<i class="allfontcolor fas fa-check-circle fa-1x"></i><b class="allfontcolor"></b>
+                {% endif %} -->
+              </div>
 
-                      </div>
-                      </div>
+            </div>
+            </div>
+          {% endfor %}
 
-                  {% endfor %}
-
-            {% else %}
+          {% else %}
             <br>
               There are no polls yet.
             <br>
-            {% endif %}
+          {% endif %}
 
-          <br>
-        </ul>
       </div>
-
 
       <div class="polllist"></div>
 
@@ -268,7 +270,7 @@ function FilterTag() {
         if (result["polllist"].length>0){
             $.each(result['polllist'], function(a,b) {
 
-                row = "<div class='col-xs-12 col-sm-4'><div class='greyboxstyle' style='margin-bottom:11px'><a href='"+b['url']+"' class='greyboxstyle'><b>"+b["title"]+"&nbsp;&nbsp;&nbsp; ("+b['counter']+" Tips)</b></a></div></div>";
+                row = "<div class='greyboxstyle'><div class='row'><div class='col-10'><a href='"+b['url']+"'><b style='line-height: 200%;'>"+b["title"]+"</b></a></div><div class='col-2'><span class='badge badge-pill badgestyle badge-secondary' style='font-size:12px; margin-left:-12px'> "+b['counter']+" tips </span></div></div></div>"
 
                 $(".polllist").append(row);
             });
@@ -280,7 +282,6 @@ function FilterTag() {
             $(".polllist_error").show();
         }
     }
-
 
 
 
@@ -302,10 +303,10 @@ function set_fav() {
         success: function(jsondata) {
 
         if (jsondata.result=="favorited"){
-          var message = "Favorited Tag"
+          var message = "Favorited Topic"
           var color = "gold"
         }else{
-          var message = "Unfavorited Tag"
+          var message = "Unfavorited Topic"
           var color = "dodgerblue"
         }
         showFlashMessage(message)
