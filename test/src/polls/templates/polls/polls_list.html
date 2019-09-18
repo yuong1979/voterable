@@ -169,7 +169,7 @@
 
 <!--                   had a div class row removed here because it was causing scrolling issues -->
 
-                  <div class="col-xs-12 col-sm-12 contentstyle row-tip-body" style="float:left"> <!-- changed sm-7 to sm-12 to get the words to flush with all -->
+                  <div class="col-xs-12 col-sm-12 contentstyle row-tip-body" style="float:left;"> <!-- changed sm-7 to sm-12 to get the words to flush with all -->
 
                     <div id="poll-space-{{ poll.id }}"></div><!-- I changed this from p to div if I face issues to change -->
 
@@ -192,7 +192,9 @@
 
                           {% else %}
 
+                            <hr style="margin-bottom: 0px; margin-top: -6px; visibility: hidden;">
                             <button class="btn btn-link poll-button readmorebtn" usercreate="{{poll.user_submit}}" poll_id="{{ poll.id }}">Read More</button>
+                            <hr style="margin-bottom: -6px; margin-top: 0px; visibility: hidden;">
 
                             <span class="poll-collapse d-none">
                             {{ poll.description|striptags_except:"iframe, a, p, ol, ul, li, br, i, img"|safe }}
