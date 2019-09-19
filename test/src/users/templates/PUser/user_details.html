@@ -36,7 +36,7 @@
 
         <div class="col-xs-8 col-sm-9">
           
-            <div class="fontstyle16" style="margin:10px">
+            <div class="fontstyle110" style="margin:10px">
             {% if user.user.puser.name %}
             {{ user.user.puser.name }}
             {% else %}
@@ -44,7 +44,7 @@
             {% endif %}
             </div>
 
-            <div class="fontstyle14" style="color:grey; margin:10px">
+            <div class="fontstyle90" style="color:grey; margin:10px">
                 {% if user.description %}
                   {{ user.description }}
                 {% else %}
@@ -77,33 +77,33 @@
             <ul class="list-group">
 
               <li class="list-group-item">
-                <b class="fontstyle14">Reputation Points:</b>
-                <span class="badge badge-pill badge-secondary" style="float:right"> {{points}} </span>
+                <b class="fontstyle90">Reputation Points:</b>
+                <span class="badge badge-pill badgestyle badge-secondary" style="float:right"> {{points}} </span>
               </li>
 
               <li class="list-group-item">
-                <b class="fontstyle14">Rank:</b>
-                <span class="badge badge-pill badge-secondary" style="float:right"> {{rank}} </span>
+                <b class="fontstyle90">Rank:</b>
+                <span class="badge badge-pill badgestyle badge-secondary" style="float:right"> {{rank}} </span>
               </li>
 
               <li class="list-group-item">
-                <b class="fontstyle14">Tips created:</b>
-                <span class="badge badge-pill badge-secondary" style="float:right"> {{ pollsECreated }} </span>
+                <b class="fontstyle90">Tips created:</b>
+                <span class="badge badge-pill badgestyle badge-secondary" style="float:right"> {{ pollsECreated }} </span>
               </li>
 
               <li class="list-group-item">
-                <b class="fontstyle14">Times tips were viewed:</b>
-                <span class="badge badge-pill badge-secondary" style="float:right"> {{ votes_poll_entries_views }} </span>
+                <b class="fontstyle90">Times tips were viewed:</b>
+                <span class="badge badge-pill badgestyle badge-secondary" style="float:right"> {{ votes_poll_entries_views }} </span>
               </li>
 
               <li class="list-group-item">
-                <b class="fontstyle14">Tip Upvotes:</b>
-                <span class="badge badge-pill badge-secondary" style="float:right"> {{ upvotes }} </span>
+                <b class="fontstyle90">Tip Upvotes:</b>
+                <span class="badge badge-pill badgestyle badge-secondary" style="float:right"> {{ upvotes }} </span>
               </li>
 
               <li class="list-group-item">
-                <b class="fontstyle14">Comment Upvotes:</b>
-                <span class="badge badge-pill badge-secondary" style="float:right"> {{ comment_likes }} </span>
+                <b class="fontstyle90">Comment Upvotes:</b>
+                <span class="badge badge-pill badgestyle badge-secondary" style="float:right"> {{ comment_likes }} </span>
               </li>
 
             </ul>
@@ -116,34 +116,34 @@
     </div><!-- mainboxstyle -->
 
 
+
+
+
+
 {% if pollcreatelist %}
+
     <div class="mainboxstyle">
 
         <div class="mainheaderstyle"><i class="fas fa-edit fa-1x"></i>&nbsp;&nbsp;&nbsp;&nbsp;User Created Tips</div><hr>
 
-        <ul class="nav nav-pills">
+     
+          {% for i in pollcreatelist %}
+            <div class="greyboxstyle col-12 col-lg-6">
+            <div class="row">
 
-              {% for i in pollcreatelist %}
+              <div class="col-10 col-lg-10">
+                <a href="/polls/?createduser={{ i.slug }}"><b style="line-height: 200%;">{{ i.title }}</b></a>
+              </div>
 
-                <div class="col-xs-12 col-sm-4">
-                <div class="greyboxstyle">
-
-                    <b><a href="/polls/?createduser={{ i.slug }}">{{ i.title }}</a></b>
-
-                      {% if i.freepoll == True %}
-                      &nbsp;&nbsp;<i class="allfontcolor fas fa-check-circle fa-1x"></i><b class="allfontcolor"></b>
-                      {% endif %}
-
-                </div>
-                </div>
-
-              {% endfor %}
-
-          <br>
-        </ul>
+            </div>
+            </div>
+          {% endfor %}
 
     </div><!-- mainboxstyle -->
+
 {% endif %}
+
+
 
 
 </div> <!-- maincontainerstyle -->

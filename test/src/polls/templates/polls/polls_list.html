@@ -40,27 +40,35 @@
 
     <div class="mainboxstyle">
 
-          <div style="margin-left:7px; float:right;">
+          <div style="float:right; margin-top:4px">
 <!--             {% if free == True %}
               <i style="font-size: 16px" class="allfontcolor fas fa-check-circle fa-1x"></i><b class="allfontcolor">&nbsp;Free</b>
             {% endif %}
             &nbsp;&nbsp;&nbsp;&nbsp; -->
 
-            {% if user_authorised == True %}
-              <a style="font-size: 16px" href='{{ PollType_obj.get_update }}' class='btn-link' ><b><i class="fas fa-edit fa-1x" aria-hidden="true"></i>&nbsp;Edit</b></a>
+            {% if listtitle == "Favorite" or listtitle == "Created"  or listtitle == "Createduser" %}
+              <a style="font-size: 16px; margin-right:10px;" href='/polls/?type={{ BackPtype }}&sort=Date' class='btn-link' ><b><i class="fas fa-step-backward fa-1x" aria-hidden="true"></i>&nbsp;Tip List</b></a>
+            {% else %}
+
+              {% if user_authorised == True %}
+                <a style="font-size: 16px; margin-right:10px;" href='{{ PollType_obj.get_update }}' class='btn-link' ><b><i class="fas fa-edit fa-1x" aria-hidden="true"></i>&nbsp;Edit</b></a>
+              {% endif %}
+
             {% endif %}
+
+
           </div>
 
         <div class="mainheaderstyle"><i class="fas fa-list-ol fa-1x"></i>&nbsp;&nbsp;&nbsp;&nbsp;{{ title }}</div>
 
         <hr>
 
-          <div class="fontstyle16">
+          <div class="fontstyle110">
           {{ PollType_obj }} 
           {% if listtitle == "All" %}
             ({{ PollType_obj.viewpolltypeunique.ecount }} Tips)
           {% endif %}
-          </div><!-- fontstyle16 -->
+          </div><!-- fontstyle110 -->
 
         <hr>
 
@@ -68,11 +76,12 @@
         {% if Tags %}
           {% for i in Tags %}
             {% if i.title != "" %}
-            <a href='{{i.get_absolute_url}}' class="btn btn-primary tagstyle" style="margin:1px"> <b>{{i}} ({{i.counter}})</b></a>
+            <a href='{{i.get_absolute_url}}' class="btn btn-primary tagstyle" style="margin:2px"> <b>{{i}} ({{i.counter}})</b></a>
             {% endif %}
           {% endfor %}
         {% endif %}
         </div><!-- tagsbox -->
+
 
     </div> <!-- mainboxstyle -->
 
@@ -80,41 +89,53 @@
 {% if listtitle == "All" %}
 
     <div class="" style="font-weight: bold; margin:5px">
-      {% if Addpost == True %}
-        <form action='{% url 'polls_detail_create' %}' method='GET'  style="display: inline-block;">
-          <input type="hidden" name="type_slug" value="{{ type_slug }}">
-          <input type="submit" class='btn buttonspace btn-sm btn-primary' value="Add New Tip">
-        </form>
+
+      {% if FullControl == True %}
+
+          <form action='{% url 'polls_detail_create' %}' method='GET'  style="display: inline-block;">
+            <input type="hidden" name="type_slug" value="{{ type_slug }}">
+            <input type="submit" class='btn buttonspace btn-sm btn-primary' value="Add New Tip">
+          </form>
+
       {% else %}
-        <small>Please post again in another {{ Hours }} Hours and {{ Minutes }} Minutes</small>
+
+<!--         {% if Addpost == True %}
+          <form action='{% url 'polls_detail_create' %}' method='GET'  style="display: inline-block;">
+            <input type="hidden" name="type_slug" value="{{ type_slug }}">
+            <input type="submit" class='btn buttonspace btn-sm btn-primary' value="Add New Tip">
+          </form>
+        {% else %}
+          <small>Please post again in another {{ Hours }} Hours and {{ Minutes }} Minutes</small>
+        {% endif %} -->
+
       {% endif %}
+
     </div>
 
-    <div class="container fontstyle14" >
+    <div class="container fontstyle100" >
 
         {% if request.GET.sort == 'Score' %}
-        <a href="/polls/?type={{ PollType_obj.slug }}&sort=Score" class='btn btn-link btn-sm fontstyle14 disabled'>Popular</a>|
-        <a href="/polls/?type={{ PollType_obj.slug }}&sort=Date" class='btn btn-link btn-sm fontstyle14'>Latest</a>
+        <a href="/polls/?type={{ PollType_obj.slug }}&sort=Score" class='btn btn-link btn-sm fontstyle90 disabled'>Popular</a>|
+        <a href="/polls/?type={{ PollType_obj.slug }}&sort=Date" class='btn btn-link btn-sm fontstyle90'>Latest</a>
         {% else %}
-        <a href="/polls/?type={{ PollType_obj.slug }}&sort=Score" class='btn btn-link btn-sm fontstyle14'>Popular</a>|
-        <a href="/polls/?type={{ PollType_obj.slug }}&sort=Date" class='btn btn-link btn-sm fontstyle14 disabled'>Latest</a>
+        <a href="/polls/?type={{ PollType_obj.slug }}&sort=Score" class='btn btn-link btn-sm fontstyle90'>Popular</a>|
+        <a href="/polls/?type={{ PollType_obj.slug }}&sort=Date" class='btn btn-link btn-sm fontstyle90 disabled'>Latest</a>
         {% endif %}
 
-    </div><!-- container fontstyle14-->
+    </div><!-- container fontstyle100-->
 
 
 {% endif %}
 
 
 
-{% if listtitle == "Favorite" or listtitle == "Created"  or listtitle == "Createduser" %}
+<!-- {% if listtitle == "Favorite" or listtitle == "Created"  or listtitle == "Createduser" %}
 
-    <a class="fontstyle14" style="margin:18px" href='/polls/?type={{ BackPtype }}&sort=Date' class='btn-link' >
+    <a class="fontstyle90" style="margin:18px" href='/polls/?type={{ BackPtype }}&sort=Date' class='btn-link' >
       <i class="fas fa-list-ol fa-1x" aria-hidden="true"></i>&nbsp;View Complete Tip List
     </a>
 
-{% endif %}
-
+{% endif %} -->
 
 
           
@@ -128,9 +149,16 @@
 
                 <div class="row row-tip">
 
-                  <div class="col-sm-12 fontstyle14" style="margin-left:12px">
+                      <button class="test" id="{{ poll.id }}">{{ poll.id }}</button>
+
+                  <div class="col-sm-12 fontstyle100" style="margin-left:12px">
                       <b><span>{{ page_obj.number|total_count:paginator.per_page|counter_for_pagination:forloop.counter }}.</span>
                       {{ poll.title|safe }}</b><p class="timestampstyle">{{ poll.date|timesince }} ago</p>
+
+
+
+
+
                     <hr class="tiplinebreak">
                   </div>
 
@@ -147,7 +175,7 @@
 
 <!--                   had a div class row removed here because it was causing scrolling issues -->
 
-                  <div class="col-xs-12 col-sm-12 contentstyle row-tip-body" style="float:left"> <!-- changed sm-7 to sm-12 to get the words to flush with all -->
+                  <div class="col-xs-12 col-sm-12 contentstyle row-tip-body" style="float:left;"> <!-- changed sm-7 to sm-12 to get the words to flush with all -->
 
                     <div id="poll-space-{{ poll.id }}"></div><!-- I changed this from p to div if I face issues to change -->
 
@@ -170,7 +198,9 @@
 
                           {% else %}
 
+                            <hr style="margin-bottom: 0px; margin-top: -6px; visibility: hidden;">
                             <button class="btn btn-link poll-button readmorebtn" usercreate="{{poll.user_submit}}" poll_id="{{ poll.id }}">Read More</button>
+                            <hr style="margin-bottom: -6px; margin-top: 0px; visibility: hidden;">
 
                             <span class="poll-collapse d-none">
                             {{ poll.description|striptags_except:"iframe, a, p, ol, ul, li, br, i, img"|safe }}
@@ -377,9 +407,46 @@
 
 
 
-
-
 {#  <script>#}
+
+
+
+
+
+
+//this is not working for all - this needs to work
+$(document).ready(function () {
+
+// var scrolltoid = document.getElementById('16')
+// scrolltoid.scrollIntoView();
+// window.scrollBy(0, -50);
+
+$('html, body').animate({
+    scrollTop: $('#16').offset().top
+}, 'slow');
+
+});
+
+
+
+
+// this is working for $('#6') but not working for $('#16')
+testEvent();
+function testEvent() {
+  $(".test").click(function(event){
+    event.preventDefault();
+
+    // var scrolltoid = document.getElementById('16')
+    // scrolltoid.scrollIntoView(true);
+    // window.scrollBy(0, -50);
+
+    $('html, body').animate({
+        scrollTop: $('#16').offset().top
+    }, 'slow');
+
+
+  });
+};
 
 
 
@@ -397,6 +464,9 @@
       },
       onAfterPageLoad: function ($items) {
         $('.loading').hide();
+
+        console.log($items)
+
         addPollIdEvent();
         set_votes();
         set_fav();
@@ -410,6 +480,10 @@
 
       }
     });
+
+
+
+
 
 
 
@@ -780,7 +854,6 @@ set_fav();
 set_votes();
 set_more();
 set_report();
-
 
 
 

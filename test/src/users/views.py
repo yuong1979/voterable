@@ -91,6 +91,7 @@ class PUserDetail(DetailView):
         if pt < 0:
             pt = 0
 
+
         rk = Ranking.objects.get(low_score__lte=pt, high_score__gte=pt)
 
         context["rank"] = rk

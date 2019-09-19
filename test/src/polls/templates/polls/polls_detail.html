@@ -36,12 +36,15 @@
 
     <div class="mainboxstyle">
 
+            <div style="float:right; margin-top:4px">
+              <a style="font-size: 16px; margin-right:10px;" href='/polls/?type={{ BackPtype }}&sort=Date' class='btn-link' ><b><i class="fas fa-step-backward fa-1x" aria-hidden="true"></i>&nbsp;Tip List</b></a>
+            </div>
 
         <div class="mainheaderstyle"><i class="fas fa-info-circle fa-1x"></i>&nbsp;&nbsp;&nbsp;&nbsp;Details</div>
 
         <hr>
 
-        <div class="container fontstyle14" style="text-align: left; ">
+        <div class="container fontstyle110" style="text-align: left; ">
 
           {% if poll.user_submit.puser.image %}
           <img src="{{ poll.user_submit.puser.image.url }}" class='cpimgsmall' />
@@ -58,7 +61,7 @@
               {% endif %}
               </b></a>
 
-          </div><!-- container fontstyle14 -->
+          </div><!-- container fontstyle110 -->
 
     </div>
 
@@ -68,7 +71,7 @@
 
                 <div class="row row-tip">
 
-                  <div class="col-sm-12 fontstyle14" style="float:left; margin-left:12px">
+                  <div class="col-sm-12 fontstyle110" style="float:left; margin-left:12px">
                       <b>
                       {{ poll.title|safe }}</b><p class="timestampstyle">{{ poll.date|timesince }} ago</p>
                     <hr class="tiplinebreak">
@@ -116,13 +119,13 @@
 <!-- only display analytics if the user is premium or the person who created the poll -->
     <div class="mainboxstyle">
 
-        {% if request.user.puser.memberp or poll.user_submit == request.user %}
+<!--         {% if request.user.puser.memberp or poll.user_submit == request.user or request.user.is_staff %} -->
 
-              <div class="fontstyle14" style="padding:4px; margin:4px;">
+              <div class="fontstyle90" style="padding:4px; margin:4px;">
 
                   <span style="margin:18px">
                 Upvotes &nbsp;
-                  <div class="badge badge-pill badge-secondary">
+                  <div class="badge badge-pill badgestyle badge-secondary">
                     {% if poll.posi %} {{poll.posi}} {% else %} 0 {% endif %}
                   </div>
                   </span>
@@ -133,21 +136,21 @@
 
                   <span style="margin:18px">
                 Views &nbsp;
-                  <div class="badge badge-pill badge-secondary">
+                  <div class="badge badge-pill badgestyle badge-secondary">
                     {% if Views %} {{Views}} {% else %} 0 {% endif %}
                   </div>  
                   </span>
                 
                   <span style="margin:18px">
                 Favorited &nbsp;
-                  <div class="badge badge-pill badge-secondary">
+                  <div class="badge badge-pill badgestyle badge-secondary">
                     {% if Favorited %} {{Favorited}} {% else %} 0 {% endif %}
                   </div>
                   </span>
                 
               </div>
 
-        {% endif %}
+<!--         {% endif %} -->
 
     </div><!-- mainboxstyle -->
 
@@ -196,24 +199,37 @@
 
       {% if msg %}
 
-      <div class="container fontstyle14">
-      &nbsp;Reviews&nbsp;&nbsp;
+      <div class="container fontstyle100">
+      &nbsp;Comments&nbsp;&nbsp;
 
         {% if request.GET.sort == 'Date' %}
 
-        <a href="#" class="btn btn-link btn-sm fontstyle12" sorttype="/polls/{{ poll.id }}/?sort=Score" style="display:inline-block;">Popular</a>|
+        <a href="#" class="btn btn-link btn-sm fontstyle85" sorttype="/polls/{{ poll.id }}/?sort=Score" style="display:inline-block;">Popular</a>|
 
-        <a href="#" class="btn btn-link btn-sm fontstyle12 disabled" sorttype="/polls/{{ poll.id }}/?sort=Date" style="display:inline-block;">Latest</a>
+        <a href="#" class="btn btn-link btn-sm fontstyle85 disabled" sorttype="/polls/{{ poll.id }}/?sort=Date" style="display:inline-block;">Latest</a>
 
         {% else %}
 
-        <a href="#" class="btn btn-link btn-sm fontstyle12 disabled" sorttype="/polls/{{ poll.id }}/?sort=Score" style="display:inline-block;">Popular</a>|
+        <a href="#" class="btn btn-link btn-sm fontstyle85 disabled" sorttype="/polls/{{ poll.id }}/?sort=Score" style="display:inline-block;">Popular</a>|
 
-        <a href="#" class="btn btn-link btn-sm fontstyle12" sorttype="/polls/{{ poll.id }}/?sort=Date" style="display:inline-block;">Latest</a>
+        <a href="#" class="btn btn-link btn-sm fontstyle85" sorttype="/polls/{{ poll.id }}/?sort=Date" style="display:inline-block;">Latest</a>
 
         {% endif %}
 
-      </div><!-- container fontstyle14-->
+      </div><!-- container fontstyle90-->
+
+
+
+
+
+<!--             &nbsp;&nbsp;
+              <a href='{{ Userdetail }}' class='btn-link' ><b>
+              {% if poll.user_submit.puser.name %}
+              {{ poll.user_submit.puser.name }}
+              {% else %}
+              {{ poll.user_submit }}
+              {% endif %}
+              </b></a> -->
 
 
 
@@ -229,9 +245,9 @@
 
                 <div class="row" style="margin-top:10px">
 
-                  <div class="col-1"></div>
+<!--                   <div class="col-1"></div> -->
 <!--                   user image -->
-                  <div class="col-2" style="text-align:left;">
+                  <div class="col-2" style="margin-left:10px ;text-align:left; margin-bottom:-15px ">
                   {% if i.senduser.puser.image %}
                   <a href='{{ i.senduser.puser.get_absolute_url }}'><img src="{{ i.senduser.puser.image.url }}" class='cpimgsmall' /></a>
                   {% else %}
@@ -240,8 +256,10 @@
                   </div>
 
 
-                  <div class="col-9" style="text-align:left; margin-left: -20px">
-                    <a class='btn-link fontstyle14' style="float:left;" >
+
+
+                  <div class="col-9" style="text-align:left; margin-left: -20px; margin-bottom:-15px">
+                    <a href='{{ i.senduser.puser.get_absolute_url }}' class='btn-link fontstyle100' style="float:left;" >
                       {% if i.senduser.puser.name %}
                       {{ i.senduser.puser.name|truncatechars:12 }}
                       {% else %}
@@ -257,9 +275,10 @@
                       
 
 <!--                   contentbox -->
-                  <div class="col-1"></div>
 
-                  <div class="col-10" style="float:left; background-color: #F0F0F0 ; border-radius: 6px; padding:8px;">
+<!-- <div class="col-xs-12 col-sm-6 basefadecontent"> -->
+
+                  <div class="card-body" style="margin: 20px; background-color: #F0F0F0 ; border-radius: 6px; padding:10px;">
 
                     <div class="contentstyle">{{ i.content }}</div>
                     
@@ -267,7 +286,7 @@
 
                       <div class="row">
 
-                        <div class="col-6 fontstyle12">
+                        <div class="col-6 fontstyle85">
                         {% if i in msglike %}
                           <a href="#" class="likes" msg_id="{{ i.id }}" style="display:inline-block;"><span id='msg-type-{{ i.id }}'>Remove Upvote</span></a>
                         {% else %}
@@ -275,7 +294,7 @@
                         {% endif %}
                         </div>
 
-                        <div class="col-6 fontstyle12">
+                        <div class="col-6 fontstyle85">
                         <div style="text-align:right;">
                         <div style="display:inline-block; text-align:right" id='msg-score-{{ i.id }}'>{{ i.likes }} </div>
                         Upvotes
@@ -285,7 +304,12 @@
                       </div>
 
                   </div>
-                  <div class="col-1"></div>
+
+
+
+
+
+
 
 
 
@@ -317,7 +341,7 @@
 
       {% else %}
 
-      <div class="container fontstyle14">
+      <div class="container fontstyle90">
       <br>There are no reviews/comments yet<br><br>
       </div>
 

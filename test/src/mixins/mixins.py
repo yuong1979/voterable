@@ -34,7 +34,6 @@ class UserChangeManagerMixin(object):
 class PollTypeMixin(object):
 	def get_pobject(self, *args, **kwargs):
 
-
 		#checking which type of list user is user
 		try:
 			type_slug = self.request.GET.get("type")
