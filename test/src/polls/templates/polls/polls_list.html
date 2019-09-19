@@ -138,7 +138,6 @@
 {% endif %} -->
 
 
-
           
       {% if object_list %}
 
@@ -150,9 +149,16 @@
 
                 <div class="row row-tip">
 
+                      <button class="test" id="{{ poll.id }}">{{ poll.id }}</button>
+
                   <div class="col-sm-12 fontstyle100" style="margin-left:12px">
                       <b><span>{{ page_obj.number|total_count:paginator.per_page|counter_for_pagination:forloop.counter }}.</span>
                       {{ poll.title|safe }}</b><p class="timestampstyle">{{ poll.date|timesince }} ago</p>
+
+
+
+
+
                     <hr class="tiplinebreak">
                   </div>
 
@@ -401,9 +407,46 @@
 
 
 
-
-
 {#  <script>#}
+
+
+
+
+
+
+//this is not working for all - this needs to work
+$(document).ready(function () {
+
+// var scrolltoid = document.getElementById('16')
+// scrolltoid.scrollIntoView();
+// window.scrollBy(0, -50);
+
+$('html, body').animate({
+    scrollTop: $('#16').offset().top
+}, 'slow');
+
+});
+
+
+
+
+// this is working for $('#6') but not working for $('#16')
+testEvent();
+function testEvent() {
+  $(".test").click(function(event){
+    event.preventDefault();
+
+    // var scrolltoid = document.getElementById('16')
+    // scrolltoid.scrollIntoView(true);
+    // window.scrollBy(0, -50);
+
+    $('html, body').animate({
+        scrollTop: $('#16').offset().top
+    }, 'slow');
+
+
+  });
+};
 
 
 
@@ -421,6 +464,9 @@
       },
       onAfterPageLoad: function ($items) {
         $('.loading').hide();
+
+        console.log($items)
+
         addPollIdEvent();
         set_votes();
         set_fav();
@@ -434,6 +480,10 @@
 
       }
     });
+
+
+
+
 
 
 
@@ -804,7 +854,6 @@ set_fav();
 set_votes();
 set_more();
 set_report();
-
 
 
 
