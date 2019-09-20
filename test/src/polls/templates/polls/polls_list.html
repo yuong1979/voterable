@@ -14,6 +14,19 @@
 {% block style %}
 
 
+.float{
+  position:fixed;
+  width:40px;
+  height:40px;
+  bottom:30px;
+  right:30px;
+/*  background-color:#06C;
+  color:#FFF;*/
+  border-radius:50px;
+  text-align:center;
+/*  box-shadow: 3px 3px 3px #999;*/
+}
+
 {% endblock %}
 </style>
 
@@ -274,16 +287,13 @@
 
 
 
-
-
 {% include 'sharemodal.html' %}
 
 
-
-
-
-
-
+<!-- floating arrow to speed scroll up -->
+<a href="#" class="float">
+<i class="fas fa-arrow-alt-circle-up fa-2x"></i>
+</a>
 
 
 
