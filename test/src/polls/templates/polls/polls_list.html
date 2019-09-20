@@ -14,18 +14,6 @@
 {% block style %}
 
 
-.float{
-  position:fixed;
-  width:40px;
-  height:40px;
-  bottom:30px;
-  right:30px;
-/*  background-color:#06C;
-  color:#FFF;*/
-  border-radius:50px;
-  text-align:center;
-/*  box-shadow: 3px 3px 3px #999;*/
-}
 
 {% endblock %}
 </style>
@@ -290,10 +278,7 @@
 {% include 'sharemodal.html' %}
 
 
-<!-- floating arrow to speed scroll up -->
-<a href="#" class="float">
-<i class="fas fa-arrow-alt-circle-up fa-2x"></i>
-</a>
+
 
 
 
@@ -424,18 +409,18 @@
 
 
 
-//this is not working for all - this needs to work
-$(document).ready(function () {
+// //this is not working for all - this needs to work
+// $(document).ready(function () {
 
-// var scrolltoid = document.getElementById('16')
-// scrolltoid.scrollIntoView();
-// window.scrollBy(0, -50);
+// // var scrolltoid = document.getElementById('16')
+// // scrolltoid.scrollIntoView();
+// // window.scrollBy(0, -50);
 
-$('html, body').animate({
-    scrollTop: $('#16').offset().top
-}, 'slow');
+// $('html, body').animate({
+//     scrollTop: $('#16').offset().top
+// }, 'slow');
 
-});
+// });
 
 
 
@@ -453,6 +438,9 @@ function testEvent() {
     $('html, body').animate({
         scrollTop: $('#16').offset().top
     }, 'slow');
+
+
+    window.scrollTo(0, 0);
 
 
   });
@@ -490,9 +478,6 @@ function testEvent() {
 
       }
     });
-
-
-
 
 
 
