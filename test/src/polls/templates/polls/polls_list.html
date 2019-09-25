@@ -184,10 +184,10 @@
                       <div class="Mobilefont Compfont">
 
                           <span class="tip-sliced">
-                          {{ poll.description|striptags_except:"a, p, ol, ul, li, br, i"|safe|truncatechars_html:"150" }}
+                          {{ poll.description|striptags_except:"a, p, ol, ul, li, i"|safe|truncatechars_html:"150" }}
                           </span>
 
-                          {% if poll.description|striptags_except:"a, p, ol, ul, li, br, i"|safe|length < 150 %}
+                          {% if poll.description|striptags_except:"a, p, ol, ul, li, i"|safe|length < 150 %}
 
                             {% if poll.textatt %}<p class="creditstyle"> Credits: {{ poll.textatt }}</p>{% endif %}
 
@@ -204,7 +204,7 @@
                             <hr style="margin-bottom: -6px; margin-top: 0px; visibility: hidden;">
 
                             <span class="poll-collapse d-none">
-                            {{ poll.description|striptags_except:"iframe, a, p, ol, ul, li, br, i, img"|safe }}
+                            {{ poll.description|striptags_except:"iframe, a, p, ol, ul, li, i, img"|safe }}
 
                             {% if poll.textatt %}<p class="creditstyle"> Credits: {{ poll.textatt }}</p>{% endif %}
 
