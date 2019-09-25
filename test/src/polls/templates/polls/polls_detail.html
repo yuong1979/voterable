@@ -121,9 +121,9 @@
 
 <!--         {% if request.user.puser.memberp or poll.user_submit == request.user or request.user.is_staff %} -->
 
-              <div class="fontstyle90" style="padding:4px; margin:4px;">
+              <div class="fontstyle90" style="padding:2px; margin:2px;">
 
-                  <span style="margin:18px">
+                  <span style="margin:8px">
                 Upvotes &nbsp;
                   <div class="badge badge-pill badgestyle badge-secondary">
                     {% if poll.posi %} {{poll.posi}} {% else %} 0 {% endif %}
@@ -134,14 +134,14 @@
                   {% if poll.nega %} {{poll.nega}} {% else %} 0 {% endif %}
                 </b> -->
 
-                  <span style="margin:18px">
+                  <span style="margin:8px">
                 Views &nbsp;
                   <div class="badge badge-pill badgestyle badge-secondary">
                     {% if Views %} {{Views}} {% else %} 0 {% endif %}
                   </div>  
                   </span>
                 
-                  <span style="margin:18px">
+                  <span style="margin:8px">
                 Favorited &nbsp;
                   <div class="badge badge-pill badgestyle badge-secondary">
                     {% if Favorited %} {{Favorited}} {% else %} 0 {% endif %}
@@ -247,7 +247,7 @@
 
 <!--                   <div class="col-1"></div> -->
 <!--                   user image -->
-                  <div class="col-2" style="margin-left:10px ;text-align:left; margin-bottom:-15px ">
+                  <div class="col-2" style="text-align:left; margin-bottom:-15px ">
                   {% if i.senduser.puser.image %}
                   <a href='{{ i.senduser.puser.get_absolute_url }}'><img src="{{ i.senduser.puser.image.url }}" class='cpimgsmall' /></a>
                   {% else %}
@@ -258,7 +258,7 @@
 
 
 
-                  <div class="col-9" style="text-align:left; margin-left: -20px; margin-bottom:-15px">
+                  <div class="col-9" style="text-align:left; margin-bottom:-15px">
                     <a href='{{ i.senduser.puser.get_absolute_url }}' class='btn-link fontstyle100' style="float:left;" >
                       {% if i.senduser.puser.name %}
                       {{ i.senduser.puser.name|truncatechars:12 }}
@@ -272,7 +272,7 @@
 
                   </div>
 
-                      
+
 
 <!--                   contentbox -->
 
