@@ -74,14 +74,27 @@
 
         <div class="mainheaderstyle"><i class="fas fa-list-ol fa-1x"></i>&nbsp;&nbsp;&nbsp;&nbsp;{{ title }}</div>
 
+
         <hr>
 
-          <div class="fontstyle110">
-          {{ PollType_obj }} 
-          {% if listtitle == "All" %}
-            ({{ PollType_obj.viewpolltypeunique.ecount }} Tips)
-          {% endif %}
-          </div><!-- fontstyle110 -->
+            <div class="col-12 col-lg-6 fontstyle110" style="padding:0px">
+
+              <div class="pull-right">
+              {% if listtitle == "All" %}
+              <div class="" style="padding-right: 0px margin-right:0px">
+                <span class="badge badge-pill badgestyle badge-secondary"> {{ PollType_obj.viewpolltypeunique.ecount }} Tips </span> 
+              </div>
+              {% endif %}
+              </div>
+
+              <br>
+
+              <div style="padding-left:10px">
+                <p><b style="line-height: 200%; ">{{ PollType_obj }}</b></p>
+              </div>
+
+            </div>
+
 
         <hr>
 

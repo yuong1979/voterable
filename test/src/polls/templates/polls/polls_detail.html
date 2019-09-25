@@ -97,7 +97,7 @@
                       {% if poll.description %}
                       <div class="Mobilefont Compfont">
 
-                            {{ poll.description|striptags_except:"iframe, a, p, ol, ul, li, br, i, img"|safe }}
+                            {{ poll.description|striptags_except:"iframe, a, p, ol, ul, li, i, img"|safe }}
 
                             {% if poll.textatt %}<p class="creditstyle"> Credits: {{ poll.textatt }}</p>{% endif %}
 
