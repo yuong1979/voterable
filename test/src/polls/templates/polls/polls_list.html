@@ -162,7 +162,7 @@
 
                 <div class="row row-tip">
 
-                      <button class="test" id="{{ poll.id }}">{{ poll.id }}</button>
+<!--                       <button class="test" id="{{ poll.id }}">{{ poll.id }}</button> -->
 
                   <div class="col-sm-12 fontstyle100" style="margin-left:12px">
                       <b><span>{{ page_obj.number|total_count:paginator.per_page|counter_for_pagination:forloop.counter }}.</span>
@@ -211,9 +211,9 @@
 
                           {% else %}
 
-                            <hr style="margin-bottom: 0px; margin-top: -6px; visibility: hidden;">
+                            <hr style="margin-bottom: 0px; margin-top: -12px; visibility: hidden;">
                             <button class="btn btn-link poll-button readmorebtn" usercreate="{{poll.user_submit}}" poll_id="{{ poll.id }}">Read More</button>
-                            <hr style="margin-bottom: -6px; margin-top: 0px; visibility: hidden;">
+                            <hr style="margin-bottom: -12px; margin-top: 0px; visibility: hidden;">
 
                             <span class="poll-collapse d-none">
                             {{ poll.description|striptags_except:"iframe, a, p, ol, ul, li, i, img"|safe }}
@@ -241,16 +241,18 @@
           {% endfor %} <!-- for poll in polls -->
 
           
+
+
+
+        </div><!-- for infinite container -->
+
           {% if not request.user.is_authenticated and not "/accounts/login" in request.get_full_path %}
           &nbsp;&nbsp;&nbsp;&nbsp;
           <a href="{% url 'account_login' %}" class='btn btn-primary btn-sm shadow'><b>Sign up to view all</b></a><br><br>
           {% endif %}
 
 
-        </div><!-- for infinite container -->
-
-
-
+<!-- http://localhost:8000/polls/?type=test-listing-poll-tip-5test-listing-poll-tip-5test-listing-poll-tip-5 -->
 
         <div class="loading" style="display: none;">
           Loading...

@@ -213,6 +213,7 @@ class PollTopicsView(ListView, FormView):
         polllist_list = polllist
         page = self.request.GET.get('page', 1)
         paginator = Paginator(polllist_list, 10)  # 5 - how much on one page
+
         try:
             polllist = paginator.page(page)
         except PageNotAnInteger:
@@ -728,7 +729,8 @@ class PollListUpdate(LoginRequiredMixin,UpdateView): #if user is request user or
 class PollsListView(ListView, PollTypeMixin):
     model = PollItem
     template_name = "polls/polls_list.html"
-    paginate_by = 10
+    # change paginate to control how many polls load on a page
+    paginate_by = 5
     context_object_name = 'polls'
     queryset = PollItem.objects.filter(allowed=True).order_by('-score')
 
@@ -830,9 +832,9 @@ class PollsListView(ListView, PollTypeMixin):
             pt_query = PollItem.objects.filter()
 
             if sort == "Score":
-                pt_query = pt_query.filter(allowed=True, polltype=poll_type).order_by('-score')[:8]
+                pt_query = pt_query.filter(allowed=True, polltype=poll_type).order_by('-score')[:10]
             else:
-                pt_query = pt_query.filter(allowed=True, polltype=poll_type).order_by('-pollmodifydate')[:8]
+                pt_query = pt_query.filter(allowed=True, polltype=poll_type).order_by('-pollmodifydate')[:10]
 
 
         return pt_query
