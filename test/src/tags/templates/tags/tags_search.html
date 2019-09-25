@@ -6,6 +6,14 @@
 {% block style %}
 
 
+
+/*#id_search
+{
+margin-left:15px;
+}*/
+
+
+
 {% endblock %}
 </style>
 
@@ -13,13 +21,13 @@
 {% block content %}
 
 
+
+
+
 <div class="maincontainerstyle">
 
     <div class="mainboxstyle">
-      
-        <div class="mainheaderstyle"><i class="fa fa-tags fa-1x"></i>&nbsp;&nbsp;&nbsp;&nbsp;Topics</div>
 
-        <hr>
 
             <div class="col-xs-12 col-sm-6 col-md-4">
 
@@ -30,6 +38,14 @@
               </form>
 
             </div>
+
+            <hr>
+
+
+      
+        <div class="mainheaderstyle"><i class="fa fa-tags fa-1x"></i>&nbsp;&nbsp;&nbsp;&nbsp;Topics</div>
+
+        <hr>
 
             <div class="alltaglist">
 
@@ -49,10 +65,23 @@
 
             </div>
 
-            <div class="taglist">
-
-            </div>
+        <div class="taglist"></div>
         <div class="taglist_error"></div>
+
+        <hr>
+
+
+        <div class="htipstyle" style="display: none;">
+        <div class="mainheaderstyle"><i class="fas fa-magic fa-1x"></i>&nbsp;&nbsp;&nbsp;&nbsp;Tips</div>
+        <hr>
+        </div>
+
+        <div class="polllist"></div>
+        <div class="polllist_error"></div>
+
+
+
+
     </div><!-- mainboxstyle -->
 
 </div> <!-- maincontainerstyle -->
@@ -98,6 +127,13 @@ function FilterTag() {
             $(".taglist_error").show();
             $(".taglist_error p").html("");
             $(".taglist_error").append("<p>Loading data...</p>");
+
+            $(".polllist_error").show();
+            $(".polllist_error p").html("");
+            $(".polllist_error").append("<p>Loading data...</p>");
+
+            $(".htipstyle").hide();
+
         },
         success : function(result){
             $(".taglist_error").hide();
@@ -107,12 +143,29 @@ function FilterTag() {
             $(".taglist").html("");
 
             putTagListData(result);
+
+            $(".polllist_error").hide();
+
+            $(".polllist").show();
+            $(".allpolllist").hide();
+            $(".polllist").html("");
+
+            putPollListData(result);
+
+            $(".htipstyle").show();
+
+
         },
         error: function(response){
             $(".taglist_error").show();
             $(".taglist_error p").html("");
 
             $(".taglist_error").append("<p>Something went wrong...</p>");
+
+            $(".polllist_error").show();
+            $(".polllist_error p").html("");
+
+            $(".polllist_error").append("<p>Something went wrong...</p>");
         }
     });
 
@@ -122,6 +175,12 @@ function FilterTag() {
         $(".taglist").hide();
         $(".alltaglist").show();
 
+
+        $(".polllist_error").hide();
+        $(".polllist").hide();
+        $(".allpolllist").show();
+
+        $(".htipstyle").hide();
     }
 
 }
@@ -144,11 +203,38 @@ function FilterTag() {
         }else{
 
             $(".taglist_error p").html("");
-            $(".taglist_error").append("<p>No results found</p>");
+            $(".taglist_error").append("<p>No topics found</p>");
             $(".taglist").hide();
             $(".taglist_error").show();
         }
     }
+
+
+
+    function putPollListData(result){
+        let row;
+
+        if (result["polllist"].length>0){
+            $.each(result['polllist'], function(a,b) {
+
+                row = "<div class='greyboxstyle'><div class='row'><div class='col-10'><a href='"+b['url']+"'><b style='line-height: 200%;'>"+b["title"]+"</b></a></div><div class='col-2'><span class='badge badge-pill badgestyle badge-secondary' style='font-size:12px; margin-left:-12px'> "+b['counter']+" tips </span></div></div></div>"
+
+                $(".polllist").append(row);
+
+            });
+        }else{
+
+            $(".polllist_error p").html("");
+            $(".polllist_error").append("<p>No tips found</p>");
+            $(".polllist").hide();
+            $(".polllist_error").show();
+
+        }
+    }
+
+
+
+
 </script>
 
 {% endblock %}

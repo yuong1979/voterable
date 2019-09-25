@@ -27,28 +27,45 @@ def Tagsearch(request):
 	# exclude inactive polls
 	exin = Ptype.objects.filter(active=True)
 	taglist = TagPoll.objects.filter(active=True, polltype__in=exin).distinct()
+	polllist = Ptype.objects.filter(active=True)
+
 
 	# ptype = Ptype.objects.filter(active=True)
 	taglist = taglist.exclude(title="").order_by('title')
+	polllist = polllist.exclude(title="").order_by('title')
 
 	if search:
 		taglist = taglist.filter(title__icontains=search)
-		# taglist = taglist.filter(title__istartswith=search)
+		polllist = polllist.filter(title__icontains=search)
 
-	return_data = []
+	return_datat = []
 
 	i=0
 
 	for tag in taglist:
 		# print(type(tag.get_absolute_url()))
-		return_data.append({
+		return_datat.append({
 			'title': taglist.values()[i]['title'],
 			'counter': taglist.values()[i]['counter'],
 			'url': tag.get_absolute_url()
 		})
 		i+=1
 
-	context["taglist"] = list(return_data)
+	context["taglist"] = list(return_datat)
+
+	return_datap = []
+
+	i=0
+	for poll in polllist:
+		return_datap.append({
+			'title': polllist.values()[i]['title'],
+			'counter': poll.viewpolltypeunique.ecount,
+			'url': poll.get_url()
+		})
+		i+=1
+
+	context["polllist"] = list(return_datap)
+
 
 	return HttpResponse(json.dumps(context), content_type="application/json")
 

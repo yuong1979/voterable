@@ -27,7 +27,7 @@ class TagSearchForm(forms.Form):
     search = forms.CharField(
         required=True,
         label="",
-        widget=forms.TextInput(attrs={'placeholder': 'Search Topics'})
+        widget=forms.TextInput(attrs={'placeholder': 'Search'})
     )
 
 

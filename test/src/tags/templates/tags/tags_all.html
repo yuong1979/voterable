@@ -243,7 +243,7 @@ function FilterTag() {
             $(".allpolllist").hide();
             $(".polllist").html("");
 
-            putTagListData(result);
+            putPollListData(result);
         },
         error: function(response){
             $(".polllist_error").show();
@@ -264,7 +264,7 @@ function FilterTag() {
 }
 
 
-    function putTagListData(result){
+    function putPollListData(result){
         let row;
 
         if (result["polllist"].length>0){
