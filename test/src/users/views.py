@@ -205,7 +205,7 @@ class PUserCreate(CreateView, LoginRequiredMixin):
 
             referral.save()
 
-            messages.success(self.request, "You have been given an additional " + str(referraldays) + " extra days of premium package free for using your referral code.")
+            # messages.success(self.request, "You have been given an additional " + str(referraldays) + " extra days of premium package free for using your referral code.")
 
         except:
             pass
@@ -231,7 +231,7 @@ class PUserCreate(CreateView, LoginRequiredMixin):
         user.referralid = newpromo.promoid
         user.save() 
 
-        messages.success(self.request, "You have been given " + str(signupdays) + " days of premium package free trial, activate anytime.")
+        # messages.success(self.request, "You have been given " + str(signupdays) + " days of premium package free trial, activate anytime.")
 
 
 

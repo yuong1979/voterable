@@ -29,9 +29,20 @@
           <a class="btn btn-info btn-circle" style="margin:2px" href="https://twitter.com/home?status={{ request.build_absolute_uri }}">
               <i class="fab fa-twitter fa-2x" aria-hidden="true"></i>
           </a>
-          <a class="btn btn-danger btn-circle" style="margin:2px" href="https://plus.google.com/share?url={{ request.build_absolute_uri }}">
+<!--           <a class="btn btn-danger btn-circle" style="margin:2px" href="https://plus.google.com/share?url={{ request.build_absolute_uri }}">
               <i class="fab fa-google-plus fa-2x" aria-hidden="true"></i>
+          </a> -->
+
+          <a class="btn btn-success btn-circle" style="margin:2px" href="https://wa.me/?text=={{ request.build_absolute_uri }}" data-action="share/whatsapp/share">
+              <i class="fab fa-whatsapp fa-2x" aria-hidden="true"></i>
           </a>
+
+
+<!-- <a href="https://wa.me/?text=urlencodedtext">Share this</a> -->
+
+<!--           <a href="whatsapp://send?text=<<HERE GOES THE URL ENCODED TEXT YOU WANT TO SHARE>>" data-action="share/whatsapp/share">Share via Whatsapp</a> -->
+
+
           <a class="btn btn-primary btn-circle" style="margin:2px"
              href="https://www.linkedin.com/shareArticle?mini=true&url={{ request.build_absolute_uri }}&title={{ instance.title }}">
               <i class="fab fa-linkedin fa-2x" aria-hidden="true"></i>
