@@ -59,13 +59,22 @@
             {% endif %}
             &nbsp;&nbsp;&nbsp;&nbsp; -->
 
+
             {% if listtitle == "Favorite" or listtitle == "Created"  or listtitle == "Createduser" %}
               <a style="font-size: 16px; margin-right:10px;" href='/polls/?type={{ BackPtype }}&sort=Date' class='btn-link' ><b><i class="fas fa-step-backward fa-1x" aria-hidden="true"></i>&nbsp;Tip List</b></a>
             {% else %}
 
               {% if user_authorised == True %}
-                <a style="font-size: 16px; margin-right:10px;" href='{{ PollType_obj.get_update }}' class='btn-link' ><b><i class="fas fa-edit fa-1x" aria-hidden="true"></i>&nbsp;Edit</b></a>
+                <a style="font-size: 16px; margin-right:10px;" href='{{ PollType_obj.get_update }}' class='btn-link' ><b><i class="fas fa-edit fa-1x" aria-hidden="true"></i>&nbsp;</b></a>
               {% endif %}
+
+
+
+
+
+<!--                 <a style="font-size: 16px; margin-right:10px;" href='{{ PollType_obj.get_update }}' class='btn-link' ><b><i class="fas fa-edit fa-1x" aria-hidden="true"></i>&nbsp;Edit</b></a> -->
+
+
 
             {% endif %}
 
@@ -78,6 +87,8 @@
         <hr>
 
             <div class="col-12 col-lg-6 fontstyle110" style="padding:0px">
+
+                <a class="pull-right" style="font-size: 16px; margin-right:15px"><b><i class="fa fa-share-alt fa-lg iconmg allbtniconcolor" aria-hidden="true" data-toggle="modal" data-target="#ShareModal"></i>&nbsp;</b></a>
 
               <div class="pull-left">
               {% if listtitle == "All" %}

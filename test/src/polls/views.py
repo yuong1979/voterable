@@ -1400,54 +1400,68 @@ class PollDetailView(LoginRequiredMixin, DetailView, FormView):
                 view_obj.save()
 
 
-        # getting the number of views
-        try:
-            view_obj = ViewPollItemsUnique.objects.get(p_item=self.object)
-            context['Views'] = view_obj.vcount
-        except:
-            pass
+        ##### this needs to be fixed ######
+        # # getting the number of views
+        # try:
+        #     view_obj = ViewPollItemsUnique.objects.get(p_item=self.object)
+        #     context['Views'] = view_obj.vcount
+        # except:
+        #     pass
 
 
-        # getting the number of favorites
-        try:
-            fav_obj = PollFav.objects.filter(poll=self.object)
-            context['Favorited'] = fav_obj.count()
-        except:
-            pass
+        # # getting the number of favorites
+        # try:
+        #     fav_obj = PollFav.objects.filter(poll=self.object)
+        #     context['Favorited'] = fav_obj.count()
+        # except:
+        #     pass
 
-        # getting the analytics
-        try:
-            todate = datetime.datetime.now()
-            fromdate = todate - timedelta(days=365)
 
-            # context['Analytics'] = ScorePollItemsByMonth.objects.filter(p_item=self.object, updated__gte=fromdate, updated__lte=todate)
+        # # getting the analytics
+        # try:
+        #     todate = datetime.now(tzinfo=pytz.UTC)
+        #     # todate = datetime.datetime.now()
+        #     fromdate = todate - timedelta(days=365)
 
-            # sort the querydata by id
-            df = ScorePollItemsByMonth.objects.filter(p_item=self.object, updated__range=[fromdate, todate]).order_by('id')
+        #     # context['Analytics'] = ScorePollItemsByMonth.objects.filter(p_item=self.object, updated__gte=fromdate, updated__lte=todate)
 
-            df = df.values_list('year','month','posi','nega', flat=False)
-            #inserting the collected data into a dateframe for manipulation
-            df = pd.DataFrame(list(df))
-            #giving the dataframe column names
-            df.columns = ['year','month','posi','nega']
-            #concatenate the period
-            df["period"] = df["year"].map(str) + "-" + df["month"]
-            #reverse the negative sign
-            df["nega"] = df["nega"]*-1
-            df = df[['period','posi','nega']]
-            #changing column names
-            df.rename(columns={'posi':'Upvotes','nega':'Downvotes'}, inplace=True)
-            #adding the header to a list format
-            dfcolumn = [df.columns.values.tolist()]
-            #adding the values to a list format
-            df = df.values.tolist()
-            #adding both together
-            df = dfcolumn + df
+        #     # sort the querydata by id
+        #     df = ScorePollItemsByMonth.objects.filter(p_item=self.object, updated__range=[fromdate, todate]).order_by('id')
 
-            context["datav"] = json.dumps(df)
+        #     df = df.values_list('year','month','posi','nega', flat=False)
+        #     #inserting the collected data into a dateframe for manipulation
+        #     df = pd.DataFrame(list(df))
+        #     #giving the dataframe column names
+        #     df.columns = ['year','month','posi','nega']
+        #     #concatenate the period
+        #     df["period"] = df["year"].map(str) + "-" + df["month"]
+        #     #reverse the negative sign
+        #     df["nega"] = df["nega"]*-1
+        #     df = df[['period','posi','nega']]
+        #     #changing column names
+        #     df.rename(columns={'posi':'Upvotes','nega':'Downvotes'}, inplace=True)
+        #     #adding the header to a list format
+        #     dfcolumn = [df.columns.values.tolist()]
+        #     #adding the values to a list format
+        #     df = df.values.tolist()
+        #     #adding both together
+        #     df = dfcolumn + df
 
-        except:
-            pass
+        #     context["datav"] = json.dumps(df)
+
+        # except:
+        #     pass
+
+
+        view_obj = ViewPollItemsUnique.objects.get(p_item=self.object)
+        context['Views'] = view_obj.vcount
+
+        fav_obj = PollFav.objects.filter(poll=self.object)
+        context['Favorited'] = fav_obj.count()
+
+
+
+
 
         # get user details
         context['Userdetail'] = PUser.objects.get(user=self.object.user_submit).get_absolute_url()
