@@ -79,7 +79,7 @@
 
             <div class="col-12 col-lg-6 fontstyle110" style="padding:0px">
 
-              <div class="pull-right">
+              <div class="pull-left">
               {% if listtitle == "All" %}
               <div class="" style="padding-right: 0px margin-right:0px">
                 <span class="badge badge-pill badgestyle badge-secondary"> {{ PollType_obj.viewpolltypeunique.ecount }} Tips </span> 
@@ -544,6 +544,7 @@ function scrollup() {
       $tipRow.find('.tip-sliced').addClass('d-none');
       $tipRow.find('button').addClass('d-none');
       $tipRow.find('span.poll-collapse').removeClass('d-none');
+      $(".tiplinebreak").hide();
 
 
       var Subscribedp = "{{ Subscribedp  }}"
