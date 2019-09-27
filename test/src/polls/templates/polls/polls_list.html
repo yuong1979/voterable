@@ -53,7 +53,7 @@
 
     <div class="mainboxstyle">
 
-          <div style="float:right; margin-top:4px">
+          <div style="text-align: right; margin-top:4px">
 <!--             {% if free == True %}
               <i style="font-size: 16px" class="allfontcolor fas fa-check-circle fa-1x"></i><b class="allfontcolor">&nbsp;Free</b>
             {% endif %}
@@ -61,20 +61,32 @@
 
 
             {% if listtitle == "Favorite" or listtitle == "Created"  or listtitle == "Createduser" %}
-              <a style="font-size: 16px; margin-right:10px;" href='/polls/?type={{ BackPtype }}&sort=Date' class='btn-link' ><b><i class="fas fa-step-backward fa-1x" aria-hidden="true"></i>&nbsp;Tip List</b></a>
+
+              <a style="font-size: 16px; margin-right:10px;" class='btn-link' href='/polls/?type={{ BackPtype }}&sort=Date' >
+                <b class="allbtniconcolor">
+                  <i class="fas fa-step-backward fa-1x" aria-hidden="true"></i>&nbsp;&nbsp;Tip List
+                </b>
+              </a>
+
             {% else %}
 
               {% if user_authorised == True %}
-                <a style="font-size: 16px; margin-right:10px;" href='{{ PollType_obj.get_update }}' class='btn-link' ><b><i class="fas fa-edit fa-1x" aria-hidden="true"></i>&nbsp;</b></a>
+
+                <a style="font-size: 16px; margin-right:10px;" class="pull-right" href='{{ PollType_obj.get_update }}'>
+                  <b class="allbtniconcolor">
+                    <i class="fas fa-edit fa-1x" aria-hidden="true"></i>&nbsp;&nbsp;Edit
+                  </b>
+                </a>
+
               {% endif %}
 
-
-
-
+                <a style="font-size: 16px; margin-right:10px;" class="pull-right" data-toggle="modal" data-target="#ShareModal">
+                  <b class="allbtniconcolor">
+                    <i class="fa fa-share-alt fa-1x" aria-hidden="true"></i>&nbsp;&nbsp;Share
+                  </b>
+                </a>
 
 <!--                 <a style="font-size: 16px; margin-right:10px;" href='{{ PollType_obj.get_update }}' class='btn-link' ><b><i class="fas fa-edit fa-1x" aria-hidden="true"></i>&nbsp;Edit</b></a> -->
-
-
 
             {% endif %}
 
@@ -88,17 +100,15 @@
 
             <div class="col-12 col-lg-6 fontstyle110" style="padding:0px">
 
-                <a class="pull-right" style="font-size: 16px; margin-right:15px"><b><i class="fa fa-share-alt fa-lg iconmg allbtniconcolor" aria-hidden="true" data-toggle="modal" data-target="#ShareModal"></i>&nbsp;</b></a>
+              <div class="row">
 
-              <div class="pull-left">
               {% if listtitle == "All" %}
-              <div class="" style="padding-right: 0px margin-right:0px">
+              <div class="pull-left" style="margin-left:25px; margin-bottom: 10px">
                 <span class="badge badge-pill badgestyle badge-secondary"> {{ PollType_obj.viewpolltypeunique.ecount }} Tips </span> 
               </div>
               {% endif %}
-              </div>
 
-              <br>
+              </div>
 
               <div style="padding-left:10px">
                 <p><b style="line-height: 200%; ">{{ PollType_obj }}</b></p>

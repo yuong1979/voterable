@@ -45,37 +45,31 @@ width: 55px;
 
 <div class="maincontainerstyle">
 
-
     <div class="mainboxstyle">
+      
+          <div class="pull-right" style="margin-top:4px">
 
-      <div class="row col-lg-6">
-        <div class="mainheaderstyle col-10"><i class="fas fa-magic fa-1x"></i>&nbsp;&nbsp;&nbsp;{{ tag }}
+            {% if request.user.is_authenticated %}
 
-        </div>
+              {% if fav == True %}
 
-        <div class="col-2" style="margin-top:6px;">
-              {% if request.user.is_authenticated %}
-
-                {% if fav == True %}
-
-                <a style="font-size: 16px; margin-right:10px;" href='#' class='favorite' tag_id="{{ tag.id }}"><b><i id='fav-type-{{ tag.id }}' aria-hidden="true" class="fa fa-star fa-lg" style="color:gold;"></i></b></a>
-
-
-                {% else %}
-
-                <a style="font-size: 16px; margin-right:10px;" href='#' class='favorite' tag_id="{{ tag.id }}"><b><i id='fav-type-{{ tag.id }}' aria-hidden="true" class="fa fa-star fa-lg allbtniconcolor"></i></b></a>
-
-                {% endif %}
+              <a style="font-size: 16px; margin-right:10px;" href='#' class='favorite' tag_id="{{ tag.id }}"><b><i id='fav-type-{{ tag.id }}' aria-hidden="true" class="fa fa-star fa-1x" style="color:gold;"></i>&nbsp;&nbsp;Favorite</b></a>
 
               {% else %}
-              <a href="/accounts/login/"><i class="allbtniconcolor fa fa-star fa-lg"></i></a>
+
+              <a style="font-size: 16px; margin-right:10px;" href='#' class='favorite' tag_id="{{ tag.id }}"><b><i id='fav-type-{{ tag.id }}' aria-hidden="true" class="fa fa-star fa-1x allbtniconcolor"></i>&nbsp;&nbsp;Favorite</b></a>
+
               {% endif %}
-        </div>
-      </div>
 
+            {% else %}
+            <a href="/accounts/login/"><i class="allbtniconcolor fa fa-star fa-lg"></i></a>
+            {% endif %}
 
+          </div>
 
+          <div class="mainheaderstyle"><i class="fas fa-magic fa-1x"></i>&nbsp;&nbsp;&nbsp;{{ tag }}
 
+          </div>
 
 
         <hr>
