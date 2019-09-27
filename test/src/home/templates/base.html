@@ -211,7 +211,7 @@
         .fontstyle110 {
           font-weight:bolder;
           font-size: 110%;
-          margin-left: 10px;
+/*          margin-left: 10px;*/
         }
 
 
@@ -808,21 +808,17 @@
     <div class="card shadow" style="margin: 5px">
       <div class="card-body tipcardbodystyle">
         <div class="card-title mainheaderstyle"><i class="fas fa-magic fa-1x"></i>&nbsp;&nbsp;&nbsp;&nbsp;Hot Tips</div><hr>
-
-
-
-
      
           {% for i in toppolls %}
             <div class="greyboxstyle col-12 col-lg-6">
-            <div class="row">
+            <div class="row" style="margin-right: 6px">
 
-              <div class="col-10 col-lg-10">
+              <div class="col-10 col-lg-10" style="padding-left: 10px;">
                 <a href="{{ i.get_url }}"><b style="line-height: 200%;">{{ i }}</b></a>
               </div>
 
               <div class="col-2 col-lg-2">
-                <span class="badge badge-pill badgestyle badge-secondary" style="margin-left:-12px"> {{ i.ecount }} tips </span> 
+                <span class="badge badge-pill badgestyle badge-secondary" style="margin-left:-6px"> {{ i.ecount }} tips </span> 
 
 <!--                 {% if i.freepoll == True %}
                 &nbsp;&nbsp;<i class="allfontcolor fas fa-check-circle fa-1x"></i><b class="allfontcolor"></b>
@@ -833,14 +829,10 @@
             </div>
           {% endfor %}
 
-
-
-
-
-
       </div>
     </div>
   </div>
+
 
   <div class="col-xs-12 col-sm-6 basefadecontent">
     <div class="card shadow" style="margin: 5px">

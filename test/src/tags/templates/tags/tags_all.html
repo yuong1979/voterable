@@ -45,37 +45,31 @@ width: 55px;
 
 <div class="maincontainerstyle">
 
-
     <div class="mainboxstyle">
+      
+          <div class="pull-right" style="margin-top:4px">
 
-      <div class="row col-lg-6">
-        <div class="mainheaderstyle col-10"><i class="fas fa-magic fa-1x"></i>&nbsp;&nbsp;&nbsp;{{ tag }}
+            {% if request.user.is_authenticated %}
 
-        </div>
+              {% if fav == True %}
 
-        <div class="col-2" style="margin-top:6px;">
-              {% if request.user.is_authenticated %}
-
-                {% if fav == True %}
-
-                <a style="font-size: 16px; margin-right:10px;" href='#' class='favorite' tag_id="{{ tag.id }}"><b><i id='fav-type-{{ tag.id }}' aria-hidden="true" class="fa fa-star fa-lg" style="color:gold;"></i></b></a>
-
-
-                {% else %}
-
-                <a style="font-size: 16px; margin-right:10px;" href='#' class='favorite' tag_id="{{ tag.id }}"><b><i id='fav-type-{{ tag.id }}' aria-hidden="true" class="fa fa-star fa-lg allbtniconcolor"></i></b></a>
-
-                {% endif %}
+              <a style="font-size: 16px; margin-right:10px;" href='#' class='favorite' tag_id="{{ tag.id }}"><b><i id='fav-type-{{ tag.id }}' aria-hidden="true" class="fa fa-star fa-1x" style="color:gold;"></i>&nbsp;&nbsp;Favorite</b></a>
 
               {% else %}
-              <a href="/accounts/login/"><i class="allbtniconcolor fa fa-star fa-lg"></i></a>
+
+              <a style="font-size: 16px; margin-right:10px;" href='#' class='favorite' tag_id="{{ tag.id }}"><b><i id='fav-type-{{ tag.id }}' aria-hidden="true" class="fa fa-star fa-1x allbtniconcolor"></i>&nbsp;&nbsp;Favorite</b></a>
+
               {% endif %}
-        </div>
-      </div>
 
+            {% else %}
+            <a href="/accounts/login/"><i class="allbtniconcolor fa fa-star fa-lg"></i></a>
+            {% endif %}
 
+          </div>
 
+          <div class="mainheaderstyle"><i class="fas fa-magic fa-1x"></i>&nbsp;&nbsp;&nbsp;{{ tag }}
 
+          </div>
 
 
         <hr>
@@ -146,14 +140,14 @@ width: 55px;
         {% if tagpolllist %}        
           {% for i in tagpolllist %}
             <div class="greyboxstyle col-12 col-lg-6">
-            <div class="row">
+            <div class="row" style="margin-right: 6px">
 
-              <div class="col-10 col-lg-10">
+              <div class="col-10 col-lg-10" style="padding-left: 10px;">
                 <a href="/polls/?type={{ i.slug }}"><b style="line-height: 200%;">{{ i.title }}</b></a>
               </div>
 
               <div class="col-2 col-lg-2">
-                <span class="badge badge-pill badgestyle badge-secondary" style="margin-left:-12px"> {{ i.viewpolltypeunique.ecount }} tips </span> 
+                <span class="badge badge-pill badgestyle badge-secondary" style="margin-left:-6px"> {{ i.viewpolltypeunique.ecount }} tips </span> 
 
 <!--                 {% if i.freepoll == True %}
                 &nbsp;&nbsp;<i class="allfontcolor fas fa-check-circle fa-1x"></i><b class="allfontcolor"></b>
@@ -270,7 +264,13 @@ function FilterTag() {
         if (result["polllist"].length>0){
             $.each(result['polllist'], function(a,b) {
 
-                row = "<div class='greyboxstyle'><div class='row'><div class='col-10'><a href='"+b['url']+"'><b style='line-height: 200%;'>"+b["title"]+"</b></a></div><div class='col-2'><span class='badge badge-pill badgestyle badge-secondary' style='font-size:12px; margin-left:-12px'> "+b['counter']+" tips </span></div></div></div>"
+
+            // <div class='row' style='margin-right: 6px'>
+            // <div>
+
+             // style='padding-left: 10px;'
+
+                row = "<div class='greyboxstyle'><div class='row' style='margin-right: 6px'><div class='col-10' style='padding-left: 10px;'><a href='"+b['url']+"'><b style='line-height: 200%;'>"+b["title"]+"</b></a></div><div class='col-2'><span class='badge badge-pill badgestyle badge-secondary' style='font-size:12px; margin-left:-6px'> "+b['counter']+" tips </span></div></div></div>"
 
                 $(".polllist").append(row);
             });

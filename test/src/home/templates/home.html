@@ -208,7 +208,7 @@ if (sessionStorage.getItem('Notification') !== 'true')
 
         <div class="col-xs-8 col-sm-9">
           
-            <div class="fontstyle110" style="margin:10px">
+            <div class="fontstyle110" style="margin-top:10px">
             {% if user.user.puser.name %}
             {{ user.user.puser.name }}
             {% else %}
@@ -216,7 +216,7 @@ if (sessionStorage.getItem('Notification') !== 'true')
             {% endif %}
             </div>
             
-            <div class="fontstyle90" style="color:grey; margin:10px">
+            <div class="fontstyle90" style="color:grey; margin-top:10px">
                 {% if user.description %}
                   {{ user.description }}
                 {% else %}
@@ -368,7 +368,7 @@ if (sessionStorage.getItem('Notification') !== 'true')
 
 
 
-
+{% comment %}
 
 
 
@@ -437,6 +437,7 @@ if (sessionStorage.getItem('Notification') !== 'true')
 
 
 
+{% endcomment %}
 
 
 </div> 
@@ -465,9 +466,9 @@ if (sessionStorage.getItem('Notification') !== 'true')
         <div class=" tipcardbodystyle">
           {% for poll_type in fav_poll_types %}
             <div class="greyboxstyle col-12 col-lg-6">
-            <div class="row">
+            <div class="row" style="margin-right: 6px">
 
-              <div class="col-10 col-lg-10">
+              <div class="col-12 col-lg-12">
                 <a href="/polls/?favorite={{ poll_type.slug }}"><b style="line-height: 200%;">{{ poll_type.title }}</b></a>
               </div>
 
@@ -541,9 +542,9 @@ if (sessionStorage.getItem('Notification') !== 'true')
         <div class=" tipcardbodystyle">
           {% for i in pollcreatelist %}
             <div class="greyboxstyle col-12 col-lg-6">
-            <div class="row">
+            <div class="row" style="margin-right: 0px">
 
-              <div class="col-10 col-lg-10">
+              <div class="col-12 col-lg-12">
                 <a href="/polls/?create={{ i.slug }}"><b style="line-height: 200%;">{{ i.title }}</b></a>
               </div>
 

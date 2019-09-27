@@ -72,7 +72,7 @@ margin-left:15px;
 
 
         <div class="htipstyle" style="display: none;">
-        <div class="mainheaderstyle"><i class="fas fa-magic fa-1x"></i>&nbsp;&nbsp;&nbsp;&nbsp;Tips</div>
+        <div class="mainheaderstyle"><i class="fas fa-magic fa-1x"></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Tips</div>
         <hr>
         </div>
 
@@ -217,7 +217,7 @@ function FilterTag() {
         if (result["polllist"].length>0){
             $.each(result['polllist'], function(a,b) {
 
-                row = "<div class='greyboxstyle'><div class='row'><div class='col-10'><a href='"+b['url']+"'><b style='line-height: 200%;'>"+b["title"]+"</b></a></div><div class='col-2'><span class='badge badge-pill badgestyle badge-secondary' style='font-size:12px; margin-left:-12px'> "+b['counter']+" tips </span></div></div></div>"
+                row = "<div class='greyboxstyle'><div class='row' style='margin-right: 6px'><div class='col-10' style='padding-left: 10px;'><a href='"+b['url']+"'><b style='line-height: 200%;'>"+b["title"]+"</b></a></div><div class='col-2'><span class='badge badge-pill badgestyle badge-secondary' style='font-size:12px; margin-left:-6px'> "+b['counter']+" tips </span></div></div></div>"
 
                 $(".polllist").append(row);
 

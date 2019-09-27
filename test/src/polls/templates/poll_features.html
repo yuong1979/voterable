@@ -9,19 +9,20 @@
 
 
   .iconbox {
-    float:left; 
+/*    float:left; */
     padding-top:-20px; 
     padding-bottom:-20px;
     padding-left:0px; 
     padding-right:0px;
     font-size: 16px;
+
   }
 
 
 /*regulates the distance between fontawesome icons across polllist fav/create/all/preview/details*/
     .iconmg
     {
-        padding: 3% 8% 3% 5%;
+        padding: 3% 9% 3% 2%;
     }
 
 
@@ -40,7 +41,9 @@
 
     <hr>
 
-    <div class="col-xs-11 col-sm-11 iconbox">
+
+
+    <div class="col-xs-12 col-sm-12 iconbox">
 
         {% if poll in pollposi %}
         <a href="#" class="vote-up" poll_id="{{ poll.id }}"><i style="color:gold;" id="pcolor-id-{{ poll.id }}" class="iconmg fas fa-arrow-alt-circle-up fa-lg"></i></a>

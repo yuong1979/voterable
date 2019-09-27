@@ -97,7 +97,7 @@
                       {% if poll.description %}
                       <div class="Mobilefont Compfont">
 
-                            {{ poll.description|striptags_except:"iframe, a, p, ol, ul, li, br, i, img"|safe }}
+                            {{ poll.description|striptags_except:"iframe, a, p, ol, ul, li, i, img"|safe }}
 
                             {% if poll.textatt %}<p class="creditstyle"> Credits: {{ poll.textatt }}</p>{% endif %}
 
@@ -116,47 +116,52 @@
 
 
 
+  {% comment %}
+  {% if request.user.puser.memberp or poll.user_submit == request.user or request.user.is_staff %}
+  {% endcomment %}
+
 <!-- only display analytics if the user is premium or the person who created the poll -->
     <div class="mainboxstyle">
 
-<!--         {% if request.user.puser.memberp or poll.user_submit == request.user or request.user.is_staff %} -->
+      <div class="fontstyle90" style="padding:2px; margin:2px;">
 
-              <div class="fontstyle90" style="padding:4px; margin:4px;">
-
-                  <span style="margin:18px">
-                Upvotes &nbsp;
-                  <div class="badge badge-pill badgestyle badge-secondary">
-                    {% if poll.posi %} {{poll.posi}} {% else %} 0 {% endif %}
-                  </div>
-                  </span>
-                
+          <span style="margin:8px">
+        Upvotes &nbsp;
+          <div class="badge badge-pill badgestyle badge-secondary">
+            {% if poll.posi %} {{poll.posi}} {% else %} 0 {% endif %}
+          </div>
+          </span>
+        
 <!--                 <b style="line-height: 200%;">DownVotes - 
-                  {% if poll.nega %} {{poll.nega}} {% else %} 0 {% endif %}
-                </b> -->
+          {% if poll.nega %} {{poll.nega}} {% else %} 0 {% endif %}
+        </b> -->
 
-                  <span style="margin:18px">
-                Views &nbsp;
-                  <div class="badge badge-pill badgestyle badge-secondary">
-                    {% if Views %} {{Views}} {% else %} 0 {% endif %}
-                  </div>  
-                  </span>
-                
-                  <span style="margin:18px">
-                Favorited &nbsp;
-                  <div class="badge badge-pill badgestyle badge-secondary">
-                    {% if Favorited %} {{Favorited}} {% else %} 0 {% endif %}
-                  </div>
-                  </span>
-                
-              </div>
-
-<!--         {% endif %} -->
+          <span style="margin:8px">
+        Views &nbsp;
+          <div class="badge badge-pill badgestyle badge-secondary">
+            {% if Views %} {{Views}} {% else %} 0 {% endif %}
+          </div>  
+          </span>
+        
+          <span style="margin:8px">
+        Favorited &nbsp;
+          <div class="badge badge-pill badgestyle badge-secondary">
+            {% if Favorited %} {{Favorited}} {% else %} 0 {% endif %}
+          </div>
+          </span>
+        
+      </div>
 
     </div><!-- mainboxstyle -->
 
+  {% comment %}
+  {% endif %}
+  {% endcomment %}
 
         <div class="mainboxstyle">
+          <div style="margin-left:15px">
         {% include 'poll_features.html' %}
+          </div>
         </div><!-- mainboxstyle -->    
 
 
@@ -247,7 +252,7 @@
 
 <!--                   <div class="col-1"></div> -->
 <!--                   user image -->
-                  <div class="col-2" style="margin-left:10px ;text-align:left; margin-bottom:-15px ">
+                  <div class="col-2" style="text-align:left; margin-bottom:-15px ">
                   {% if i.senduser.puser.image %}
                   <a href='{{ i.senduser.puser.get_absolute_url }}'><img src="{{ i.senduser.puser.image.url }}" class='cpimgsmall' /></a>
                   {% else %}
@@ -258,7 +263,7 @@
 
 
 
-                  <div class="col-9" style="text-align:left; margin-left: -20px; margin-bottom:-15px">
+                  <div class="col-9" style="text-align:left; margin-bottom:-15px">
                     <a href='{{ i.senduser.puser.get_absolute_url }}' class='btn-link fontstyle100' style="float:left;" >
                       {% if i.senduser.puser.name %}
                       {{ i.senduser.puser.name|truncatechars:12 }}
@@ -272,7 +277,7 @@
 
                   </div>
 
-                      
+
 
 <!--                   contentbox -->
 

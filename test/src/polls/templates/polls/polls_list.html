@@ -53,19 +53,40 @@
 
     <div class="mainboxstyle">
 
-          <div style="float:right; margin-top:4px">
+          <div style="text-align: right; margin-top:4px">
 <!--             {% if free == True %}
               <i style="font-size: 16px" class="allfontcolor fas fa-check-circle fa-1x"></i><b class="allfontcolor">&nbsp;Free</b>
             {% endif %}
             &nbsp;&nbsp;&nbsp;&nbsp; -->
 
+
             {% if listtitle == "Favorite" or listtitle == "Created"  or listtitle == "Createduser" %}
-              <a style="font-size: 16px; margin-right:10px;" href='/polls/?type={{ BackPtype }}&sort=Date' class='btn-link' ><b><i class="fas fa-step-backward fa-1x" aria-hidden="true"></i>&nbsp;Tip List</b></a>
+
+              <a style="font-size: 16px; margin-right:10px;" class='btn-link' href='/polls/?type={{ BackPtype }}&sort=Date' >
+                <b class="allbtniconcolor">
+                  <i class="fas fa-step-backward fa-1x" aria-hidden="true"></i>&nbsp;&nbsp;Tip List
+                </b>
+              </a>
+
             {% else %}
 
               {% if user_authorised == True %}
-                <a style="font-size: 16px; margin-right:10px;" href='{{ PollType_obj.get_update }}' class='btn-link' ><b><i class="fas fa-edit fa-1x" aria-hidden="true"></i>&nbsp;Edit</b></a>
+
+                <a style="font-size: 16px; margin-right:10px;" class="pull-right" href='{{ PollType_obj.get_update }}'>
+                  <b class="allbtniconcolor">
+                    <i class="fas fa-edit fa-1x" aria-hidden="true"></i>&nbsp;&nbsp;Edit
+                  </b>
+                </a>
+
               {% endif %}
+
+                <a style="font-size: 16px; margin-right:10px;" class="pull-right" data-toggle="modal" data-target="#ShareModal">
+                  <b class="allbtniconcolor">
+                    <i class="fa fa-share-alt fa-1x" aria-hidden="true"></i>&nbsp;&nbsp;Share
+                  </b>
+                </a>
+
+<!--                 <a style="font-size: 16px; margin-right:10px;" href='{{ PollType_obj.get_update }}' class='btn-link' ><b><i class="fas fa-edit fa-1x" aria-hidden="true"></i>&nbsp;Edit</b></a> -->
 
             {% endif %}
 
@@ -74,14 +95,27 @@
 
         <div class="mainheaderstyle"><i class="fas fa-list-ol fa-1x"></i>&nbsp;&nbsp;&nbsp;&nbsp;{{ title }}</div>
 
+
         <hr>
 
-          <div class="fontstyle110">
-          {{ PollType_obj }} 
-          {% if listtitle == "All" %}
-            ({{ PollType_obj.viewpolltypeunique.ecount }} Tips)
-          {% endif %}
-          </div><!-- fontstyle110 -->
+            <div class="col-12 col-lg-6 fontstyle110" style="padding:0px">
+
+              <div class="row">
+
+              {% if listtitle == "All" %}
+              <div class="pull-left" style="margin-left:25px; margin-bottom: 10px">
+                <span class="badge badge-pill badgestyle badge-secondary"> {{ PollType_obj.viewpolltypeunique.ecount }} Tips </span> 
+              </div>
+              {% endif %}
+
+              </div>
+
+              <div style="padding-left:10px">
+                <p><b style="line-height: 200%; ">{{ PollType_obj }}</b></p>
+              </div>
+
+            </div>
+
 
         <hr>
 
@@ -162,7 +196,7 @@
 
                 <div class="row row-tip">
 
-                      <button class="test" id="{{ poll.id }}">{{ poll.id }}</button>
+<!--                       <button class="test" id="{{ poll.id }}">{{ poll.id }}</button> -->
 
                   <div class="col-sm-12 fontstyle100" style="margin-left:12px">
                       <b><span>{{ page_obj.number|total_count:paginator.per_page|counter_for_pagination:forloop.counter }}.</span>
@@ -211,9 +245,9 @@
 
                           {% else %}
 
-                            <hr style="margin-bottom: 0px; margin-top: -6px; visibility: hidden;">
+                            <hr style="margin-bottom: 0px; margin-top: -12px; visibility: hidden;">
                             <button class="btn btn-link poll-button readmorebtn" usercreate="{{poll.user_submit}}" poll_id="{{ poll.id }}">Read More</button>
-                            <hr style="margin-bottom: -6px; margin-top: 0px; visibility: hidden;">
+                            <hr style="margin-bottom: -12px; margin-top: 0px; visibility: hidden;">
 
                             <span class="poll-collapse d-none">
                             {{ poll.description|striptags_except:"iframe, a, p, ol, ul, li, i, img"|safe }}
@@ -241,16 +275,18 @@
           {% endfor %} <!-- for poll in polls -->
 
           
+
+
+
+        </div><!-- for infinite container -->
+
           {% if not request.user.is_authenticated and not "/accounts/login" in request.get_full_path %}
           &nbsp;&nbsp;&nbsp;&nbsp;
           <a href="{% url 'account_login' %}" class='btn btn-primary btn-sm shadow'><b>Sign up to view all</b></a><br><br>
           {% endif %}
 
 
-        </div><!-- for infinite container -->
-
-
-
+<!-- http://localhost:8000/polls/?type=test-listing-poll-tip-5test-listing-poll-tip-5test-listing-poll-tip-5 -->
 
         <div class="loading" style="display: none;">
           Loading...
@@ -293,9 +329,8 @@
 
 <!-- floating arrow to speed scroll up -->
 <a href="#" class="floatarrow">
-<i class="fas fa-arrow-alt-circle-up fa-2x"></i>
+<i class="fas fa-arrow-circle-up fa-2x"></i>
 </a>
-
 
 
 
@@ -529,6 +564,7 @@ function scrollup() {
       $tipRow.find('.tip-sliced').addClass('d-none');
       $tipRow.find('button').addClass('d-none');
       $tipRow.find('span.poll-collapse').removeClass('d-none');
+      $(".tiplinebreak").hide();
 
 
       var Subscribedp = "{{ Subscribedp  }}"
