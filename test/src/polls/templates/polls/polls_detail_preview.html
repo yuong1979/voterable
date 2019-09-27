@@ -111,6 +111,18 @@
                 </div> <!-- row row tip -->
 
 
+  <hr>
+
+    <a href="/polls/{{Back}}/edit" class='btn buttonspace btn-sm btn-primary' ><b>Edit Post</b></a>
+
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+  <form action='' method='POST'  style="display: inline-block;">{% csrf_token %}
+    <input type="hidden" name="pub_poll_id" value="{{poll.id}}">
+    <input type="submit" class='btn buttonspace btn-sm btn-success'  style="font-weight: bold" value="Confirm Your Post">
+  </form>
+
+
 
     </div><!-- mainboxstyle -->
     </div><!-- maincontainerstyle -->
@@ -121,15 +133,7 @@
 
 
 
-    <a href="/polls/{{Back}}/edit" class='btn buttonspace btn-sm btn-primary' ><b>Edit Post</b></a>
 
-    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-
-
-  <form action='' method='POST'  style="display: inline-block;">{% csrf_token %}
-    <input type="hidden" name="pub_poll_id" value="{{poll.id}}">
-    <input type="submit" class='btn buttonspace btn-sm btn-success'  style="font-weight: bold" value="Confirm Your Post">
-  </form>
 
 
 
