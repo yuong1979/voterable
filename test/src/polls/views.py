@@ -1400,24 +1400,24 @@ class PollDetailView(LoginRequiredMixin, DetailView, FormView):
                 view_obj.save()
 
 
-        ##### this needs to be fixed ######
-        # # getting the number of views
-        # try:
-        #     view_obj = ViewPollItemsUnique.objects.get(p_item=self.object)
-        #     context['Views'] = view_obj.vcount
-        # except:
-        #     pass
+
+        # getting the number of views
+        try:
+            view_obj = ViewPollItemsUnique.objects.get(p_item=self.object)
+            context['Views'] = view_obj.vcount
+        except:
+            pass
 
 
-        # # getting the number of favorites
-        # try:
-        #     fav_obj = PollFav.objects.filter(poll=self.object)
-        #     context['Favorited'] = fav_obj.count()
-        # except:
-        #     pass
+        # getting the number of favorites
+        try:
+            fav_obj = PollFav.objects.filter(poll=self.object)
+            context['Favorited'] = fav_obj.count()
+        except:
+            pass
 
 
-        # # getting the analytics
+        ## getting the analytics
         # try:
         #     todate = datetime.now(tzinfo=pytz.UTC)
         #     # todate = datetime.datetime.now()
@@ -1451,13 +1451,6 @@ class PollDetailView(LoginRequiredMixin, DetailView, FormView):
 
         # except:
         #     pass
-
-
-        view_obj = ViewPollItemsUnique.objects.get(p_item=self.object)
-        context['Views'] = view_obj.vcount
-
-        fav_obj = PollFav.objects.filter(poll=self.object)
-        context['Favorited'] = fav_obj.count()
 
 
 
