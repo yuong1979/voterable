@@ -206,7 +206,7 @@
 
 
 
-                    <hr class="tiplinebreak">
+                    <hr class="row-tip-linebreak" style="margin-top:-1px;margin-bottom:-1px">
                   </div>
 
                   {% if poll.image or poll.imageurl %}
@@ -564,7 +564,7 @@ function scrollup() {
       $tipRow.find('.tip-sliced').addClass('d-none');
       $tipRow.find('button').addClass('d-none');
       $tipRow.find('span.poll-collapse').removeClass('d-none');
-      $(".tiplinebreak").hide();
+      $tipRow.find(".row-tip-linebreak").hide();
 
 
       var Subscribedp = "{{ Subscribedp  }}"
