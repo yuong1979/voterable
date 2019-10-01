@@ -14,17 +14,3 @@ from .base import *
 # # 	pass
 
 
-
-
-
-
-
-
-# useful functions
-# start = time.time()
-# end = time.time()
-# print(end - start)
-
-
-
-
