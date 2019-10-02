@@ -41,6 +41,7 @@ from django.views.generic import TemplateView
 from billing.views import CancelSubscribe, SelectPlan, SuccessSub, ConfirmCancel, StripeCheckOut#, Subscribe1#, Subscribe0#, Subscribe2, Subscribe3, RegisterClass, StripeAddDays, StripePayment, 
 from notifications.views import allin, read, readall, get_notifications_ajax, MsgCountView
 from micell.views import api_survey
+from tags.views import TagTopicList
 
 
 urlpatterns = [
@@ -65,6 +66,8 @@ urlpatterns = [
 
     # url(r'^home/$', SigninHomeView.as_view(), name='Home'),
 
+
+    url(r'^tagtopiclist/$', TagTopicList, name='TagTopicList'),
     
 
     url(r'^contact/$', ContactView.as_view(), name='Contact'),
