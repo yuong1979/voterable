@@ -244,6 +244,17 @@ if (sessionStorage.getItem('Notification') !== 'true')
         <div class="mainheaderstyle"><i class="fas fa-sliders fa-1x"></i>&nbsp;&nbsp;&nbsp;&nbsp;Settings</div><hr>
 
 
+
+{% if request.user.is_staff %}
+
+        <b style="margin-left: 10px">Admin options</b><br>
+
+        <a href='{% url 'TagTopicList' %}' class='btn buttonspace btn-sm btn-warning' data-action='show-spinner'><b>check tags page</b></a>
+        <br><br>
+
+
+{% endif  %}
+
 <!-- unhide the below if you want to give user ability to control their notifications -->
           <ul class="list-group">
 

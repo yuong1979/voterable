@@ -7,7 +7,7 @@ from rest_framework.decorators import action
 from tags.models import TagPoll, runtagcount
 from django.views.generic import TemplateView, ListView, DetailView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView, FormView
-from polls.models import Ptype
+from polls.models import Ptype, PollItem
 from tags.forms import TagSearchForm, TagPollSearchForm
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.models import User
@@ -68,6 +68,24 @@ def Tagsearch(request):
 
 
 	return HttpResponse(json.dumps(context), content_type="application/json")
+
+
+
+
+
+def TagTopicList(request):
+
+	taglist = TagPoll.objects.filter(active=True)
+	polllist = Ptype.objects.filter(active=True)
+	# tiplist = PollItem.objects.filter(allowed=True)
+
+	context = {
+				'polls': polllist, 
+				'tags': taglist, 
+				# 'tips': tiplist
+				}
+				
+	return render(request, 'tags/tags_private.html', context)
 
 
 
