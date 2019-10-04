@@ -73,20 +73,6 @@ def Tagsearch(request):
 
 
 
-def TagTopicList(request):
-
-	taglist = TagPoll.objects.filter(active=True)
-	polllist = Ptype.objects.filter(active=True)
-	# tiplist = PollItem.objects.filter(allowed=True)
-
-	context = {
-				'polls': polllist, 
-				'tags': taglist, 
-				# 'tips': tiplist
-				}
-				
-	return render(request, 'tags/tags_private.html', context)
-
 
 
 class TagAllView(ListView, FormView):

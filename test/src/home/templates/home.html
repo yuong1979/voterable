@@ -249,7 +249,16 @@ if (sessionStorage.getItem('Notification') !== 'true')
 
         <b style="margin-left: 10px">Admin options</b><br>
 
-        <a href='{% url 'TagTopicList' %}' class='btn buttonspace btn-sm btn-warning' data-action='show-spinner'><b>check tags page</b></a>
+        <a href='{% url 'AnalyseTags' %}' class='btn buttonspace btn-sm btn-warning' data-action='show-spinner'><b>Analyse Tags</b></a>
+
+
+        <a href='{% url 'AnalysePvote' %}' class='btn buttonspace btn-sm btn-warning' data-action='show-spinner'><b>Analyse tip votes</b></a>
+
+
+        <a href='{% url 'AnalyseVid' %}' class='btn buttonspace btn-sm btn-warning' data-action='show-spinner'><b>Analyse Vids</b></a>
+
+        <a href='{% url 'ProcessAnalytics' %}' class='btn buttonspace btn-sm btn-danger' data-action='show-spinner'><b>Process Analytics</b></a>
+
         <br><br>
 
 

@@ -71,6 +71,7 @@ def async_contact_mail(subject, contact_message, from_email, to_email):
 
 
 
+
 # testing your periodic tasks - you need to enable send email every 20secs on celery.py
 @task(name='send-test-task')
 def send_email_task():
