@@ -249,6 +249,9 @@ if (sessionStorage.getItem('Notification') !== 'true')
 
         <b style="margin-left: 10px">Admin options</b><br>
 
+        <a href='' class='testing btn buttonspace btn-sm btn-success'><b>Test Flash</b></a>
+
+
         <a href='{% url 'AnalyseTags' %}' class='btn buttonspace btn-sm btn-warning' data-action='show-spinner'><b>Analyse Tags</b></a>
 
 
@@ -257,7 +260,10 @@ if (sessionStorage.getItem('Notification') !== 'true')
 
         <a href='{% url 'AnalyseVid' %}' class='btn buttonspace btn-sm btn-warning' data-action='show-spinner'><b>Analyse Vids</b></a>
 
-        <a href='{% url 'ProcessAnalytics' %}' class='btn buttonspace btn-sm btn-danger' data-action='show-spinner'><b>Process Analytics</b></a>
+        <a href='{% url 'RunOps' %}' class='btn buttonspace btn-sm btn-danger' data-action='show-spinner'><b>Run Ops</b></a>
+
+
+
 
         <br><br>
 
@@ -699,6 +705,39 @@ $(function () {
 
 
 
+
+
+function set_ops() {
+
+
+  $(".testing").off( "click" ).click(function(e){
+
+    event.preventDefault();
+
+
+    var tag_id = "testing";
+
+      $.ajax({
+        dataType: 'json',
+        type: 'GET',
+        data: 'data=' + tag_id,
+        url: '/runops/success/',
+        success: function(jsondata) {
+
+
+          var tester = jsondata.result
+
+          showFlashMessage(tester)
+
+        }
+      });
+
+  });
+
+}
+
+
+set_ops()
 
 
 

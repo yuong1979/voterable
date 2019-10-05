@@ -1,9 +1,12 @@
 from django.shortcuts import render
 
+from django.http import HttpResponse, JsonResponse, HttpResponseRedirect, Http404
 # Create your views here.
 from tags.models import TagPoll, runtagcount
 from polls.models import Ptype, PollItem
 from django.conf import settings
+from django.views.decorators.csrf import csrf_exempt
+from django.core.mail import send_mail
 
 from celery.schedules import crontab
 from celery.task import periodic_task
@@ -15,6 +18,19 @@ import urllib.request
 # from pytube import YouTube
 from django.shortcuts import render, get_object_or_404, HttpResponseRedirect, redirect
 
+
+
+# this is for email from contact form - dont touch it
+@task()
+def async_contact_mail(subject, contact_message, from_email, to_email):
+    send_mail(
+        subject=subject,
+        message="",
+        html_message=contact_message,
+        from_email=from_email,
+        recipient_list=to_email,
+        fail_silently=False
+    )
 
 
 
@@ -35,46 +51,16 @@ def AnalyseTags(request):
 def AnalysePvote(request):
 	# only filtered for the top 50 lowest score so that it will not take a long time to load
 	tiplist = PollItem.objects.filter(allowed=True).order_by('score')[:50]
-	
-	context = {
-				'tiplists': tiplist,
-				}
+	context = {'tiplists': tiplist,}
 				
 	return render(request, 'analysepvote.html', context)
 
 
 
-
-
-            # async_contact_mail.delay(
-            #     subject=subject,
-            #     contact_message=contact_message,
-            #     from_email=from_email,
-            #     to_email=to_email
-            #     )
-
-
-
-
-
-
-
 def AnalyseVid(request):
-	# polllist = Ptype.objects.filter(active=True)
-
 	pitems = PollItem.objects.filter(published=False)
+	context = {'pitems': pitems,}
 
-	context = {
-				'pitems': pitems,
-				}
-
-	print (request.user)
-
-	print (dir(request.user))
-
-	print (request.user.is_staff)
-
-				
 	return render(request, 'analysevid.html', context)
 
 
@@ -83,17 +69,128 @@ def AnalyseVid(request):
 
 
 
-def ProcessAnalytics(request):
+
+
+
+
+def RunOps(request):
 
 	if request.user.is_staff == True:
-		async_vid_analytics.delay()
+
+		ErrorReport.delay()	
 
 	return redirect("Home")
 
 
 
-# for detecting dead videos
+
 @task()
+def ErrorReport():
+
+	subject = "Ops Processes"
+
+	if settings.TYPE == "base":
+		from_email = settings.EMAIL_HOST_USER
+	else:
+		from_email = settings.DEFAULT_FROM_EMAIL
+
+	to_email = [from_email]
+
+	try:
+
+		async_vid_analytics()
+		loadcredit()
+
+		contact_message = "Processes are successful"
+
+	except Exception as e:
+
+		print(e)
+
+		contact_message = "Processes are not successful : " + str(e)
+
+		
+	async_contact_mail.delay(
+		subject=subject,
+		contact_message=contact_message,
+		from_email=from_email,
+		to_email=to_email
+		)
+
+
+
+
+
+
+
+# Loading the youtube credit into the source
+def loadcredit():
+	tiplist = PollItem.objects.filter(allowed=True)
+	api_key = settings.YOUTUBE_SECRET
+	p_id = []
+
+	for i in tiplist:
+
+		testvid = i.description
+
+		try:
+			start = testvid.index("youtube.com/embed")
+			end = (testvid[start:].index('"'))
+			end = start + end
+			youtubefull = testvid[start:end]
+
+			try:
+				vidid = re.search(r'youtube.com/embed/(.*?)start', youtubefull).group(1)
+				#remove the last question mark
+				vidid = vidid[:-1]
+
+			except AttributeError:
+
+				vidid = re.findall('(?<=embed/).*$', youtubefull)
+				#remove the item from the list
+				vidid = vidid[0]
+
+			video_id = vidid
+
+			url = f"https://www.googleapis.com/youtube/v3/videos?part=snippet&id={video_id}&key={api_key}"
+
+			json_url = urllib.request.urlopen(url)
+			data = json.loads(json_url.read())
+
+
+			if data.get('pageInfo')['totalResults'] != 0:
+				vidcredit = data.get('items')[0]['snippet']['channelTitle']
+				# print (data.get('items')[0]['snippet']['thumbnails']['default']['url'])
+				# print (data.get('items')[0]['snippet']['channelTitle'])
+				# print (data.get('items')[0]['snippet']['title'])
+
+
+
+				if i.textatt == None:
+					# replacing the source credit with the youtube video creator
+					i.textatt = vidcredit
+					i.save()
+
+		except ValueError:
+			pass
+			# print ("video does not exist - skip")
+	
+	print ("loadcredit success")
+	return None
+
+
+
+##### local database
+# 	# 15 - video is private
+# 	# 34 - video is unavailable
+# 	# 36 - video does not exist
+# 	# 18 - works from the middle
+# 	# 21 - works from the start
+
+
+
+
+# for detecting dead videos
 def async_vid_analytics():
 
 	#change all the published to postive first
@@ -142,6 +239,7 @@ def async_vid_analytics():
 			if vidactive == 0:
 				print (video_id + " video is no longer existing - record result")
 				p_id.append(i.id)
+				print ("non working vids flagged")
 
 		except ValueError:
 			pass
@@ -155,6 +253,7 @@ def async_vid_analytics():
 	FailVid = PollItem.objects.filter(id__in=p_id)
 
 	for i in FailVid:
+
 		i.published = False
 		i.save()
 
@@ -163,91 +262,61 @@ def async_vid_analytics():
 
 
 
+def api_ops(request):
+
+    if request.GET:
+
+        if request.user.is_authenticated:
+            tag_id =  request.GET.get('data')
+            result = tag_id
+
+            return JsonResponse({"result": result})
+        else:
+            return JsonResponse({"result": "error", "msg": "login_requred"})
+
+    else:
+        return redirect('/')
 
 
 
 
 
 
+# @csrf_exempt # ok to exempt no input
+# def api_ops(request):
+
+#   if request.POST:
+
+#       if request.user.is_authenticated:
+#           tag_id =  request.POST.get('tag_id')
+#           tagitem_obj = TagPoll.objects.get(id=tag_id)
+#           tag_fav = TagPoll.objects.filter(title=tagitem_obj, tagfav=request.user)
+
+#           if tag_fav:
+#               # remove favorite
+#               tag_fav.first().tagfav.remove(request.user)
+#               result = "unfavorited"
+#               # messages.info(request, "Unfavorited!")
+
+#           else:
+#               # add favorite
+#               fav = TagPoll.objects.get_or_create(title=tagitem_obj)[0]
+#               fav.save()
+#               fav.tagfav.add(request.user)
+#               result = "favorited"
+#               # messages.info(request, "Favorited!")
+
+#           return JsonResponse({"result": result})
+#       else:
+#           return JsonResponse({"result": "error", "msg": "login_requred"})
+
+#   else:
+#       return redirect('/')
 
 
 
 
 
-
-
-
-# # for detecting dead videos
-# def AnalyseVid(request):
-# 	# polllist = Ptype.objects.filter(active=True)
-# 	tiplist = PollItem.objects.filter(allowed=True)
-
-# 	api_key = settings.YOUTUBE_SECRET
-
-# 	p_id = []
-
-# 	for i in tiplist:
-
-# 		testvid = i.description
-
-# 		try:
-# 			start = testvid.index("youtube.com/embed")
-# 			end = (testvid[start:].index('"'))
-# 			end = start + end
-# 			youtubefull = testvid[start:end]
-
-# 			try:
-# 				vidid = re.search(r'youtube.com/embed/(.*?)start', youtubefull).group(1)
-# 				#remove the last question mark
-# 				vidid = vidid[:-1]
-
-# 			except AttributeError:
-
-# 				vidid = re.findall('(?<=embed/).*$', youtubefull)
-# 				#remove the item from the list
-# 				vidid = vidid[0]
-
-# 			video_id = vidid
-
-# 			url = f"https://www.googleapis.com/youtube/v3/videos?part=snippet&id={video_id}&key={api_key}"
-
-# 			json_url = urllib.request.urlopen(url)
-# 			data = json.loads(json_url.read())
-
-# 			vidactive = data.get('pageInfo')['totalResults']
-
-# 			if vidactive == 0:
-# 				print (video_id + " video is no longer existing - record result")
-# 				p_id.append(i.id)
-
-# 			# try:
-# 			# 	print (data.get('pageInfo')['totalResults'])
-# 			# 	print (data.get('items')[0]['snippet']['thumbnails']['default']['url'])
-# 			# 	print (data.get('items')[0]['snippet']['channelTitle'])
-# 			# 	print (data.get('items')[0]['snippet']['title'])
-
-# 			# except IndexError:
-# 			# 	print ("video is no longer existing - record result")
-# 			# 	p_id.append(i.id)
-
-
-# 		except ValueError:
-# 			pass
-# 			# print ("video does not exist - no issues skip")
-
-
-# 		notvalidvid = PollItem.objects.filter(allowed=True, id__in=p_id)
-
-
-# 	pitem = PollItem.objects.filter(id__in=p_id)
-
-# 	context = {
-# 				'pitems': notvalidvid,
-# 				# 'data': data,
-# 				# 'vid' : vid,
-# 				}
-				
-# 	return render(request, 'analysevid.html', context)
 
 
 
@@ -270,11 +339,7 @@ def async_vid_analytics():
 
 # 	api_key = settings.YOUTUBE_SECRET
 
-# 	# 15 - video is private
-# 	# 34 - video is unavailable
-# 	# 36 - video does not exist
-# 	# 18 - works from the middle
-# 	# 21 - works from the start
+
 
 # 	poll = PollItem.objects.filter(allowed=True, id=18).first()
 

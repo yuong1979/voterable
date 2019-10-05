@@ -42,7 +42,7 @@ from billing.views import CancelSubscribe, SelectPlan, SuccessSub, ConfirmCancel
 from notifications.views import allin, read, readall, get_notifications_ajax, MsgCountView
 from micell.views import api_survey
 
-from analytics.views import AnalyseTags, AnalysePvote, AnalyseVid, ProcessAnalytics
+from analytics.views import AnalyseTags, AnalysePvote, AnalyseVid, RunOps, api_ops
 
 
 
@@ -73,8 +73,8 @@ urlpatterns = [
     url(r'^analysepvote/$', AnalysePvote, name='AnalysePvote'),
     url(r'^analysevid/$', AnalyseVid, name='AnalyseVid'),
 
-    url(r'^processanalytics/$', ProcessAnalytics, name='ProcessAnalytics'),
-
+    url(r'^runops/$', RunOps, name='RunOps'),
+    url(r'^runops/success/$', api_ops, name="api_ops"),
 
     url(r'^contact/$', ContactView.as_view(), name='Contact'),
     url(r'^promotions/$', PromotionView.as_view(), name='Promotions'),
@@ -107,6 +107,8 @@ urlpatterns = [
 
     url(r'^tags/$', TagAllView.as_view(), name='TagAllView'),
     url(r'^tags/fav/$', api_fav, name="fav"),
+
+
     # url(r'^poll_suggest/$', PollSuggestion, name="PollSuggestion"),
     # url(r'^poll_recommend/$', PollRecommendation, name="PollRecommendation"),
     url(r'^poll_redirect/$', PollRedirect.as_view(), name="PollRedirect"),
