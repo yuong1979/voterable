@@ -32,6 +32,9 @@
 
     {% if listtitle == "All" %}
 
+
+
+
     <div class="fontstyle85" id="poll-badge-{{ poll.id }}" style="margin:2px; margin-top:14px; white-space:nowrap">
 <!--       <b id="poll-score-{{ poll.id }}">{{ poll.score }} </b> -->
         <span id="pvote-{{ poll.id }}">{{ poll.posi }}</span> <font>Upvotes</font>
@@ -43,74 +46,203 @@
 
 
 
-    <div class="col-xs-12 col-sm-12 iconbox">
+
+<div style="text-align: center">
+<div class="row" style="margin: 0% -5% -10% -5%; padding: 0% 5% -10% 5% ;">
+
 
         {% if poll in pollposi %}
-        <a href="#" class="vote-up" poll_id="{{ poll.id }}"><i style="color:gold;" id="pcolor-id-{{ poll.id }}" class="iconmg fas fa-arrow-alt-circle-up fa-lg"></i></a>
+
+            <div style="float:left" id="parent">
+            <div class="child">
+              <a href='#' class='vote-up' poll_id="{{ poll.id }}"><b><i style="color:gold;" id="pcolor-id-{{ poll.id }}" class="fas fa-arrow-alt-circle-up fa-1x iconshape"></i></b></a>
+            </div>
+
+            <div class="child icontext">Upvote</div>
+            </div>
+
         {% else %}
-        <a href="#" class="vote-up" poll_id="{{ poll.id }}"><i id="pcolor-id-{{ poll.id }}" class="iconmg allbtniconcolor fas fa-arrow-alt-circle-up fa-lg"></i></a>
+
+            <div style="float:left;" id="parent">
+            <div class="child">
+              <a href='#' class='vote-up' poll_id="{{ poll.id }}"><b><i id='pcolor-id-{{ poll.id }}' class="fas fa-arrow-alt-circle-up fa-1x iconshape"></i></b></a>
+            </div>
+
+            <div class="child icontext">Upvote</div>
+            </div>
+
         {% endif %}
 
-        {% if request.user.is_authenticated %}
-            {% if poll.user_submit != request.user %}
-            <i class="iconmg allbtniconcolor fa fa-flag fa-lg modalclick" id="{{ poll.id }}" aria-hidden="true" data-toggle="modal" data-target="#ReportModal"></i>
-            {% endif %}
+
+        {% if poll in pollnega %}
+
+            <div style="float:left" id="parent">
+            <div class="child">
+              <a href='#' class='vote-down' poll_id="{{ poll.id }}"><b><i style="color:gold;" id="ncolor-id-{{ poll.id }}" class="fas fa-arrow-alt-circle-down fa-1x iconshape"></i></b></a>
+            </div>
+
+            <div class="child icontext">Downvote</div>
+            </div>
+
         {% else %}
-        <a href="/accounts/login/"><i class="iconmg fa fa-flag fa-lg"></i></a>
+
+            <div style="float:left;" id="parent">
+            <div class="child">
+              <a href='#' class='vote-down' poll_id="{{ poll.id }}"><b><i id="ncolor-id-{{ poll.id }}" class="fas fa-arrow-alt-circle-down fa-1x iconshape"></i></b></a>
+            </div>
+
+            <div class="child icontext">Downvote</div>
+            </div>
+
         {% endif %}
 
-<!--         <i class="iconmg allbtniconcolor fa fa-share-alt fa-lg" aria-hidden="true" data-toggle="modal" data-target="#ShareModal"></i> -->
+
+
+
+
+
+
+
 
         {% if request.user.is_authenticated %}
-
           {% if poll in PollFav %}
-          <a href="#" class="favorite" poll_id="{{ poll.id }}"><i style="color:gold;" id='fav-type-{{ poll.id }}' class="iconmg fa fa-star fa-lg"></i></a>
+
+            <div style="float:left" id="parent">
+            <div class="child" style="text-align:center">
+              <a href='#' class='favorite' poll_id="{{ poll.id }}"><b><i style="color:gold; font-size: 22px;" id='fav-type-{{ poll.id }}' class="fa fa-star fa-1x iconshape"></i></b></a>
+            </div>
+
+            <div class="child icontext">Favorite</div>
+            </div>
+
           {% else %}
-          <a href="#" class="favorite" poll_id="{{ poll.id }}"><i id='fav-type-{{ poll.id }}' class="iconmg allbtniconcolor fa fa-star fa-lg"></i></a>
+
+            <div style="float:left;" id="parent">
+            <div class="child" style="text-align:center">
+              <a href='#' class='favorite' poll_id="{{ poll.id }}"><b><i id='fav-type-{{ poll.id }}' class="fa fa-star fa-1x iconshape" style="font-size: 22px"></i></b></a>
+            </div>
+
+            <div class="child icontext">Favorite</div>
+            </div>
+
           {% endif %}
 
         {% else %}
-        <a href="/accounts/login/"><i class="iconmg fa fa-star fa-lg"></i></a>
+
+            <div style="float:left" id="parent">
+            <div class="child" style="text-align:center;">
+                <a href="/accounts/login/"><i class="fa fa-star fa-lg iconshape" style="font-size: 22px"></i></a>
+            </div>
+
+            <div class="child icontext">Favorite</div>
+            </div>
+
         {% endif %}
+
+
 
         {% if request.user.is_authenticated %}
-        <a href="/polls/{{ poll.id }}"><i class="iconmg allbtniconcolor fas fa-info-circle fa-lg"></i></a>
+        <div style="float:left" id="parent">
+            <div class="child" style="text-align:center;">
+              <a href='/polls/{{ poll.id }}'><b><i class="fas fa-info-circle fa-1x iconshape"></i></b></a>
+            </div>
+        <div class="child icontext">Detail</div>
+        </div>
         {% endif %}
 
-        {% if poll in pollnega %}
-        <a href="#" class="vote-down" poll_id="{{ poll.id }}"><i style="color:gold;" id="ncolor-id-{{ poll.id }}" class="iconmg fas fa-arrow-alt-circle-down fa-lg"></i></a>
-        {% else %}
-        <a href="#" class="vote-down" poll_id="{{ poll.id }}"><i id="ncolor-id-{{ poll.id }}" class="iconmg allbtniconcolor fas fa-arrow-alt-circle-down fa-lg"></i></a>
-        {% endif %}
+</div>
+</div>
 
-    </div>
+
     {% endif %}
 
 
+
+
+<!-- <div class="" style="background-color: green">
+
+<div class="" style="text-align: center; background-color: red">
+
+<div class="row" style="text-align: center">
+
+            <div style="float:left; text-align: center" id="parent">
+            <div class="child">
+              <a href='#' class='vote-up' poll_id="{{ poll.id }}"><b><i style="color:gold;" id="pcolor-id-{{ poll.id }}" class="fas fa-arrow-alt-circle-up fa-1x iconshape"></i></b></a>
+            </div>
+
+            <div class="child icontext">Upvote</div>
+            </div>
+
+</div>
+
+</div>
+
+</div> -->
 
 
     {% if listtitle == "Favorite" or listtitle == "Created"  or listtitle == "Createduser" %}
     <hr>
-    <div class="col-xs-11 col-sm-11 iconbox">
+
+    <div class="row" style="text-align:right; background-color: green">
+      
 
         {% if request.user.is_authenticated %}
 
-          <a href="#" class="favorite" poll_id="{{ poll.id }}"><i style="color:gold;" id='fav-type-{{ poll.id }}' class="iconmg fa fa-star fa-lg"></i></a>
+          <div style="" id="parent">
+            <div class="child" style="text-align:center;">
+              <a href='#' data-toggle="modal" data-target="#ShareModal"><b><i style="font-size: 22px" class="fa fa-share-alt fa-1x iconshape" aria-hidden="true"></i></b></a>
+            </div>
+            <div class="child icontext">Share</div>
+          </div>
+
+
+          {% if poll in PollFav %}
+
+            <div style="" id="parent">
+            <div class="child" style="text-align:center">
+              <a href='#' class='favorite' poll_id="{{ poll.id }}"><b><i style="color:gold; font-size: 22px" id='fav-type-{{ poll.id }}' class="fa fa-star fa-1x iconshape"></i></b></a>
+            </div>
+
+            <div class="child icontext">Favorite</div>
+            </div>
+
+          {% else %}
+
+            <div style="" id="parent">
+            <div class="child" style="text-align:center">
+              <a href='#' class='favorite' poll_id="{{ poll.id }}"><b><i style="font-size: 22px" id='fav-type-{{ poll.id }}' class="fa fa-star fa-1x iconshape"></i></b></a>
+            </div>
+
+            <div class="child icontext">Favorite</div>
+            </div>
+
+          {% endif %}
 
         {% else %}
-        <a href="/accounts/login/"><i class="iconmg fa fa-star fa-lg"></i></a>
+
+            <div style="" id="parent">
+            <div class="child" style="text-align:center;">
+                <a href="/accounts/login/"><i style="font-size: 22px" class="fa fa-star fa-lg iconshape"></i></a>
+            </div>
+
+            <div class="child icontext">Favorite</div>
+            </div>
+
         {% endif %}
 
 
-        {% if request.user.is_authenticated %}
-        <a href="/polls/{{ poll.id }}"><i class="iconmg allbtniconcolor fas fa-info-circle fa-lg"></i></a>
-        {% endif %}
+          <div style="" id="parent">
+            <div class="child" style="text-align:center;">
+              <a href='/polls/{{ poll.id }}'><b><i class="fas fa-info-circle fa-1x iconshape"></i></b></a>
+            </div>
+            <div class="child icontext">Detail</div>
+          </div>
+
+
 
     </div>
+
     {% endif %}
-
-
-
 
 
 
@@ -123,31 +255,127 @@
     {% if listtitle == "Detail" %}
 
 
-        {% if user_authorised == True %}
-        <a href='{{ poll.get_update }}' class='btn-link'><i class="fas fa-edit fa-lg iconmg allbtniconcolor" aria-hidden="true"></i></a>
-        {% endif %}
 
-        <i class="fa fa-share-alt fa-lg iconmg allbtniconcolor" aria-hidden="true" data-toggle="modal" data-target="#ShareModal"></i>
 
+
+
+
+
+
+
+
+
+
+
+          <div style="float:left" id="parent">
+            <div class="child" style="text-align:center;">
+              <a href='#' data-toggle="modal" data-target="#ShareModal"><b><i style="font-size: 22px" class="fa fa-share-alt fa-1x iconshape" aria-hidden="true"></i></b></a>
+            </div>
+            <div class="child icontext">Share</div>
+          </div>
 
         {% if request.user.is_authenticated %}
 
           {% if favorited == True %}
-          <a href="#" class="favorite iconmg" poll_id="{{ poll.id }}"><i style="color:gold;" id='fav-type-{{ poll.id }}' class="fa fa-star fa-lg"></i></a>
+
+            <div style="float:left" id="parent">
+            <div class="child" style="text-align:center">
+              <a href='#' class='favorite' poll_id="{{ poll.id }}"><b><i style="color:gold; font-size: 22px" id='fav-type-{{ poll.id }}' class="fa fa-star fa-1x iconshape"></i></b></a>
+            </div>
+
+            <div class="child icontext">Favorite</div>
+            </div>
+
           {% else %}
-          <a href="#" class="favorite iconmg allbtniconcolor" poll_id="{{ poll.id }}"><i id='fav-type-{{ poll.id }}' class="fa fa-star fa-lg"></i></a>
+
+            <div style="float:left;" id="parent">
+            <div class="child" style="text-align:center">
+              <a href='#' class='favorite' poll_id="{{ poll.id }}"><b><i style="font-size: 22px" id='fav-type-{{ poll.id }}' class="fa fa-star fa-1x iconshape"></i></b></a>
+            </div>
+
+            <div class="child icontext">Favorite</div>
+            </div>
+
           {% endif %}
 
         {% else %}
-        <a href="/accounts/login/"><i class="fa fa-star fa-lg iconmg"></i></a>
+
+            <div style="float:left" id="parent">
+            <div class="child" style="text-align:center;">
+                <a href="/accounts/login/"><i class="fa fa-star fa-1x iconshape" style="font-size: 22px"></i></a>
+            </div>
+
+            <div class="child icontext">Favorite</div>
+            </div>
+
         {% endif %}
 
         {% if request.user.is_authenticated %}
-        <i class="fa fa-comment fa-lg iconmg allbtniconcolor" aria-hidden="true" data-toggle="modal" data-target="#CommentModel"></i>
+
+          <div style="float:left;" id="parent">
+            <div class="child" style="text-align:center;">
+              <a href='#' data-toggle="modal" data-target="#CommentModel"><b><i style="font-size: 20px" class="fa fa-comment fa-1x iconshape" aria-hidden="true"></i></b></a>
+            </div>
+            <div class="child icontext">Comment</div>
+          </div>
+
         {% else %}
-        <a href="/accounts/login/"><i class="fa fa-comment fa-lg iconmg allbtniconcolor"></i></a>
+
+          <div style="float:left;" id="parent">
+            <div class="child" style="text-align:center;">
+              <a href="/accounts/login/"><b><i style="font-size: 20px" class="fa fa-comment fa-1x iconshape"></i></b></a>
+            </div>
+            <div class="child icontext">Comment</div>
+          </div>
+
         {% endif %}
   
 
 
+        {% if request.user.is_authenticated %}
+
+          <div style="float:left;" id="parent">
+            <div class="child" style="text-align:center;">
+              <a href='#' data-toggle="modal" data-target="#ReportModal"><b><i class="fa fa-flag fa-lg iconshape" id="{{ poll.id }}" aria-hidden="true"></i></b></a>
+            </div>
+            <div class="child icontext">Report</div>
+          </div>
+
+
+        {% else %}
+
+          <div style="float:left;" id="parent">
+            <div class="child" style="text-align:center;">
+              <a href="/accounts/login/"><b><i class="fa fa-flag fa-lg iconshape"></i></b></a>
+            </div>
+            <div class="child icontext">Report</div>
+          </div>
+
+
+        {% endif %}
+
+
+        {% if user_authorised == True %}
+
+           <div style="float:left" id="parent">
+            <div class="child" style="text-align:center;">
+              <a href='{{ poll.get_update }}'><b><i class="fas fa-edit fa-1x iconshape"></i></b></a>
+            </div>
+            <div class="child icontext">Edit</div>
+          </div>
+
+        {% endif %}
+
+
+
+
+
     {% endif %}
+
+
+
+
+
+
+
+

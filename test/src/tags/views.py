@@ -73,20 +73,6 @@ def Tagsearch(request):
 
 
 
-def TagTopicList(request):
-
-	taglist = TagPoll.objects.filter(active=True)
-	polllist = Ptype.objects.filter(active=True)
-	# tiplist = PollItem.objects.filter(allowed=True)
-
-	context = {
-				'polls': polllist, 
-				'tags': taglist, 
-				# 'tips': tiplist
-				}
-				
-	return render(request, 'tags/tags_private.html', context)
-
 
 
 class TagAllView(ListView, FormView):
@@ -183,7 +169,7 @@ def TagPollsearch(request):
 # implement search here
 class TagView(DetailView, FormView):
 	model = TagPoll
-	template_name = 'tags/tags_all.html'
+	template_name = 'tags/tags_polls_search.html'
 	form_class = TagPollSearchForm
 
 	def dispatch(self, *args, **kwargs):

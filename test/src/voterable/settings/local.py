@@ -142,6 +142,7 @@ SUMMERNOTE_CONFIG = {
     }
 }
 
+YOUTUBE_SECRET = "AIzaSyDwdKqVHz0u92oPapansUYuNJ0lV23y4Zk"
 
 #necessary for django allauth - this will call the id of the site we are using to be attached
 #to the emails we send out - eg th default is example.com

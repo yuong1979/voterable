@@ -986,6 +986,7 @@ class PollsListView(ListView, PollTypeMixin):
             context['PollFav'] = pollfavitem
 
 
+
             # #exclude entries that have been voted down more then 10 votes
             # todisallow = PollItem.objects.filter(allowed=True, polltype=ptype_obj, score__lte=-10)
             # if todisallow:
@@ -1413,6 +1414,7 @@ class PollDetailView(LoginRequiredMixin, DetailView, FormView):
         try:
             fav_obj = PollFav.objects.filter(poll=self.object)
             context['Favorited'] = fav_obj.count()
+
         except:
             pass
 
@@ -1637,6 +1639,7 @@ class reportForm(forms.Form):
 
 
 
+
 # reporting a poll does not remove the poll - it emails the admin and admin will decide to remove the poll
 def api_report(request):
 
@@ -1704,6 +1707,8 @@ def api_report(request):
                 # if the user has reported already then just get and replace the latest issue in the database
                 # We save the issuemsg model field only if we don't get 'true' from our frontend
                 preport = PostReport.objects.get_or_create(p_item=pollobj, Puser=request.user)[0]
+
+                
                 if issuemsg != 'true':
                     preport.postissuemsg = issuemsg
                 preport.usercon = useremail
@@ -1712,22 +1717,22 @@ def api_report(request):
 
 
                 # original email send without async
-                # send_mail(
-                #     subject=subject,
-                #     message="Poll item " + str(pollid) + " has been reported for issue " + issueid,
-                #     html_message=contact_message,
-                #     from_email=from_email,
-                #     recipient_list=to_email,
-                #     fail_silently=False
-                # )
-
-                # emailing the report to myself so I can make a decision to hide/disallow the poll as admin
-                async_report_mail.delay(
+                send_mail(
                     subject=subject,
-                    contact_message=contact_message,
+                    message="Poll item " + str(pollid) + " has been reported for issue " + issueid,
+                    html_message=contact_message,
                     from_email=from_email,
-                    to_email=to_email
-                    )
+                    recipient_list=to_email,
+                    fail_silently=False
+                )
+
+                # # emailing the report to myself so I can make a decision to hide/disallow the poll as admin
+                # async_report_mail.delay(
+                #     subject=subject,
+                #     contact_message=contact_message,
+                #     from_email=from_email,
+                #     to_email=to_email
+                #     )
             
             return JsonResponse({"result": result })
 

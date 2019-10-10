@@ -71,6 +71,7 @@ def async_contact_mail(subject, contact_message, from_email, to_email):
 
 
 
+
 # testing your periodic tasks - you need to enable send email every 20secs on celery.py
 @task(name='send-test-task')
 def send_email_task():
@@ -302,6 +303,7 @@ class HomeView(TemplateView):
     def get_context_data(self, *args, **kwargs):
 
         context = super(HomeView, self).get_context_data(*args, **kwargs)
+
 
         # http://localhost:8000/?ref=4B17MW
 
@@ -664,6 +666,16 @@ def api_subnews(request):
             return JsonResponse({"result": "error", "msg": "login_requred"})
     else:
         return redirect('/')
+
+
+
+
+
+
+
+
+
+
 
 
 
