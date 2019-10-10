@@ -18,7 +18,7 @@
         <div class="col-3">
             <div class="footiconholder" id="parent">
             <div class="child" style="">
-                <a href='{% url 'Home' %}'><i class="fas fa-home fa-1x iconshape footicon1" style="font-size: 25px; "></i></a>
+                <a href='{% url 'Home' %}'><i class="fas fa-home fa-1x iconshape footicon1 do" id='1' style="font-size: 25px; "></i></a>
             </div>
 
             <div class="child icontext footicon1">Home</div>
@@ -28,7 +28,7 @@
         <div class="col-3">
             <div class="footiconholder" id="parent">
             <div class="child" style="">
-                <a href='{% url 'TagAllView' %}'><i class="fa fa-tags fa-1x iconshape footicon2" style="font-size: 25px"></i></a>
+                <a href='{% url 'TagAllView' %}'><i class="fa fa-tags fa-1x iconshape footicon2 do" id='2' style="font-size: 25px"></i></a>
             </div>
 
             <div class="child icontext footicon2">Topics</div>
@@ -38,7 +38,7 @@
         <div class="col-3">
             <div class="footiconholder" id="parent">
             <div class="child" style="">
-                <a href='{% url 'notifications_all' %}'><i class="fas fa-bell fa-1x iconshape footicon3" style="font-size: 25px"></i></a>
+                <a href='{% url 'notifications_all' %}'><i class="fas fa-bell fa-1x iconshape footicon3 do" id='3' style="font-size: 25px"></i></a>
             </div>
 
             <div class="child icontext footicon3">Notifications</div>
@@ -54,7 +54,10 @@
 <br><br><br><!-- leave the breaks in here for gaps between the footer the content -->
 
 <script type="text/javascript">
-    
+
+
+
+
     var currentpath = window.location.pathname
 
     var path1 = '{% url 'Home' %}'
@@ -65,24 +68,78 @@
     if ( currentpath === path1){
         var footer = document.getElementsByClassName("footicon1");
         for(var i=0; i< footer.length; i++){
-            footer[i].style.color = "grey";
+            footer[i].style.color = "gold";
         }
+            // footer.removeAttr('href')
+
+            // console.log(footer)
+            // footer[0].classList.add("disableClick");
+            // footer[1].classList.add("disableClick");
+
+            // footer[0].href = "#"
+            // footer[1].href = "#"
+
 
     } else if ( currentpath === path2){
         var footer = document.getElementsByClassName("footicon2");
         for(var i=0; i< footer.length; i++){
-            footer[i].style.color = "grey";
+            footer[i].style.color = "gold";
         }
 
 
     } else if ( currentpath === path3){
         var footer = document.getElementsByClassName("footicon3");
         for(var i=0; i< footer.length; i++){
-            footer[i].style.color = "grey";
+            footer[i].style.color = "gold";
         }
     } else {
         //do nothing - page is not there
     }
+
+
+
+
+
+
+
+// function set_ops() {
+
+
+//   $(".do").off( "click" ).click(function(e){
+
+//     event.preventDefault();
+
+//     var path1 = '{% url 'Home' %}'
+//     var path2 = '{% url 'TagAllView' %}'
+//     var path3 = '{% url 'notifications_all' %}'
+
+
+//     var currentpath = window.location.pathname
+
+//     var path = $(this).attr('id')
+
+
+//     if ((path == '1') && ( currentpath !== path1)) {
+//         // window.location.href({% url 'Home' %})
+//     }
+
+//     if ((path == '2') && ( currentpath !== path2)) {
+//         // window.location.href({% url 'TagAllView' %})
+//     }
+
+//     if ((path == '3') && ( currentpath !== path3)) {
+//         // window.location.href({% url 'notifications_all' %})
+//     }
+
+//   });
+
+// }
+
+
+// set_ops()
+// set_page()
+
+
 
 
 

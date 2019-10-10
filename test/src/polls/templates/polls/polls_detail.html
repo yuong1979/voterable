@@ -81,7 +81,7 @@
                   <div class="col-sm-12 fontstyle110" style="float:left; margin-left:12px">
                       <b>
                       {{ poll.title|safe }}</b><p class="timestampstyle">{{ poll.date|timesince }} ago</p>
-                    <hr class="tiplinebreak">
+                    <hr>
                   </div>
 
                   {% if poll.image or poll.imageurl %}
@@ -102,13 +102,13 @@
                     <div id="poll-space-{{ poll.id }}"></div><!-- I changed this from p to div if I face issues to change -->
 
                       {% if poll.description %}
-                      <div class="Mobilefont Compfont">
+                      <div class="pollcontainer">
 
                             {{ poll.description|striptags_except:"iframe, a, p, ol, ul, li, i, img"|safe }}
 
                             {% if poll.textatt %}<p class="creditstyle"> Credits: {{ poll.textatt }}</p>{% endif %}
 
-                      </div> <!-- mobilefont compfont -->
+                      </div> <!-- pollcontainer -->
                       {% endif %} <!-- poll description -->
 
                   </div><!-- contentstyle -->

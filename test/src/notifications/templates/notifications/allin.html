@@ -33,46 +33,65 @@ th {
 {% block content %}
 
 
-<div class="container">
+
+<div class="row">
+
+  <div class="col-sm-12" >
     <div class="mainboxstyle">
 
-        <div class="mainheaderstyle"><i class="far fa-bell fa-1x"></i>&nbsp;&nbsp;&nbsp;&nbsp;Notifications</div><hr>
+        <div class="mainheaderstyle"><i class="far fa-bell fa-1x"></i>&nbsp;&nbsp;&nbsp;Notifications</div>
 
-        <form action='{% url 'readall' %}' method='GET'  style="display: inline-block;">
-          &nbsp;&nbsp;&nbsp;
-          <input type="submit" class='btn btn-primary btn-sm'  style="font-weight: bold" value="Mark all notifications as read">
-        </form>
-
-        <br><br>
+    </div><!-- mainboxstyle -->
+  </div>
 
 
-        <table class="table">
-            
-            {% if notifications %}
+    
+<div class="col-sm-12">
 
-                {% for note in notifications %}
-                
-                <tr>
-                    <td>
-                        <small>{{ note|safe }}</small>
-                    </td>
-                    <td> 
-                        <small>{% if note.read %} Read {% else %} Unread {% endif %}</small>
-                    </td>
-                </tr>
+  {% if notifications %}
 
-                {% endfor %}
 
-            {% else %}
+      <div style="margin: 0% 20% 2% 10%">
+          <form action='{% url 'readall' %}' method='GET'  style="display: inline-block;">
+            &nbsp;&nbsp;&nbsp;
+            <input type="submit" class='btn btn-primary btn-sm'  style="font-weight: bold" value="Mark all notifications as read">
+          </form>
+      </div>
 
-                <p>You have no notifications yet</p>
+      <table class="table">
 
-            {% endif %}
-            
-        </table>
+          {% for note in notifications %}
 
-    </div> <!-- mainboxstyle -->
+          <tr style="background-color: white;">
+              <td>
+                  <b>{{ note.action }}:</b>
+                  <br>
+                  <b>{{ note|safe }}</b>
+              </td>
+              <td> 
+                  <b>{% if note.read %} Read {% else %} Unread {% endif %}</b>
+              </td>
+          </tr>
+
+          {% endfor %}
+          
+      </table>
+
+
+  {% else %}
+  <br>
+  <b style="margin:10%">You have no notifications yet</b>
+
+  {% endif %}
+
 </div>
+
+
+
+
+
+</div>
+
 
 {% include 'footermenu.html' %}
 
