@@ -9,6 +9,13 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!--     <meta name="viewport" content="height=device-height, 
+                      width=device-width, initial-scale=1.0, 
+                      minimum-scale=1.0, maximum-scale=1.0, 
+                      user-scalable=no, target-densitydpi=device-dpi"> -->
+
+
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
     <meta name="description" content="">
     <meta name="author" content="">
@@ -162,9 +169,36 @@
         }
 
 /*        regulates all icon button colors across the project*/
-        .allbtniconcolor {
+/*        .allbtniconcolor {
           color:  dodgerblue;
+        }*/
+
+
+
+        .footermenu {
+          position: fixed;
+          left: 0;
+          bottom: 0;
+          width: 100%;
+          background-color: white;
+          color: white;
+          text-align: center;
+          z-index: 1;
+
+          padding:15px 15px 0px 15px; 
+          border-style: solid; border-width: 1px; 
+          border-top-color: lightgrey;
+
         }
+
+
+        .footiconholder {
+          float:left; 
+/*          padding: 0% 80% 0% 10%;*/
+/*          font-size: 20px;*/
+        }
+
+
 
 
 
@@ -176,8 +210,8 @@
 
         .mainboxstyle {
           background-color:white; 
-          margin-left:-7px;
-          margin-right:-7px;
+/*          margin-left:-7px;
+          margin-right:-7px;*/
           margin-top:7px;
           margin-bottom: 7px; 
           padding:15px;
@@ -194,8 +228,8 @@
           margin-top: 3px;
           margin-bottom: 3px;
 
-          margin-left: -3px;
-          margin-right: -3px;
+          margin-left: -5px;
+          margin-right: -5px;
 
           padding-top: 0px;
           padding-bottom: 0px;
@@ -291,16 +325,31 @@
         .greyboxstyle {
           
 
-          background-color: #F0F0F0;  /*original color #d3d3d3*/
+          background-color:white;
+/*          margin: 10px;*/
+          margin: 5px -7px 5px -7px; 
+/*          margin-left:-7px;
+          margin-right:-7px;
+          margin-top:7px;
+          margin-bottom: 7px; */
+          padding: 2px 15px 2px 20px ;
+          border-radius: 3px;
+
+/*          background-color: #F0F0F0;  /*original color #d3d3d3*/
+
         /*  height: 100%;*/
 /*          min-height: 30px;*/
           font-size: 95%;
-          padding: 4px 10px 4px 10px;
-          margin: 5px -7px 5px -7px;
-          border-bottom: 1px;
-/*          border-bottom-color: lightgrey;
-          border-bottom-style: solid;*/
-          border-radius: 5px;
+
+/*          padding: 0px 6px 0px 6px;*/
+/*          margin: 0px 4px 0px 4px;*/
+
+/*          border: 3px;
+          border-color: #F0F0F0;
+          border-style: solid;*/
+
+/*          border-radius: 5px;*/
+
 /*          position: relative;
           transform: translateY(-50%); 
           top: 50%;
@@ -316,8 +365,57 @@
         }
 
 
-        #id_search {
-          margin-left: -20px
+/*        #id_search {
+          margin-left: 0px
+        }*/
+
+
+/*        this is for the icons - for elements to be stacked on top of one another*/
+        #parent { 
+          padding:0px;
+          margin:0% 1% 5% 0%;
+
+/*          background-color: green;*/
+        }
+
+        .child {
+          height:14px;
+          margin:0px 2px 10px 2px;
+/*          background-color: red;*/
+        }
+
+
+/*        this for for the searchbox data loading message*/
+        .loadmsg {
+          margin:30px;
+        }        
+
+        .icontext {
+          font-size: 12px;
+          color: dodgerblue;
+          font-weight: bold;
+/*          background-color: blue;*/
+          width: 60px;
+          text-align: center;
+        }
+
+        .iconshape {
+          font-size: 20px;
+/*          background-color: yellow;*/          
+        }
+
+
+
+        .iconfixfav {
+          font-size: 22px
+        }
+
+        .iconfixshare {
+          font-size: 22px
+        }
+
+        .iconfixcomment {
+          font-size: 20px;
         }
 
 
@@ -683,11 +781,11 @@
 
 
 
-<center><h1 style="color:#0A8082">Applications</h1></center>
+<!-- <center><h1 style="color:#0A8082">Applications</h1></center> -->
 
 
-<div style="margin:20px">
-  <div class="row">
+
+<!--   <div class="row">
 
     <div class="col-12 col-md-3 basefadecontent">
       <div class ="basethumbnailsize shadow"><br>
@@ -721,8 +819,8 @@
       </div>
     </div>
 
-  </div>
-</div>
+  </div> -->
+
 
 
 <div class="row"></div><br><br>
@@ -733,10 +831,10 @@
 <center><h1 style="color:#0A8082">Milestones</h1></center>
 
 
-<div style="margin:20px">
+
   <div class="row">
 
-    <div class="col-sm-4 basefadecontent">
+    <div class="col-sm-4">
       <div class ="basethumbnailsize shadow"><br>
 
         <div class="row">
@@ -759,7 +857,7 @@
     </div>
 
 
-    <div class="col-sm-4 basefadecontent">
+    <div class="col-sm-4">
       <div class ="basethumbnailsize shadow"><br>
 
         <div class="row">
@@ -783,7 +881,7 @@
 
 
 
-    <div class="col-sm-4 basefadecontent">
+    <div class="col-sm-4">
       <div class ="basethumbnailsize shadow"><br>
 
         <div class="row">
@@ -809,7 +907,7 @@
 
 
   </div>
-</div>
+
 
 
 <br><br>
@@ -818,16 +916,17 @@
 <center><h1 style="color:#0A8082">View Tips</h1></center>
 
 
-<div style="margin:20px"> <!-- container for for margin 20 -->
+
 <div class="row">
 
-  <div class="col-xs-12 col-sm-6  basefadecontent">
-    <div class="card shadow" style="margin: 5px">
+  <div class="col-xs-12 col-sm-6">
+    <div class="card shadow" style="margin: 5% 0% 5% 0%">
       <div class="card-body tipcardbodystyle">
+
         <div class="card-title mainheaderstyle"><i class="fas fa-magic fa-1x"></i>&nbsp;&nbsp;&nbsp;&nbsp;Hot Tips</div><hr>
-     
           {% for i in toppolls %}
-            <div class="greyboxstyle col-12 col-lg-6">
+
+            <div class="greyboxstyle col-12 col-lg-12">
             <div class="row" style="margin-right: 6px">
 
               <div class="col-10 col-lg-10" style="padding-left: 10px;">
@@ -842,7 +941,10 @@
                 {% endif %} -->
               </div>
 
+
+
             </div>
+            <hr style="margin:0px 0px 0px 0px">
             </div>
           {% endfor %}
 
@@ -851,8 +953,8 @@
   </div>
 
 
-  <div class="col-xs-12 col-sm-6 basefadecontent">
-    <div class="card shadow" style="margin: 5px">
+  <div class="col-xs-12 col-sm-6">
+    <div class="card shadow" style="margin: 5% 0% 5% 0%">
       <div class="card-body">
         <div class="card-title mainheaderstyle"><i class="fa fa-tag fa-1x"></i>&nbsp;&nbsp;&nbsp;&nbsp;Hot Topics</div><hr>
           {% for i in tags %}
@@ -867,10 +969,9 @@
 
 
 </div> 
-</div> <!-- container for margin20 -->
+
 
 <br><br><br>
-
 
 
 
@@ -889,9 +990,10 @@
 
 
 
-  <div style="margin:20px">
+<!--   <div style="margin:20px"> -->
 
-    <h3>Welcome 
+    <br>
+    <h3 style="margin:8px">Welcome 
 
         {% if request.user.puser.name %}
         {{ request.user.puser.name }}
@@ -901,11 +1003,11 @@
 
     </h3>
 
-    <b>You are logged in</b><br><br>
+    <b style="margin:16px">You now are logged in</b><br><br>
 
       {% block special %}{% endblock %}
 
-  </div>
+<!--   </div> -->
 
 
 
@@ -950,6 +1052,31 @@
 
   {% block jquery %}
   {% endblock %}
+
+
+
+
+//scrolling footer
+var lastScrollTop = 0;
+// element should be replaced with the actual target element on which you have applied scroll, use window in case of no target element.
+window.addEventListener("scroll", function(){ // or window.addEventListener("scroll"....
+  var st = window.pageYOffset || document.documentElement.scrollTop;
+  var footer = document.getElementById("scrollfooter");
+
+
+
+   if (st > lastScrollTop){
+      // downscroll code
+    footer.style.display = "block";
+   } else {
+      // upscroll code
+    footer.style.display = "none";      
+   }
+   lastScrollTop = st <= 0 ? 0 : st; // For Mobile or negative scrolling
+}, false);
+
+
+
 
 
 const updateMsgCount = () => {

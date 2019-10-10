@@ -17,7 +17,7 @@
   position:fixed;
   width:40px;
   height:40px;
-  bottom:30px;
+  bottom:20px;
   right:30px;
 /*  background-color:#06C;
   color:#FFF;*/
@@ -38,6 +38,9 @@
 
 
 
+
+
+
 {% include 'scrollbar.html' %} <!-- for users to estimate how many on the list -->
 
 
@@ -51,54 +54,63 @@
 
 
 
+
     <div class="mainboxstyle">
 
-          <div style="text-align: right; margin-top:4px">
-<!--             {% if free == True %}
-              <i style="font-size: 16px" class="allfontcolor fas fa-check-circle fa-1x"></i><b class="allfontcolor">&nbsp;Free</b>
-            {% endif %}
-            &nbsp;&nbsp;&nbsp;&nbsp; -->
 
 
             {% if listtitle == "Favorite" or listtitle == "Created"  or listtitle == "Createduser" %}
 
-              <a style="font-size: 16px; margin-right:10px;" class='btn-link' href='/polls/?type={{ BackPtype }}&sort=Date' >
-                <b class="allbtniconcolor">
-                  <i class="fas fa-step-backward fa-1x" aria-hidden="true"></i>&nbsp;&nbsp;Tip List
-                </b>
-              </a>
+
+
+
+
+              <div style="float:right" id="parent">
+                <div class="child" style="text-align:center;">
+                  <a href='/polls/?type={{ BackPtype }}&sort=Date'><b><i class="fas fa-step-backward fa-1x iconshape"></i></b></a>
+                </div>
+                <div class="child icontext">Tip List</div>
+              </div>
+
 
             {% else %}
 
               {% if user_authorised == True %}
 
-                <a style="font-size: 16px; margin-right:10px;" class="pull-right" href='{{ PollType_obj.get_update }}'>
-                  <b class="allbtniconcolor">
-                    <i class="fas fa-edit fa-1x" aria-hidden="true"></i>&nbsp;&nbsp;Edit
-                  </b>
-                </a>
+              <div style="float:right" id="parent">
+                <div class="child" style="text-align:center;">
+                  <a href='{{ PollType_obj.get_update }}'><b><i class="fas fa-edit fa-1x iconshape"></i></b></a>
+                </div>
+                <div class="child icontext">Edit</div>
+              </div>
 
               {% endif %}
 
-                <a style="font-size: 16px; margin-right:10px;" class="pull-right" data-toggle="modal" data-target="#ShareModal">
-                  <b class="allbtniconcolor">
-                    <i class="fa fa-share-alt fa-1x" aria-hidden="true"></i>&nbsp;&nbsp;Share
-                  </b>
-                </a>
 
-<!--                 <a style="font-size: 16px; margin-right:10px;" href='{{ PollType_obj.get_update }}' class='btn-link' ><b><i class="fas fa-edit fa-1x" aria-hidden="true"></i>&nbsp;Edit</b></a> -->
+              <div style="float:right" id="parent">
+                <div class="child" style="text-align:center;">
+                  <a href='#' data-toggle="modal" data-target="#ShareModal"><b><i class="fa fa-share-alt fa-1x iconshape" aria-hidden="true"></i></b></a>
+                </div>
+                <div class="child icontext">Share</div>
+              </div>
+
+
+
+
 
             {% endif %}
 
 
-          </div>
 
         <div class="mainheaderstyle"><i class="fas fa-list-ol fa-1x"></i>&nbsp;&nbsp;&nbsp;&nbsp;{{ title }}</div>
 
+    </div>
 
-        <hr>
 
-            <div class="col-12 col-lg-6 fontstyle110" style="padding:0px">
+    <div class="mainboxstyle">
+
+
+            <div class="col-12 col-lg-6 fontstyle110" style="padding:0px;">
 
               <div class="row">
 
@@ -119,15 +131,20 @@
 
         <hr>
 
-        <div class="tagsbox">
-        {% if Tags %}
-          {% for i in Tags %}
-            {% if i.title != "" %}
-            <a href='{{i.get_absolute_url}}' class="btn btn-primary tagstyle" style="margin:2px"> <b>{{i}} ({{i.counter}})</b></a>
-            {% endif %}
-          {% endfor %}
-        {% endif %}
-        </div><!-- tagsbox -->
+
+    <div class="tagsbox">
+      {% if Tags %}
+        {% for i in Tags %}
+          {% if i.title != "" %}
+            <a href='{{i.get_absolute_url}}' class="btn btn-primary tagstyle">{{ i }} ({{i.counter}})</a>&nbsp;&nbsp;
+          {% endif %}
+        {% endfor %}
+      {% else %}
+      <br>
+        <small><b>There are no entries yet.</b></small>
+      <br>
+      {% endif %}
+    </div><!-- tagsbox -->
 
 
     </div> <!-- mainboxstyle -->
@@ -308,7 +325,7 @@
       {% endif %}
 
 
-
+{% include 'footermenu.html' %}
 
 
 
@@ -335,87 +352,6 @@
 
 
 
-  <!-- The Modal -->
-  <div class="modal fade" id="ReportModal" style="margin:0% 1% 0% 1%; width:95%">
-    <div class="modal-dialog">
-      <div class="modal-content">
-      
-        <!-- Modal Header -->
-        <div class="modal-header">
-          <h4 class="modal-title">Report Post</h4>
-          <button type="button" class="close" data-dismiss="modal">&times;</button>
-        </div>
-        
-        <!-- Modal body -->
-        <div class="modal-body center">
-
-          <h4><i class="fas fa-exclamation-triangle" style="color:red">&nbsp;&nbsp;&nbsp;</i> Is this post bothering you?</h4>
-          <p style="color:grey">Please tell us why</p>
-
-
-        <!-- import the older version of font awesome for this spinner because the latest version is not the coolest -->
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-        <i class="spinreport fa fa-spinner fa-spin" style="font-size:24px; display:none; margin:20px"></i>
-        <div class="spinreport" style="font-size:16px; display:none; ">Sending</div>
-
-        <div class="hidesubmission">
-        <form>
-
-        <b>
-        <input class='btn btn-sm btn-warning btn-block reportp' issue_id="Spam Content" poll_id="{{ poll.id }}" data-action='show-spinner' type="submit" value="Spam" style="font-weight: bold;">
-
-        <br>
-
-        <input class='btn btn-sm btn-danger btn-block reportp' issue_id="Outdated Content" poll_id="{{ poll.id }}" data-action='show-spinner' type="submit" value="Outdated" style="font-weight: bold;">
-
-        <br>
-
-        <input class='btn btn-sm btn-success btn-block reportp' issue_id="Inappropriate Content" poll_id="{{ poll.id }}" data-action='show-spinner' type="submit" value="Inappropriate" style="font-weight: bold;">
-
-        <br>
-
-        <input class='btn btn-sm btn-primary btn-block reportp' issue_id="Duplicate Content" poll_id="{{ poll.id }}" data-action='show-spinner' type="submit" value="Duplicate" style="font-weight: bold;">
-        </b>
-
-        <br>
-
-        <input class='btn btn-sm btn-secondary btn-block reportp' issue_id="Other Content" poll_id="{{ poll.id }}" data-action='show-spinner' type="submit" value="Others" style="font-weight: bold;">
-        </b>
-
-        <br>
-
-
-<!--         <p class="text-center"><b>Or leave your complaint below:</b></p>
-
-        <textarea id="custom_report_textarea" class="form-control" rows="3" poll_id="{{ poll.id }}" data-action='show-spinner' issue_id="Custom Report" style="font-weight: bold;"></textarea>
-
-        <br>
-
-        <button id="custom_report_button" class="btn btn-sm btn-secondary btn-block" type="submit"><b>Submit</b></button> -->
-
-
-
-
-<!--         <input class="form-control" rows="5" data-action='show-spinner' type="text"> -->
-
-<!--         <div class="form-group"> -->
-<!--           <label for="comment">Comment:</label>
-          <textarea class="form-control" rows="4" id="comment"></textarea> -->
-<!--         </div> -->
-
-        </form>
-      </div> <!-- to hide -->
-        </div>
-        
-        <!-- Modal footer -->
-<!--         <div class="modal-footer">
-          <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-        </div> -->
-        
-      </div>
-    </div>
-  </div>
-  
 
 
 
@@ -513,11 +449,11 @@ function testEvent() {
       onAfterPageLoad: function ($items) {
         $('.loading').hide();
 
-        addPollIdEvent();
+        // addPollIdEvent();
         set_votes();
         set_fav();
         set_more();
-        set_report();
+        // set_report();
 
  
     $(".note-video-clip").attr("width", "100%");
@@ -785,82 +721,82 @@ $(function(){
 
 
 
-// sending the poll id to report after the flag is clicked on
-function addPollIdEvent() {
-  $(".modalclick").click(function(){
-    $(".hidesubmission").show();
-    $(".spinreport").hide();
-    var value = $(this).attr('id');
-    $(".reportp").data("poll_id", value);
-    $("#custom_report_button").data("poll_id", value);
-  });
-};
+// // sending the poll id to report after the flag is clicked on
+// function addPollIdEvent() {
+//   $(".modalclick").click(function(){
+//     $(".hidesubmission").show();
+//     $(".spinreport").hide();
+//     var value = $(this).attr('id');
+//     $(".reportp").data("poll_id", value);
+//     $("#custom_report_button").data("poll_id", value);
+//   });
+// };
 
 
 
 
-// receiving the poll id, the poll issue id and poll issue text to be inserted into the database
-function poll_report_ajax_calling(pollid, issueid, issuemsg){
-    // if custom report textarea is empty - show flash message, else - fire AJAX call
-    if (issuemsg == false){
-        var message = "You've submitted an empty report. Please, fill in the textarea or use standard reports!"
-        showFlashMessage(message);
-    }
-    else{
-        $.ajax({
-            dataType: 'json',
-            type: 'POST',
-            data: {
-              'poll_id': pollid, 'issue_id': issueid, 'issuemsg': issuemsg,
-              csrfmiddlewaretoken: '{{ csrf_token }}'
-            },
-            url: '/polls/report/',
-            success: function(jsondata) {
-            var message = "Post reported. Thank you"
-            showFlashMessage(message)
-            $('#ReportModal').modal("hide")
-            }
-        })
-    }
-};
+// // receiving the poll id, the poll issue id and poll issue text to be inserted into the database
+// function poll_report_ajax_calling(pollid, issueid, issuemsg){
+//     // if custom report textarea is empty - show flash message, else - fire AJAX call
+//     if (issuemsg == false){
+//         var message = "You've submitted an empty report. Please, fill in the textarea or use standard reports!"
+//         showFlashMessage(message);
+//     }
+//     else{
+//         $.ajax({
+//             dataType: 'json',
+//             type: 'POST',
+//             data: {
+//               'poll_id': pollid, 'issue_id': issueid, 'issuemsg': issuemsg,
+//               csrfmiddlewaretoken: '{{ csrf_token }}'
+//             },
+//             url: '/polls/report/',
+//             success: function(jsondata) {
+//             var message = "Post reported. Thank you"
+//             showFlashMessage(message)
+//             $('#ReportModal').modal("hide")
+//             }
+//         })
+//     }
+// };
 
-function set_report() {
+// function set_report() {
 
-  $('#custom_report_button').on('click', function(e){
-      e.preventDefault();
-      var textarea = $('#custom_report_textarea');
-      var button = $(this);
-      var pollid = $(".reportp").data("poll_id");
-      var issueid = textarea.attr('issue_id');
-      var issuemsg;
+//   $('#custom_report_button').on('click', function(e){
+//       e.preventDefault();
+//       var textarea = $('#custom_report_textarea');
+//       var button = $(this);
+//       var pollid = $(".reportp").data("poll_id");
+//       var issueid = textarea.attr('issue_id');
+//       var issuemsg;
       
-      // check if textarea is not empty and have no blank spaces instead of text
-      if ($.trim(textarea.val()).length) {
-          issuemsg = textarea.val();
-          poll_report_ajax_calling(pollid, issueid, issuemsg);
-          textarea.val('')
-      }
-      else{
-          issuemsg = false;
-          poll_report_ajax_calling(pollid, issueid, issuemsg);
-          textarea.val('')
-      };
-  });
+//       // check if textarea is not empty and have no blank spaces instead of text
+//       if ($.trim(textarea.val()).length) {
+//           issuemsg = textarea.val();
+//           poll_report_ajax_calling(pollid, issueid, issuemsg);
+//           textarea.val('')
+//       }
+//       else{
+//           issuemsg = false;
+//           poll_report_ajax_calling(pollid, issueid, issuemsg);
+//           textarea.val('')
+//       };
+//   });
 
-  $(".reportp").click(function(e){
-      //preventdefault is important because it stops the original button from working and uses the javascript method
-      e.preventDefault();
-      var pollid = $(".reportp").data("poll_id");
-      var issueid = $(this).attr("issue_id");
-      var issuemsg = true;
+//   $(".reportp").click(function(e){
+//       //preventdefault is important because it stops the original button from working and uses the javascript method
+//       e.preventDefault();
+//       var pollid = $(".reportp").data("poll_id");
+//       var issueid = $(this).attr("issue_id");
+//       var issuemsg = true;
 
-      $(".hidesubmission").hide();
-      $(".spinreport").fadeIn(1000);
+//       $(".hidesubmission").hide();
+//       $(".spinreport").fadeIn(1000);
 
-      poll_report_ajax_calling(pollid, issueid, issuemsg);
-  });
+//       poll_report_ajax_calling(pollid, issueid, issuemsg);
+//   });
 
-}
+// }
 
 
 
@@ -885,7 +821,7 @@ function set_fav() {
           var message = "Unfavorited Tip"
           var color = "dodgerblue"
         }
-        showFlashMessage(message)
+        // showFlashMessage(message)
             var fav_id = "#fav-type-" + poll_id;
             
             if (jsondata.msg === "login_requred") {
@@ -901,11 +837,11 @@ function set_fav() {
 
 }
 
-addPollIdEvent();
+// addPollIdEvent();
 set_fav();
 set_votes();
 set_more();
-set_report();
+// set_report();
 
 
 

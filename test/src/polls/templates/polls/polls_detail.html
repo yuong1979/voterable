@@ -33,12 +33,19 @@
 
 
 
-
     <div class="mainboxstyle">
 
-            <div style="float:right; margin-top:4px">
+<!--             <div style="float:right; margin-top:4px">
               <a style="font-size: 16px; margin-right:10px;" href='/polls/?type={{ BackPtype }}&sort=Date' class='btn-link' ><b><i class="fas fa-step-backward fa-1x" aria-hidden="true"></i>&nbsp;Tip List</b></a>
-            </div>
+            </div> -->
+
+
+              <div style="float:right;" id="parent">
+                <div class="child" style="text-align:center;">
+                  <a href='/polls/?type={{ BackPtype }}&sort=Date'><b><i class="fas fa-step-backward fa-1x iconshape"></i></b></a>
+                </div>
+                <div class="child icontext">Tip List</div>
+              </div>
 
         <div class="mainheaderstyle"><i class="fas fa-info-circle fa-1x"></i>&nbsp;&nbsp;&nbsp;&nbsp;Details</div>
 
@@ -123,10 +130,10 @@
 <!-- only display analytics if the user is premium or the person who created the poll -->
     <div class="mainboxstyle">
 
-      <div class="fontstyle90" style="padding:2px; margin:2px;">
+      <div class="fontstyle90" style="padding:0px; margin:0px;">
 
-          <span style="margin:8px">
-        Upvotes &nbsp;
+          <span style="margin:6px">
+        Upvotes 
           <div class="badge badge-pill badgestyle badge-secondary">
             {% if poll.posi %} {{poll.posi}} {% else %} 0 {% endif %}
           </div>
@@ -136,15 +143,15 @@
           {% if poll.nega %} {{poll.nega}} {% else %} 0 {% endif %}
         </b> -->
 
-          <span style="margin:8px">
-        Views &nbsp;
+          <span style="margin:6px">
+        Views 
           <div class="badge badge-pill badgestyle badge-secondary">
             {% if Views %} {{Views}} {% else %} 0 {% endif %}
           </div>  
           </span>
         
-          <span style="margin:8px">
-        Favorited &nbsp;
+          <span style="margin:6px;">
+        Favorited 
           <div class="badge badge-pill badgestyle badge-secondary">
             {% if Favorited %} {{Favorited}} {% else %} 0 {% endif %}
           </div>
@@ -158,10 +165,8 @@
   {% endif %}
   {% endcomment %}
 
-        <div class="mainboxstyle">
-          <div style="margin-left:15px">
+        <div class="mainboxstyle row">
         {% include 'poll_features.html' %}
-          </div>
         </div><!-- mainboxstyle -->    
 
 
@@ -355,6 +360,9 @@
 </div><!-- mainboxstyle -->
 
 
+{% include 'footermenu.html' %}
+
+
 
 {% include 'sharemodal.html' %}
 
@@ -467,6 +475,92 @@
     </div>
   </div>
 </div>
+
+
+
+
+  <!-- The Modal -->
+  <div class="modal fade" id="ReportModal" style="margin:0% 1% 0% 1%; width:95%">
+    <div class="modal-dialog">
+      <div class="modal-content">
+
+
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <h4 class="modal-title">Report Post</h4>
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+        
+        <!-- Modal body -->
+        <div class="modal-body center">
+
+          <h4><i class="fas fa-exclamation-triangle" style="color:red">&nbsp;&nbsp;&nbsp;</i> Is this post bothering you?</h4>
+          <p style="color:grey">Please tell us why</p>
+
+
+        <!-- import the older version of font awesome for this spinner because the latest version is not the coolest -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+        <i class="spinreport fa fa-spinner fa-spin" style="font-size:24px; display:none; margin:20px"></i>
+        <div class="spinreport" style="font-size:16px; display:none; ">Sending</div>
+
+        <div class="hidesubmission">
+        <form>
+
+        <b>
+        <input class='btn btn-sm btn-warning btn-block reportp' issue_id="Spam Content" poll_id="{{ poll.id }}" data-action='show-spinner' type="submit" value="Spam" style="font-weight: bold;">
+
+        <br>
+
+        <input class='btn btn-sm btn-danger btn-block reportp' issue_id="Outdated Content" poll_id="{{ poll.id }}" data-action='show-spinner' type="submit" value="Outdated" style="font-weight: bold;">
+
+        <br>
+
+        <input class='btn btn-sm btn-success btn-block reportp' issue_id="Inappropriate Content" poll_id="{{ poll.id }}" data-action='show-spinner' type="submit" value="Inappropriate" style="font-weight: bold;">
+
+        <br>
+
+        <input class='btn btn-sm btn-primary btn-block reportp' issue_id="Duplicate Content" poll_id="{{ poll.id }}" data-action='show-spinner' type="submit" value="Duplicate" style="font-weight: bold;">
+        </b>
+
+        <br>
+
+        <input class='btn btn-sm btn-secondary btn-block reportp' issue_id="Other Content" poll_id="{{ poll.id }}" data-action='show-spinner' type="submit" value="Others" style="font-weight: bold;">
+        </b>
+
+        <br>
+
+
+<!--         <p class="text-center"><b>Or leave your complaint below:</b></p>
+
+        <textarea id="custom_report_textarea" class="form-control" rows="3" poll_id="{{ poll.id }}" data-action='show-spinner' issue_id="Custom Report" style="font-weight: bold;"></textarea>
+
+        <br>
+
+        <button id="custom_report_button" class="btn btn-sm btn-secondary btn-block" type="submit"><b>Submit</b></button> -->
+
+
+
+
+<!--         <input class="form-control" rows="5" data-action='show-spinner' type="text"> -->
+
+<!--         <div class="form-group"> -->
+<!--           <label for="comment">Comment:</label>
+          <textarea class="form-control" rows="4" id="comment"></textarea> -->
+<!--         </div> -->
+
+        </form>
+      </div> <!-- to hide -->
+        </div>
+        
+        <!-- Modal footer -->
+<!--         <div class="modal-footer">
+          <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+        </div> -->
+        
+      </div>
+    </div>
+  </div>
+  
 
 
 
@@ -611,7 +705,7 @@ $(".favorite").click(function(e){
         var message = "Unfavorited Tip"
         var color = "dodgerblue"
       }
-      showFlashMessage(message)
+      // showFlashMessage(message)
           var fav_id = "#fav-type-" + poll_id;
           
           if (jsondata.msg === "login_requred") {
@@ -726,6 +820,8 @@ $(".favorite").click(function(e){
 {#  <script>#}
 
 
+set_report()
+
 
 $(".note-video-clip").attr("width", "100%");
 $(".note-video-clip").attr("height", "300");
@@ -798,6 +894,55 @@ $(".note-video-clip").attr("height", "300");
       });
 
     });
+
+
+function set_report() {
+
+  $(".reportp").click(function(e){
+      //preventdefault is important because it stops the original button from working and uses the javascript method
+      e.preventDefault();
+      var pollid = $(".reportp").attr("poll_id");
+      var issueid = $(this).attr("issue_id");
+      var issuemsg = true;
+
+      $(".hidesubmission").hide();
+      $(".spinreport").fadeIn(1000);
+
+      poll_report_ajax_calling(pollid, issueid, issuemsg);
+  });
+
+}
+
+
+
+// receiving the poll id, the poll issue id and poll issue text to be inserted into the database
+function poll_report_ajax_calling(pollid, issueid, issuemsg){
+    // if custom report textarea is empty - show flash message, else - fire AJAX call
+    if (issuemsg == false){
+        var message = "You've submitted an empty report. Please, fill in the textarea or use standard reports!"
+        showFlashMessage(message);
+    }
+    else{
+        $.ajax({
+            dataType: 'json',
+            type: 'POST',
+            data: {
+              'poll_id': pollid, 'issue_id': issueid, 'issuemsg': issuemsg,
+              csrfmiddlewaretoken: '{{ csrf_token }}'
+            },
+            url: '/polls/report/',
+            success: function(jsondata) {
+            var message = "Post reported. Thank you"
+            showFlashMessage(message)
+            $('#ReportModal').modal("hide")
+            }
+        })
+    }
+};
+
+
+
+
 
 {#  </script>#}
 {% endblock %}

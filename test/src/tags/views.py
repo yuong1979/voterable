@@ -169,7 +169,7 @@ def TagPollsearch(request):
 # implement search here
 class TagView(DetailView, FormView):
 	model = TagPoll
-	template_name = 'tags/tags_all.html'
+	template_name = 'tags/tags_polls_search.html'
 	form_class = TagPollSearchForm
 
 	def dispatch(self, *args, **kwargs):
