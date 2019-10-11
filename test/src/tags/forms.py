@@ -27,7 +27,12 @@ class TagSearchForm(forms.Form):
     search = forms.CharField(
         required=True,
         label="",
-        widget=forms.TextInput(attrs={'placeholder': 'Search'})
+        widget=forms.TextInput(attrs={
+            'placeholder': 'Search', 
+            'autocomplete':'off'
+            }),
+
+
     )
 
 
@@ -51,5 +56,8 @@ class TagPollSearchForm(forms.Form):
     search = forms.CharField(
         required=True,
         label="",
-        widget=forms.TextInput(attrs={'placeholder': 'Search Tips'})
+        widget=forms.TextInput(attrs={
+            'placeholder': 'Search Tips', 
+            'autocomplete':'off'
+            })
     )
