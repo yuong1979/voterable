@@ -1277,14 +1277,24 @@ class PollDetailPreview(LoginRequiredMixin, TemplateView):
 
 
 
-# Updated Tip
-# New Tip
-# Updated Review
-# New Tip List
 
-# Updated Tip List
-# New Review
 
+
+
+
+
+# AdminPollsListView
+
+def AdminPollsListView(request):
+    pslug = request.GET.get('type') 
+    ptype_obj = Ptype.objects.filter(slug=pslug)
+    polllist = PollItem.objects.filter(polltype=ptype_obj).order_by('-date')
+
+    context = {
+                'polls': polllist, 
+                }
+                
+    return render(request, 'polls/admin_poll_list.html', context)
 
 
 

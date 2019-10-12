@@ -51,56 +51,51 @@ width: 55px;
 
 <div class="row">
 
-  <div class="col-sm-12" >
+  <div class="col-sm-12" style="margin:0% 0% -4% 0%">
     <div class="mainboxstyle">
 
 
-<div style="float:right" id="parent">
+    <div style="float:right" id="parent">
 
-    {% if request.user.is_authenticated %}
+        {% if request.user.is_authenticated %}
 
-      {% if fav == True %}
+          {% if fav == True %}
 
-        <div class="child" style="text-align:center;">
-          <a href='#' class='favorite' tag_id="{{ tag.id }}"><b><i id='fav-type-{{ tag.id }}' aria-hidden="true" class="fa fa-star fa-1x iconshape" style="color:gold;"></i></b></a>
-        </div>
+            <div class="child" style="text-align:center;">
+              <a href='#' class='favorite' tag_id="{{ tag.id }}"><b><i id='fav-type-{{ tag.id }}' aria-hidden="true" class="fa fa-star fa-1x iconshape" style="color:gold;"></i></b></a>
+            </div>
 
-        <div class="child icontext">Favorite</div>
+            <div class="child icontext">Favorite</div>
 
-      {% else %}
+          {% else %}
 
-        <div class="child" style="text-align:center;">
-          <a href='#' class='favorite' tag_id="{{ tag.id }}"><b><i id='fav-type-{{ tag.id }}' aria-hidden="true" class="fa fa-star fa-1x iconshape"></i></b></a>
-        </div>
+            <div class="child" style="text-align:center;">
+              <a href='#' class='favorite' tag_id="{{ tag.id }}"><b><i id='fav-type-{{ tag.id }}' aria-hidden="true" class="fa fa-star fa-1x iconshape"></i></b></a>
+            </div>
 
-        <div class="child icontext">Favorite</div>
+            <div class="child icontext">Favorite</div>
 
-      {% endif %}
+          {% endif %}
 
-    {% else %}
-    
+        {% else %}
+        
+          <div class="child" style="text-align:center;">
+            <a href="/accounts/login/"><i class="fa fa-star fa-lg iconshape"></i></a>
+          </div>
 
-      <div class="child" style="text-align:center;">
-        <a href="/accounts/login/"><i class="fa fa-star fa-lg iconshape"></i></a>
-      </div>
+            <div class="child icontext">Favorite</div>
 
-        <div class="child icontext">Favorite</div>
+        {% endif %}
 
-    {% endif %}
+    </div>
 
-</div>
-
-
-
-        <div class="mainheaderstyle"><i class="fa fa-tags fa-1x"></i>&nbsp;&nbsp;&nbsp;{{ tag }}</div>
+    <div class="mainheaderstyle"><i class="fa fa-tags fa-1x"></i>&nbsp;&nbsp;&nbsp;{{ tag }}</div>
 
     </div><!-- mainboxstyle -->
   </div><!-- col-sm-12 -->
 
 
-
-
-  <div class="col-sm-12" >
+<!--   <div class="col-sm-12" >
     <div class="mainboxstyle">
 
     <div class="col-xs-12 col-sm-6 col-md-4">
@@ -109,8 +104,8 @@ width: 55px;
       </form>
     </div>
 
-    </div><!-- mainboxstyle -->
-  </div><!-- col-sm-12 -->
+    </div>
+  </div> -->
 
 
 </div><!-- row -->
@@ -240,84 +235,84 @@ width: 55px;
 
 
 
-var settime;
+// var settime;
 
-$('#id_search').on('keyup submit',function(e){
-    e.preventDefault();
-    clearTimeout(settime);
-    settime = setTimeout(FilterTag, 500);
-});
-
-
-
-function FilterTag() {
-
-    if($('#id_search').val()){
-
-        $.ajax({
-        method:'GET',
-        url:"/tags/psearch/",
-        dataType: "json",
-        data:{
-            search :$('#id_search').val(),
-            tag :$('.tag').attr("tag_id"),
-        },
-        beforeSend: function(){
-            $(".polllist_error").show();
-            $(".polllist_error p").html("");
-            $(".polllist_error").append("<p class='loadmsg'>Loading data...</p>");
-        },
-        success : function(result){
-            $(".polllist_error").hide();
-
-            $(".polllist").show();
-            $(".allpolllist").hide();
-            $(".polllist").html("");
-
-            putPollListData(result);
-        },
-        error: function(response){
-            $(".polllist_error").show();
-            $(".polllist_error p").html("");
-
-            $(".polllist_error").append("<p class='loadmsg'>Something went wrong...</p>");
-        }
-    });
-
-    }else{
-
-        $(".polllist_error").hide();
-        $(".polllist").hide();
-        $(".allpolllist").show();
-
-    }
-
-}
+// $('#id_search').on('keyup submit',function(e){
+//     e.preventDefault();
+//     clearTimeout(settime);
+//     settime = setTimeout(FilterTag, 500);
+// });
 
 
+
+// function FilterTag() {
+
+//     if($('#id_search').val()){
+
+//         $.ajax({
+//         method:'GET',
+//         url:"/tags/psearch/",
+//         dataType: "json",
+//         data:{
+//             search :$('#id_search').val(),
+//             tag :$('.tag').attr("tag_id"),
+//         },
+//         beforeSend: function(){
+//             $(".polllist_error").show();
+//             $(".polllist_error p").html("");
+//             $(".polllist_error").append("<p class='loadmsg'>Loading data...</p>");
+//         },
+//         success : function(result){
+//             $(".polllist_error").hide();
+
+//             $(".polllist").show();
+//             $(".allpolllist").hide();
+//             $(".polllist").html("");
+
+//             putPollListData(result);
+//         },
+//         error: function(response){
+//             $(".polllist_error").show();
+//             $(".polllist_error p").html("");
+
+//             $(".polllist_error").append("<p class='loadmsg'>Something went wrong...</p>");
+//         }
+//     });
+
+//     }else{
+
+//         $(".polllist_error").hide();
+//         $(".polllist").hide();
+//         $(".allpolllist").show();
+
+//     }
+
+// }
 
 
 
 
-    function putPollListData(result){
-        let row;
-
-        if (result["polllist"].length>0){
-            $.each(result['polllist'], function(a,b) {
-
-                row = "<div class='greyboxstyle'><div class='row'><div class='col-9 col-lg-9' style=''><a href='"+b['url']+"'><b style='line-height: 200%;'>"+b["title"]+"</b></a></div><div class='col-3 col-lg-3'><span class='badge badge-pill badgestyle badge-secondary' style=''> "+b['counter']+" tips </span></div></div></div>"
 
 
-                $(".polllist").append(row);
-            });
-        }else{
+//     function putPollListData(result){
+//         let row;
 
-            $(".polllist_error p").html("");
-            $(".polllist_error").append("<p class='loadmsg'>No results found</p>");
-            $(".polllist").hide();
-            $(".polllist_error").show();
-        }
-    }
+//         if (result["polllist"].length>0){
+//             $.each(result['polllist'], function(a,b) {
+
+//                 row = "<div class='greyboxstyle'><div class='row'><div class='col-9 col-lg-9' style=''><a href='"+b['url']+"'><b style='line-height: 200%;'>"+b["title"]+"</b></a></div><div class='col-3 col-lg-3'><span class='badge badge-pill badgestyle badge-secondary' style=''> "+b['counter']+" tips </span></div></div></div>"
+
+
+//                 $(".polllist").append(row);
+//             });
+//         }else{
+
+//             $(".polllist_error p").html("");
+//             $(".polllist_error").append("<p class='loadmsg'>No results found</p>");
+//             $(".polllist").hide();
+//             $(".polllist_error").show();
+//         }
+//     }
 
 
 

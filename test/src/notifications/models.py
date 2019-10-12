@@ -120,7 +120,7 @@ class Notification(models.Model):
 		context = {
 			"sender": self.sender,
 			"recipient": self.recipient,
-			"action": self.action,
+			# "action": self.action,
 			"message_url": message_url,
 
 			"msg_con": self.message[:80],
@@ -128,7 +128,7 @@ class Notification(models.Model):
 			"verify_read": reverse("notifications_read", kwargs={"id": self.id})
 		}
 
-		return "%(action)s<a href='%(verify_read)s?next=%(message_url)s'> :  %(msg_con)s</a>" %context
+		return "<a href='%(verify_read)s?next=%(message_url)s'> %(msg_con)s</a>" %context
 # 
 
 		# return "%(sender)s: <a href='%(verify_read)s?next=%(message_url)s'>%(action)s</a>" %context

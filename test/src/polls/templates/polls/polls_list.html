@@ -17,7 +17,7 @@
   position:fixed;
   width:40px;
   height:40px;
-  bottom:20px;
+  bottom:25px;
   right:30px;
 /*  background-color:#06C;
   color:#FFF;*/
@@ -62,9 +62,6 @@
             {% if listtitle == "Favorite" or listtitle == "Created"  or listtitle == "Createduser" %}
 
 
-
-
-
               <div style="float:right" id="parent">
                 <div class="child" style="text-align:center;">
                   <a href='/polls/?type={{ BackPtype }}&sort=Date'><b><i class="fas fa-step-backward fa-1x iconshape"></i></b></a>
@@ -75,7 +72,11 @@
 
             {% else %}
 
-              {% if user_authorised == True %}
+              {% comment %} 
+              <!-- {% if user_authorised == True %} -->
+              {% endcomment %}
+
+              {% if request.user.is_staff %}
 
               <div style="float:right" id="parent">
                 <div class="child" style="text-align:center;">
@@ -84,8 +85,15 @@
                 <div class="child icontext">Edit</div>
               </div>
 
-              {% endif %}
 
+              <div style="float:right" id="parent">
+                <div class="child" style="text-align:center;">
+                  <a href='/adminpolls/?type={{ BackPtype }}'><b><i class="fas fa-eye fa-1x iconshape"></i></b></a>
+                </div>
+                <div class="child icontext">Admin</div>
+              </div>
+
+              {% endif %}
 
               <div style="float:right" id="parent">
                 <div class="child" style="text-align:center;">
@@ -93,9 +101,6 @@
                 </div>
                 <div class="child icontext">Share</div>
               </div>
-
-
-
 
 
             {% endif %}
@@ -215,15 +220,12 @@
 
 <!--                       <button class="test" id="{{ poll.id }}">{{ poll.id }}</button> -->
 
-                  <div class="col-sm-12 fontstyle100" style="margin-left:12px">
+                  <div class="col-sm-12 fontstyle100 pollcontainer" style="margin-left:12px">
                       <b><span>{{ page_obj.number|total_count:paginator.per_page|counter_for_pagination:forloop.counter }}.</span>
                       {{ poll.title|safe }}</b><p class="timestampstyle">{{ poll.date|timesince }} ago</p>
 
 
-
-
-
-                    <hr class="row-tip-linebreak" style="margin-top:-1px;margin-bottom:-1px">
+                    <hr class="row-tip-linebreak" style="margin:10px">
                   </div>
 
                   {% if poll.image or poll.imageurl %}
@@ -244,17 +246,27 @@
                     <div id="poll-space-{{ poll.id }}"></div><!-- I changed this from p to div if I face issues to change -->
 
                       {% if poll.description %}
-                      <div class="Mobilefont Compfont">
 
                           <span class="tip-sliced">
+                          <div class="pollcontainer">
                           {{ poll.description|striptags_except:"a, p, ol, ul, li, i"|safe|truncatechars_html:"150" }}
+                          </div>
                           </span>
 
                           {% if poll.description|striptags_except:"a, p, ol, ul, li, i"|safe|length < 150 %}
+                          <div class="pollcontainer">
 
                             {% if poll.textatt %}<p class="creditstyle"> Credits: {{ poll.textatt }}</p>{% endif %}
 
                             {% if Subscribedp == True or poll.user_submit == request.user or free == True %}
+
+                            <div class="fontstyle85" id="poll-badge-{{ poll.id }}" style="margin:2px; margin-top:14px; white-space:nowrap">
+                        <!--       <b id="poll-score-{{ poll.id }}">{{ poll.score }} </b> -->
+                                <span id="pvote-{{ poll.id }}">{{ poll.posi }}</span> <font>Upvotes</font>
+                            </div>
+
+                          </div>
+                            <hr>
 
                             {% include 'poll_features.html' %}
 
@@ -262,22 +274,32 @@
 
                           {% else %}
 
-                            <hr style="margin-bottom: 0px; margin-top: -12px; visibility: hidden;">
-                            <button class="btn btn-link poll-button readmorebtn pull-right" style="margin:2px" usercreate="{{poll.user_submit}}" poll_id="{{ poll.id }}">Read More</button>
-                            <hr style="margin-bottom: -12px; margin-top: 0px; visibility: hidden;">
+<!--                             <hr style="margin-bottom: 0px; margin-top: 0px; visibility: hidden;"> -->
+                            <div class="pollcontainer">
+                            <button class="btn btn-link poll-button readmorebtn pull-right" style="margin: -2% 0% -10% 0%" usercreate="{{poll.user_submit}}" poll_id="{{ poll.id }}">Read More</button>
+                            </div>
+<!--                             <hr style="margin-bottom: 0px; margin-top: 0px; visibility: hidden;"> -->
 
                             <span class="poll-collapse d-none">
+                            <div class="pollcontainer">
                             {{ poll.description|striptags_except:"iframe, a, p, ol, ul, li, i, img"|safe }}
 
                             {% if poll.textatt %}<p class="creditstyle"> Credits: {{ poll.textatt }}</p>{% endif %}
 
+                            <div class="fontstyle85" id="poll-badge-{{ poll.id }}" style="margin:2px; margin-top:14px; white-space:nowrap">
+                        <!--       <b id="poll-score-{{ poll.id }}">{{ poll.score }} </b> -->
+                                <span id="pvote-{{ poll.id }}">{{ poll.posi }}</span> <font>Upvotes</font>
+                            </div>
+                            </div>
+
+                            <hr>
+
                             {% include 'poll_features.html' %}
 
                             </span>
-
                           {% endif %}
 
-                      </div> <!-- mobilefont compfont -->
+
                       {% endif %} <!-- poll description -->
 
                   </div><!-- contentstyle -->

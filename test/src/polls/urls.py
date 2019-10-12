@@ -2,7 +2,7 @@ from django.conf.urls import url
 from polls.views import (PollsListView, PollDetailView, api_votes, favorite_poll, #PollTopicsView,
     PollDetailCreate, PollDetailUpdate, #PollDetailDelete, PollsListFavoriteView,
     PollListCreate, PollListUpdate, PollSearchView, api_fav, api_like, api_report, api_sugglikes,
-    PollSuggView, PollRecoView, PollDetailPreview, api_vcount
+    PollSuggView, PollRecoView, PollDetailPreview, AdminPollsListView,  api_vcount
     )
 
 
@@ -15,6 +15,10 @@ urlpatterns = [
 
     #this should be poll list
     url(r'^polls/$', PollsListView.as_view(), name="polls_list"),
+
+    #this is only for admin
+    url(r'^adminpolls/$', AdminPollsListView, name="admin_polls_list"),
+
 
     url(r'^poll_list/add/$', PollListCreate.as_view(), name="poll_list_create"),
     url(r'^poll_list/(?P<pk>[0-9]+)/edit$', PollListUpdate.as_view(), name="poll_list_update"),

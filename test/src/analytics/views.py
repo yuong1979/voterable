@@ -4,6 +4,8 @@ from django.http import HttpResponse, JsonResponse, HttpResponseRedirect, Http40
 # Create your views here.
 from tags.models import TagPoll, runtagcount
 from polls.models import Ptype, PollItem
+from analytics.models import PostReport
+from django.contrib.auth.models import User
 from django.conf import settings
 from django.views.decorators.csrf import csrf_exempt
 from django.core.mail import send_mail
@@ -17,7 +19,7 @@ import re
 import urllib.request
 # from pytube import YouTube
 from django.shortcuts import render, get_object_or_404, HttpResponseRedirect, redirect
-
+from django.db.models import Count, Sum
 
 
 # this is for email from contact form - dont touch it
@@ -62,6 +64,23 @@ def AnalyseVid(request):
 	context = {'pitems': pitems,}
 
 	return render(request, 'analysevid.html', context)
+
+
+
+
+
+def AnalyseComplaint(request):
+	pitems = PollItem.objects.filter(published=False)
+	Allreports = PostReport.objects.filter()
+	report = PollItem.objects.annotate(dcount=Count('postreport__p_item')).order_by('-dcount')[:20]
+
+	context = {
+		'report': report,
+		}
+
+	return render(request, 'Analysecomplaint.html', context)
+
+
 
 
 

@@ -4,7 +4,14 @@
 
 <style>
 {% block style %}
+
+
 {% endblock %}
+
+table, th, td {
+  border: 1px solid black;
+}
+
 </style>
 
 
@@ -18,45 +25,31 @@
 
 <!-- http://localhost:8000/tagtopiclist/ -->     
 
+
+
+<small>
+
 {% if user.is_staff %}
 
-
-<b>Tip Vote analysis</b>
+<b>Complaint analysis</b>
 <br><br>
 
 
-<table class="table">
+<table style="width:100%">
 
-  <thead>
-    <tr>
-      <th>Tip</th>
-      <th>Avg</th>
-      <th>(+)</th>
-      <th>(-)</th>
-    </tr>
-  </thead>
+  {% for i in report   %}
 
-  <tbody>
+  <tr>
+    <th><a href="/polls/{{ i.id }}">{{i}}</a></th>
+    <th>{{i.dcount}}</th>
+  </tr>
 
-    {% for i in tiplists %}
-
-        <tr>
-
-          <td><a href="/polls/{{ i.id }}">{{i}}</a></td>
-          <td>{{ i.score }}</td>
-          <td>{{ i.posi }}</td>
-          <td>{{ i.nega }}</td>
-        </tr>
-
-    {% endfor %}
-
-  </tbody>
-
+  {% endfor %}
 </table>
 
 
 {% endif %}
-
+</small>
 
 
     </div><!-- mainboxstyle -->
