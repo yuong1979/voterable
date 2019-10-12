@@ -18,11 +18,11 @@
 
 <small>
 
+{% if user.is_staff %}
 
 <b>Tag analysis</b>
 <br><br>
 
-{% if user.is_staff %}
 
     {% for poll in polls %}
       Tip: <a href="/polls/?type={{ poll.slug }}">{{ poll }}</a>

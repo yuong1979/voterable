@@ -51,53 +51,48 @@ width: 55px;
 
 <div class="row">
 
-  <div class="col-sm-12" >
+  <div class="col-sm-12" style="margin:0% 0% -4% 0%">
     <div class="mainboxstyle">
 
 
-<div style="float:right" id="parent">
+    <div style="float:right" id="parent">
 
-    {% if request.user.is_authenticated %}
+        {% if request.user.is_authenticated %}
 
-      {% if fav == True %}
+          {% if fav == True %}
 
-        <div class="child" style="text-align:center;">
-          <a href='#' class='favorite' tag_id="{{ tag.id }}"><b><i id='fav-type-{{ tag.id }}' aria-hidden="true" class="fa fa-star fa-1x iconshape" style="color:gold;"></i></b></a>
-        </div>
+            <div class="child" style="text-align:center;">
+              <a href='#' class='favorite' tag_id="{{ tag.id }}"><b><i id='fav-type-{{ tag.id }}' aria-hidden="true" class="fa fa-star fa-1x iconshape" style="color:gold;"></i></b></a>
+            </div>
 
-        <div class="child icontext">Favorite</div>
+            <div class="child icontext">Favorite</div>
 
-      {% else %}
+          {% else %}
 
-        <div class="child" style="text-align:center;">
-          <a href='#' class='favorite' tag_id="{{ tag.id }}"><b><i id='fav-type-{{ tag.id }}' aria-hidden="true" class="fa fa-star fa-1x iconshape"></i></b></a>
-        </div>
+            <div class="child" style="text-align:center;">
+              <a href='#' class='favorite' tag_id="{{ tag.id }}"><b><i id='fav-type-{{ tag.id }}' aria-hidden="true" class="fa fa-star fa-1x iconshape"></i></b></a>
+            </div>
 
-        <div class="child icontext">Favorite</div>
+            <div class="child icontext">Favorite</div>
 
-      {% endif %}
+          {% endif %}
 
-    {% else %}
-    
+        {% else %}
+        
+          <div class="child" style="text-align:center;">
+            <a href="/accounts/login/"><i class="fa fa-star fa-lg iconshape"></i></a>
+          </div>
 
-      <div class="child" style="text-align:center;">
-        <a href="/accounts/login/"><i class="fa fa-star fa-lg iconshape"></i></a>
-      </div>
+            <div class="child icontext">Favorite</div>
 
-        <div class="child icontext">Favorite</div>
+        {% endif %}
 
-    {% endif %}
+    </div>
 
-</div>
-
-
-
-        <div class="mainheaderstyle"><i class="fa fa-tags fa-1x"></i>&nbsp;&nbsp;&nbsp;{{ tag }}</div>
+    <div class="mainheaderstyle"><i class="fa fa-tags fa-1x"></i>&nbsp;&nbsp;&nbsp;{{ tag }}</div>
 
     </div><!-- mainboxstyle -->
   </div><!-- col-sm-12 -->
-
-
 
 
 <!--   <div class="col-sm-12" >

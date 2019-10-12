@@ -25,14 +25,15 @@ table, th, td {
 
 <!-- http://localhost:8000/tagtopiclist/ -->     
 
+
+
 <small>
 
+{% if user.is_staff %}
 
 <b>Complaint analysis</b>
 <br><br>
 
-<small>
-{% if user.is_staff %}
 
 <table style="width:100%">
 

@@ -20,11 +20,10 @@
 
 <small>
 
+{% if user.is_staff %}
 
 <b>Video analysis</b>
 <br><br>
-
-{% if user.is_staff %}
 
   {% for i in pitems   %}
 
