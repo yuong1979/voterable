@@ -280,7 +280,7 @@ def async_vid_analytics():
 
 
 
-
+# for recording users who view a specific poll - when everytime when users click n view more - disabled currently
 def api_ops(request):
 
     if request.GET:
