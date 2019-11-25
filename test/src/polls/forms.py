@@ -566,7 +566,8 @@ class PollItemAddForm(forms.ModelForm):
 	# poll item
 	def clean_description(self):
 		description = self.cleaned_data['description']
-		if len(str(description)) > 2400:
+
+		if len(str(description)) > 5000:
 			raise forms.ValidationError("Please limit your description to less than 2400 characters")
 		if len(str(description)) < 20:
 			raise forms.ValidationError("Please input your tip description with more then 20 characters")
@@ -762,7 +763,8 @@ class PollItemEditForm(forms.ModelForm):
 	# poll item
 	def clean_description(self):
 		description = self.cleaned_data['description']
-		if len(str(description)) > 2400:
+
+		if len(str(description)) > 5000:
 			raise forms.ValidationError("Please limit your description to less than 2400 characters")
 		if len(str(description)) < 20:
 			raise forms.ValidationError("Please input your tip description with more then 20 characters")

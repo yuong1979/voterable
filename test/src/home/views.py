@@ -34,6 +34,9 @@ from django.contrib.sessions.backends.db import SessionStore
 from analytics.models import ControlTable, PromoAnalytic
 from notifications.models import Notification
 
+from tags.forms import TagSearchForm
+
+
 # from django.conf import settings
 # from django.contrib.auth.models import User
 # from django.contrib.sites.models import Site
@@ -237,10 +240,10 @@ def id_generator(size=6, chars=string.ascii_uppercase + string.digits):
 
 
 
-class HomeView(TemplateView):
+class HomeView(TemplateView, FormView):
     template_name = "home.html"
     title = 'Your Dashboard'
-    # form_class = SearchForm
+    form_class = TagSearchForm
 
 
     def dispatch(self, *args, **kwargs):
@@ -408,6 +411,13 @@ class HomeView(TemplateView):
             ######collecting user favorite polls/tags and created polls#######
             ##################################################################
 
+
+            #retrieving all tags from search
+            searchtags = TagPoll.objects.filter(active=True)
+            if searchtags:
+                context["searchtags"] = searchtags
+
+
             #retrieving favourites of user
             pitem_obj = PollItem.objects.filter(pollfav__fav_user=self.request.user)
             if pitem_obj:
@@ -419,6 +429,7 @@ class HomeView(TemplateView):
             fav_tags = TagPoll.objects.filter(tagfav=self.request.user, active=True)
             if fav_tags:
                 context["taglist"] = fav_tags
+
 
             #retrieving pollitems lists created by user
             ptype_userc = Ptype.objects.filter(pollitem__user_submit=self.request.user, active=True).distinct()
@@ -879,3 +890,12 @@ class ServiceWorkerview(TemplateView):
         context = super().get_context_data(**kwargs)
         context['SENDER_ID'] = settings.SENDER_ID
         return context
+
+
+
+
+
+
+
+
+

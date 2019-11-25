@@ -927,40 +927,6 @@
   <div class="col-xs-12 col-sm-6">
     <div class="card shadow" style="margin: 5% 0% 5% 0%">
       <div class="card-body">
-
-        <div class="card-title mainheaderstyle"><i class="fas fa-magic fa-1x"></i>&nbsp;&nbsp;&nbsp;&nbsp;Hot Tips</div><hr>
-          {% for i in toppolls %}
-
-            <div class="greyboxstyle col-12 col-lg-12">
-            <div class="row" style="margin-right: 6px">
-
-              <div class="col-10 col-lg-10" style="padding-left: 10px;">
-                <a href="{{ i.get_url }}"><b style="line-height: 200%;">{{ i }}</b></a>
-              </div>
-
-              <div class="col-2 col-lg-2">
-                <span class="badge badge-pill badgestyle badge-secondary" style="margin-left:-6px"> {{ i.ecount }} tips </span> 
-
-<!--                 {% if i.freepoll == True %}
-                &nbsp;&nbsp;<i class="allfontcolor fas fa-check-circle fa-1x"></i><b class="allfontcolor"></b>
-                {% endif %} -->
-              </div>
-
-
-
-            </div>
-            <hr style="margin:0px 0px 0px 0px">
-            </div>
-          {% endfor %}
-
-      </div>
-    </div>
-  </div>
-
-
-  <div class="col-xs-12 col-sm-6">
-    <div class="card shadow" style="margin: 5% 0% 5% 0%">
-      <div class="card-body">
         <div class="card-title mainheaderstyle"><i class="fa fa-tag fa-1x"></i>&nbsp;&nbsp;&nbsp;&nbsp;Hot Topics</div><hr>
           {% for i in tags %}
           {% if i.title != "" %}
@@ -971,6 +937,43 @@
       </div>
     </div>
   </div>
+
+
+  <div class="col-xs-12 col-sm-6">
+    <div class="card shadow" style="margin: 5% 0% 5% 0%">
+      <div class="card-body">
+
+        <div class="card-title mainheaderstyle"><i class="fas fa-magic fa-1x"></i>&nbsp;&nbsp;&nbsp;&nbsp;Hot Tips</div><hr>
+          {% for i in toppolls %}
+
+<!--             <div class="greyboxstyle col-12 col-lg-12"> -->
+            <div class="row" style="margin-right: 6px">
+
+              <div class="col-10 col-lg-10" style="padding-left: 10px; line-height: 250%;">
+                <a href="{{ i.get_url }}"><b>{{ i }}</b></a>
+              </div>
+
+              <div class="col-2 col-lg-2" style="line-height: 250%;">
+                <span class="badge badge-pill badgestyle badge-secondary" style="margin-left:-6px"> {{ i.ecount }} tips </span> 
+
+<!--                 {% if i.freepoll == True %}
+                &nbsp;&nbsp;<i class="allfontcolor fas fa-check-circle fa-1x"></i><b class="allfontcolor"></b>
+                {% endif %} -->
+              </div>
+
+
+
+            </div>
+<!--             <hr style="margin:0px 0px 0px 0px"> -->
+<!--             </div> -->
+          {% endfor %}
+
+      </div>
+    </div>
+  </div>
+
+
+
 
 
 </div> 
@@ -1061,7 +1064,7 @@
 
 
 
-//scrolling footer
+//scrolling footer for fast menu
 var lastScrollTop = 0;
 // element should be replaced with the actual target element on which you have applied scroll, use window in case of no target element.
 window.addEventListener("scroll", function(){ // or window.addEventListener("scroll"....

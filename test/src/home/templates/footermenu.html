@@ -25,7 +25,7 @@
             </div>
         </div>
 
-        <div class="col-3">
+<!--         <div class="col-3">
             <div class="footiconholder" id="parent">
             <div class="child" style="">
                 <a href='{% url 'TagAllView' %}'><i class="fa fa-tags fa-1x iconshape footicon2 footerredirect" id='2' style="font-size: 25px"></i></a>
@@ -33,7 +33,8 @@
 
             <div class="child icontext footicon2">Topics</div>
             </div>
-        </div>
+        </div> -->
+
 
         <div class="col-3">
             <div class="footiconholder" id="parent">
@@ -44,6 +45,20 @@
             <div class="child icontext footicon3">Notifications</div>
             </div>
         </div>
+        
+
+        <div class="col-3">
+            <div class="footiconholder" id="parent">
+            <div class="child" style="">
+                <a href=''><i class="fas fa-backward fa-1x iconshape footicon4 footerback" id='4' style="font-size: 25px"></i></a>
+            </div>
+
+            <div class="child icontext footicon4">Go Back</div>
+            </div>
+        </div>
+
+
+
         <div class="col-1"></div>
     </div><!-- row -->
 
@@ -132,6 +147,33 @@
 
 
 
+
+
+//disable/ ignore page link click if the user is clicking on the same page
+  $(".footerback").off( "click" ).click(function(e){
+
+    event.preventDefault();
+
+
+    console.log("back")
+
+    GoBackWithRefresh()
+
+
+
+  });
+
+
+
+function GoBackWithRefresh(event) {
+    if ('referrer' in document) {
+        window.location = document.referrer;
+        /* OR */
+        //location.replace(document.referrer);
+    } else {
+        window.history.back();
+    }
+}
 
 
 
