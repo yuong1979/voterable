@@ -201,12 +201,13 @@ if (sessionStorage.getItem('Notification') !== 'true')
     <div class="card-header" id="headingOne">
       <h2 class="mb-0">
         <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
-          <i class="fas fa-search fa-1x"></i> <b>Topics Search</b> 
+          <i class="fas fa-search fa-1x"></i> <b>Browse Topics</b> 
         </button>
       </h2>
     </div>
 
     <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordionExample">
+<!--     <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordionExample"> -->
 
 
       {% include "tag_search.html" %}
