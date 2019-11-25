@@ -36,9 +36,7 @@ Change the navbar color below -->
             <a class="nav-link" href="{% url 'Home' %}" class="menufont"><i class="allfontcolor fa fa-home fa-1x"></i>&nbsp;&nbsp;&nbsp;&nbsp;Home</a>
           </li>
 
-          <li class="nav-item">
-            <a class="nav-link" href="{% url 'TagAllView' %}" class="menufont"><i class="allfontcolor fa fa-tags fa-1x"></i>&nbsp;&nbsp;&nbsp;&nbsp;Browse Topics</a>
-          </li>
+
 
           {% if request.user.is_staff %}
           <li>
@@ -77,6 +75,10 @@ Change the navbar color below -->
               </li>
 
           {% else %}
+
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'TagAllView' %}" class="menufont"><i class="allfontcolor fa fa-tags fa-1x"></i>&nbsp;&nbsp;&nbsp;&nbsp;Browse Topics</a>
+          </li>
 
             {% if not request.user.is_authenticated and not "/accounts/login" in request.get_full_path %}
               <li><a class="nav-link" href="{% url 'account_login' %}"><i class="allfontcolor fas fa-sign-in-alt fa-1x"></i>&nbsp;&nbsp;&nbsp;&nbsp;Log In</a></li>

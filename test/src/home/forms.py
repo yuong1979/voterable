@@ -75,9 +75,3 @@ class AllauthSignupForm(forms.Form):
         """ Required, or else it throws deprecation warnings """
         pass
 
-
-
-
-
-
-

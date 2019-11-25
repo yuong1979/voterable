@@ -832,10 +832,11 @@ class PollsListView(ListView, PollTypeMixin):
             pt_query = PollItem.objects.filter()
 
             if sort == "Score":
-                pt_query = pt_query.filter(allowed=True, polltype=poll_type).order_by('-score')[:10]
+                pt_query = pt_query.filter(allowed=True, polltype=poll_type).order_by('-score')
+                # pt_query = pt_query.filter(allowed=True, polltype=poll_type).order_by('-score')[:10]
             else:
-                pt_query = pt_query.filter(allowed=True, polltype=poll_type).order_by('-pollmodifydate')[:10]
-
+                pt_query = pt_query.filter(allowed=True, polltype=poll_type).order_by('-pollmodifydate')
+                # pt_query = pt_query.filter(allowed=True, polltype=poll_type).order_by('-pollmodifydate')[:10]
 
         return pt_query
 

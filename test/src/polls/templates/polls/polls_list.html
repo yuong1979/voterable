@@ -319,10 +319,12 @@
 
         </div><!-- for infinite container -->
 
-          {% if not request.user.is_authenticated and not "/accounts/login" in request.get_full_path %}
+
+<!--         limiting users who do not sign up -->
+<!--           {% if not request.user.is_authenticated and not "/accounts/login" in request.get_full_path %}
           &nbsp;&nbsp;&nbsp;&nbsp;
           <a href="{% url 'account_login' %}" class='btn btn-primary btn-sm shadow'><b>Sign up to view all</b></a><br><br>
-          {% endif %}
+          {% endif %} -->
 
 
 <!-- http://localhost:8000/polls/?type=test-listing-poll-tip-5test-listing-poll-tip-5test-listing-poll-tip-5 -->
@@ -347,7 +349,9 @@
       {% endif %}
 
 
-{% include 'footermenu.html' %}
+
+  {% include 'footermenu.html' %}
+
 
 
 
@@ -531,9 +535,9 @@ function scrollup() {
       var free = "{{ free }}"
       var userauthenticated = "{{ userauthenticated }}"
 
-      // rerouting the user depending on his access
-      if (userauthenticated === 'True'){
 
+
+      // // rerouting the user depending on his access doesnt matter if user is authenticated
           //user has access
         if ( Subscribedp === "True" || free === "True" ||  requestuser === createuser){
 
@@ -544,33 +548,48 @@ function scrollup() {
           window.location.assign("{% url 'SelectPlan' %}")
         }
 
-      } else {
-        //user is not authenticated
-        window.location.assign("/accounts/login/")
-      }
 
 
-      //inserting the viewcount everytime a user views a poll
-      var poll_id = $(this).attr("poll_id");
+      // // rerouting the user depending on his access - only if he is authenticated
+      // if (userauthenticated === 'True'){
 
-        $.ajax({
-          dataType: 'json',
-          type: 'POST',
-          data: 'poll_id=' + poll_id,
-          url: '/polls/vcount/',
-          success: function(jsondata) {
+      //     //user has access
+      //   if ( Subscribedp === "True" || free === "True" ||  requestuser === createuser){
 
-              // var score_id = "#poll-score-" + poll_id;
+      //     //let user access - do nothing
 
-              if (jsondata.msg === "login_requred") {
-                  window.location.assign("/accounts/login/");
-              } else {
+      //   } else {
+      //     //user is not paid
+      //     window.location.assign("{% url 'SelectPlan' %}")
+      //   }
 
-                console.log(jsondata.result)
+      // } else {
+      //   //user is not authenticated
+      //   window.location.assign("/accounts/login/")
+      // }
 
-              }
-          }
-        });
+
+      // //inserting the viewcount everytime a user views a poll
+      // var poll_id = $(this).attr("poll_id");
+
+      //   $.ajax({
+      //     dataType: 'json',
+      //     type: 'POST',
+      //     data: 'poll_id=' + poll_id,
+      //     url: '/polls/vcount/',
+      //     success: function(jsondata) {
+
+      //         // var score_id = "#poll-score-" + poll_id;
+
+      //         if (jsondata.msg === "login_requred") {
+      //             window.location.assign("/accounts/login/");
+      //         } else {
+
+      //           console.log(jsondata.result)
+
+      //         }
+      //     }
+      //   });
 
 
 
